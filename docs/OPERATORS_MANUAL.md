@@ -48,3 +48,54 @@ For medium-large local training, prefer scoped/category backfills over broad ing
 v1.7.0 replaces the earlier placeholder-style host job completion path with a real local dataset-backed runner. Host jobs now resolve Training Lab datasets, Dataset Builder manifests, category datasets, raw snapshots, normalized records, and custom CSV/JSON/JSONL files where available. The runner processes rows in batches, records actual rows available/selected/processed/skipped, emits metrics, and writes hashed runtime artifacts.
 
 Recommended 16 GB local caps are 100K rows, 5K rows per batch, a 900-second runtime cap, and one host job at a time. Jobs remain disabled by default and require the confirmation phrase. Signal preview jobs create manual-review candidates only; they do not create executable orders and cannot bypass review, risk, approval, or live gates.
+
+## v1.9.0-real GUI-first configuration workflow
+
+Use `/settings/configuration` for schema-backed environment setup. Prefer the guided controls over raw `.env` edits. Use `/setup/wizard` for common presets, including 100K host training mode. Use `/setup/status` for read-only Python, virtual environment, dependency, launch, and `.env` status.
+
+Recommended operator flow:
+
+1. Open `/setup/status` and verify Python/venv/runtime status.
+2. Open `/setup/wizard` and choose the closest safe preset.
+3. Preview the diff.
+4. Resolve blockers and review warnings.
+5. Save only after validation passes.
+6. Restart the app so process-level env values take effect.
+7. Use `/settings/configuration` for targeted adjustments.
+
+The configuration console creates runtime-only backups under `data/config_backups/` and audit records under `data/config_audit/`. Sanitized exports mask secrets and are safe for debugging.
+
+The web UI never executes arbitrary shell commands, never installs packages, never exposes full secret values, never bypasses authentication/admin gates, and never flips live execution gates without validation and explicit confirmation. Training outputs and signal previews remain manual-review-only and cannot live-trade.
+
+## v1.9.0-real streamlined settings workflow
+
+Use `/settings` as the starting point for all configuration work.
+
+Recommended flow:
+
+1. Open `/settings` and review the configuration health state.
+2. Read the Recommended Setup panel.
+3. Use `/setup/wizard` for common modes such as Locked-down Safe, Local Demo, LAN Demo, Training/Backtesting, or 100K Host Training.
+4. Use `/settings/configuration` for targeted edits, search, filters, Simple Mode, Advanced Mode, and grouped diff preview.
+5. Use `/setup/status` to inspect Python, virtual environment, launch, filesystem, dependency, `.env`, and restart status.
+6. Export `/api/config/export-sanitized` when you need a secret-safe troubleshooting report.
+7. Review `/api/config/audit-history` for runtime-only config save history.
+
+The settings UX is guidance and configuration only. It does not live-trade, submit/cancel orders, sign messages, touch wallets, run shell commands, run pip, mutate the venv, leak secrets, or bypass manual review.
+
+## v2.0.0-real Live Trading Control Plane
+
+The Version 2 workflow begins at `/v2-live`. The operator should move in this order:
+
+1. Open `/v2-live/readiness` and resolve failures.
+2. Use `/v2-live/market-data` or `/api/v2/live/markets` to discover active markets.
+3. Inspect CLOB order books with `/api/v2/live/orderbook/<token_id>`.
+4. Build and preview a trade ticket with `/api/v2/live/ticket/preview`.
+5. Resolve every risk failure.
+6. Confirm human approval and acknowledge warnings.
+7. Submit only with `/api/v2/live/order/submit` and the exact configured phrase.
+8. Inspect `/v2-live/audit`, `/api/v2/live/orders/open`, and `/api/v2/live/positions`.
+9. Reconcile with `/api/v2/live/reconcile`.
+10. Use `/v2-live/emergency` to record emergency actions and then persist environment changes through settings or `.env`.
+
+Live trading remains fail-closed: no default setting enables real submit/cancel, tests do not place orders, and the app does not bypass Polymarket terms, geography, KYC, funding, allowance, wallet, or account restrictions.

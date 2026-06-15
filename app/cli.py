@@ -162,6 +162,18 @@ from .training_lab import (
     validate_dataset_payload,
 )
 
+from .config_console import (
+    apply_preset,
+    build_config_schema,
+    config_presets,
+    config_status,
+    export_sanitized_configuration,
+    preview_config_diff,
+    save_config_changes,
+    setup_runtime_status,
+    validate_config_values,
+)
+
 console = Console()
 
 
@@ -202,6 +214,47 @@ def _json_arg(value: str) -> dict[str, Any]:
 async def run(args: argparse.Namespace) -> None:
     client = GammaClient()
     clob = ClobClient()
+
+
+    # v1.9.0 streamlined GUI-first configuration / setup inspection commands. These never trade or execute shell commands.
+    if getattr(args, "config_schema", False):
+        console.print_json(data={"items": [option.__dict__ for option in build_config_schema()]})
+        return
+
+    if getattr(args, "config_status", False):
+        console.print_json(data=config_status())
+        return
+
+    if getattr(args, "config_validate", False):
+        changes = _json_arg(args.config_changes) if args.config_changes else {}
+        console.print_json(data=validate_config_values(changes, confirmation=args.confirmation))
+        return
+
+    if getattr(args, "config_diff", False):
+        changes = _json_arg(args.config_changes) if args.config_changes else {}
+        console.print_json(data=preview_config_diff(changes, confirmation=args.confirmation))
+        return
+
+    if getattr(args, "config_save", False):
+        changes = _json_arg(args.config_changes) if args.config_changes else {}
+        console.print_json(data=save_config_changes(changes, confirmation=args.confirmation, requested_by=args.operator))
+        return
+
+    if getattr(args, "config_export_sanitized", False):
+        console.print_json(data=export_sanitized_configuration())
+        return
+
+    if getattr(args, "config_presets", False):
+        console.print_json(data={"items": config_presets()})
+        return
+
+    if getattr(args, "config_apply_preset", ""):
+        console.print_json(data=apply_preset(args.config_apply_preset, confirmation=args.confirmation, requested_by=args.operator))
+        return
+
+    if getattr(args, "setup_status", False):
+        console.print_json(data=setup_runtime_status())
+        return
 
 
     # v1.6.0 Scoped historical backfill + category datasets. Operator-controlled; no command trades.
@@ -4149,6 +4202,19 @@ def main() -> None:
     parser.add_argument("--add-watch", action="store_true", help="When used with --research, add/update the market in the local watchlist")
     parser.add_argument("--remove-watch", help="Remove a market ID from the local watchlist")
     parser.add_argument("--note", default="", help="Optional note for --add-watch")
+
+    # v1.9.0 streamlined GUI-first configuration/setup commands. Inspect, validate, diff, save .env, and show setup/venv status.
+    parser.add_argument("--config-schema", action="store_true", help="Show GUI-first configuration schema/status grouped by UI controls")
+    parser.add_argument("--config-status", action="store_true", help="Show current effective configuration with secrets masked")
+    parser.add_argument("--config-validate", action="store_true", help="Validate pending config changes from --config-changes JSON or @path")
+    parser.add_argument("--config-diff", action="store_true", help="Preview .env diff for pending config changes from --config-changes JSON or @path")
+    parser.add_argument("--config-save", action="store_true", help="Save supported .env changes after validation and backup")
+    parser.add_argument("--config-export-sanitized", action="store_true", help="Export sanitized configuration and setup status JSON")
+    parser.add_argument("--config-presets", action="store_true", help="List guided setup presets")
+    parser.add_argument("--config-apply-preset", default="", help="Apply a guided setup preset by preset ID after validation")
+    parser.add_argument("--config-changes", default="", help="JSON object or @path of supported .env changes for validate/diff/save")
+    parser.add_argument("--setup-status", action="store_true", help="Show read-only Python/runtime/venv/dependency status")
+
     args = parser.parse_args()
     if (args.markets or args.opportunities or args.movers) and args.sort == "volume_24hr":
         args.sort = "volume24hr"

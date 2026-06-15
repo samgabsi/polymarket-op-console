@@ -1,4 +1,14 @@
-# Optional runtime dependency for the v1.0.0 manual-live CLOB adapter.
-# The core app does not require this package for local/paper/fake-adapter validation.
-# Install only in an operator-controlled environment after reviewing the current Polymarket docs.
+# Optional runtime dependencies for v2.0.0-real live trading.
+# The core app does not require these packages for local research, paper workflows,
+# UI inspection, mocked tests, or fail-closed readiness checks.
+# Install only in an operator-controlled environment after reviewing current Polymarket docs.
+
+# Official unified Python SDK for Polymarket. The Python SDK is beta as of v2.0.0-real.
+polymarket-client==0.1.0b5
+
+# Optional wallet-address derivation for readiness checks.
+eth-account>=0.13,<0.14
+
+# Legacy fallback retained only for compatibility with the existing isolated adapter boundary.
+# Polymarket archived py-clob-client in May 2026 and recommends the unified SDK for new integrations.
 py-clob-client==0.34.6

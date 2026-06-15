@@ -70,6 +70,20 @@ NAV_SECTIONS: list[dict[str, Any]] = [
         ],
     },
     {
+        "label": "Live v2",
+        "items": [
+            {"label": "v2 Dashboard", "href": "/v2-live", "match": ["/v2-live"]},
+            {"label": "Readiness", "href": "/v2-live/readiness", "match": ["/v2-live/readiness"]},
+            {"label": "Market data", "href": "/v2-live/market-data", "match": ["/v2-live/market-data"]},
+            {"label": "Trade ticket", "href": "/v2-live/trade-ticket", "match": ["/v2-live/trade-ticket"]},
+            {"label": "Orders", "href": "/v2-live/orders", "match": ["/v2-live/orders"]},
+            {"label": "Positions", "href": "/v2-live/positions", "match": ["/v2-live/positions"]},
+            {"label": "Risk", "href": "/v2-live/risk", "match": ["/v2-live/risk"]},
+            {"label": "Audit", "href": "/v2-live/audit", "match": ["/v2-live/audit"]},
+            {"label": "Emergency", "href": "/v2-live/emergency", "match": ["/v2-live/emergency"]},
+        ],
+    },
+    {
         "label": "Manual Control",
         "items": [
             {"label": "Manual review", "href": "/manual-execution-boundary", "match": ["/manual-execution-boundary"]},
@@ -129,7 +143,11 @@ NAV_SECTIONS: list[dict[str, Any]] = [
     {
         "label": "Settings",
         "items": [
-            {"label": "Config", "href": "/administration/config", "match": ["/administration/config"]},
+            {"label": "Settings hub", "href": "/settings", "match": ["/settings"]},
+            {"label": "Configuration console", "href": "/settings/configuration", "match": ["/settings/configuration", "/setup/environment"]},
+            {"label": "Setup wizard", "href": "/setup/wizard", "match": ["/setup/wizard"]},
+            {"label": "Runtime status", "href": "/setup/status", "match": ["/setup/status"]},
+            {"label": "Deployment", "href": "/administration/config", "match": ["/administration/config"]},
             {"label": "Maintenance", "href": "/administration/maintenance", "match": ["/administration/maintenance"]},
             {"label": "Users", "href": "/users", "match": ["/users"]},
         ],
@@ -202,7 +220,7 @@ def build_global_safety_badges() -> list[dict[str, str]]:
 def build_quick_actions() -> list[dict[str, str]]:
     return [
         {"label": "Dashboard", "href": "/", "tone": "neutral"},
-        {"label": "Live readiness", "href": "/live-trading", "tone": "danger"},
+        {"label": "Live v2", "href": "/v2-live", "tone": "danger"},
         {"label": "CLOB adapter", "href": "/live-clob-adapter", "tone": "warning"},
         {"label": "Training Lab", "href": "/training", "tone": "info"},
         {"label": "Data Lab", "href": "/data", "tone": "local"},
@@ -215,7 +233,7 @@ def console_globals() -> dict[str, Any]:
         "app_version": APP_VERSION,
         "app_version_short": APP_VERSION_SHORT,
         "nav_sections": NAV_SECTIONS,
-        "app_safety_posture": "Mobile-friendly local-first operator console. v1.6.0 adds disabled-by-default internet ingestion and host training job controls while preserving fail-closed trading, responsive UI, and operator-only execution gates.",
+        "app_safety_posture": "Mobile-friendly local-first operator console. v2.0.0 adds a guarded live-trading control plane with live data reads, trade-ticket preview, approval gates, risk checks, CLOB submit/cancel boundaries, positions, reconciliation, emergency controls, and audit exports while preserving fail-closed defaults and operator-only execution gates.",
         "global_safety_badges": build_global_safety_badges(),
         "quick_actions": build_quick_actions(),
     }

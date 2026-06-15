@@ -6,8 +6,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+<<<<<<< HEAD
 APP_VERSION = "1.9.0-real"
 APP_VERSION_SHORT = "1.9.0"
+=======
+APP_VERSION = "2.0.0-real"
+APP_VERSION_SHORT = "2.0.0"
+>>>>>>> 564bdb3 (v2 commit)
 APP_DIR = PROJECT_ROOT / "app"
 DATA_DIR = PROJECT_ROOT / "data"
 
@@ -73,6 +78,18 @@ class Settings:
     live_max_daily_notional: float = float(os.getenv("LIVE_MAX_DAILY_NOTIONAL", "0"))
     live_max_open_orders: int = int(os.getenv("LIVE_MAX_OPEN_ORDERS", "0"))
     live_allowed_market_ids: list[str] = [item.strip() for item in os.getenv("LIVE_ALLOWED_MARKET_IDS", "").split(",") if item.strip()]
+
+    # v2.0.0-real live trading control plane. Defaults are safe/fail-closed.
+    polymarket_v2_trading_mode: str = os.getenv("POLYMARKET_V2_TRADING_MODE", "research_only")
+    polymarket_v2_require_approval: bool = os.getenv("POLYMARKET_V2_REQUIRE_APPROVAL", "true").lower() in {"1", "true", "yes", "on"}
+    polymarket_v2_confirmation_phrase: str = os.getenv("POLYMARKET_V2_CONFIRMATION_PHRASE", "LIVE ORDER APPROVED")
+    polymarket_v2_force_read_only: bool = os.getenv("POLYMARKET_V2_FORCE_READ_ONLY", "false").lower() in {"1", "true", "yes", "on"}
+    polymarket_v2_allow_market_orders: bool = os.getenv("POLYMARKET_V2_ALLOW_MARKET_ORDERS", "false").lower() in {"1", "true", "yes", "on"}
+    polymarket_v2_allow_limit_orders: bool = os.getenv("POLYMARKET_V2_ALLOW_LIMIT_ORDERS", "true").lower() in {"1", "true", "yes", "on"}
+    polymarket_v2_default_slippage_bps: float = float(os.getenv("POLYMARKET_V2_DEFAULT_SLIPPAGE_BPS", "150"))
+    polymarket_v2_max_total_exposure: float = float(os.getenv("POLYMARKET_V2_MAX_TOTAL_EXPOSURE", "0"))
+    polymarket_v2_sdk_family: str = os.getenv("POLYMARKET_V2_SDK_FAMILY", "official_unified_python_sdk_then_clob_fallback")
+    polymarket_data_api_base_url: str = os.getenv("POLYMARKET_DATA_API_BASE_URL", "https://data-api.polymarket.com")
 
     # Live adapter boundary controls. Defaults are fail-closed; v1.0.0 enables manual submit/cancel only after every gate passes.
     polymarket_live_mode: bool = os.getenv("POLYMARKET_LIVE_MODE", os.getenv("LIVE_TRADING_ENABLED", "false")).lower() in {"1", "true", "yes", "on"}

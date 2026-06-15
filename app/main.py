@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import json
 from urllib.parse import urlencode
+from typing import Any
 
-from fastapi import Depends, FastAPI, Form, HTTPException, Query, Request
+from fastapi import Body, Depends, FastAPI, Form, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, PlainTextResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
@@ -66,9 +67,41 @@ from .live_adapter import build_live_adapter_readiness, build_live_adapter_reque
 from .live_execution_control import build_live_execution_attempt_board, build_live_execution_control_readiness, build_manual_cancel_preview, build_manual_submit_preview, get_live_execution_attempt, list_live_execution_attempts, live_execution_attempts_to_csv, live_execution_control_alerts, live_execution_control_readiness_to_csv, record_manual_cancel_attempt, record_manual_submit_attempt
 from .live_trading import autonomous_runs_to_csv, build_autonomous_run_preview, build_autonomous_status, build_live_order_board, build_live_reconciliation, build_live_trading_status, build_strategy_signal_board, get_autonomous_run, get_live_order_event, get_strategy_signal, list_autonomous_runs, list_live_order_events, list_strategy_signals, live_orders_to_csv, live_reconciliation_to_csv, live_trading_alerts, record_autonomous_run, record_strategy_signal, strategy_signals_to_csv, validate_strategy_signal_payload
 from .live_clob_adapter import build_clob_adapter_status, clob_adapter_status_to_csv
+from .live_v2 import (
+    audit_to_csv as live_v2_audit_to_csv,
+    build_live_v2_readiness,
+    build_live_v2_status,
+    build_live_v2_ticket_preview,
+    cancel_live_v2_order,
+    emergency_live_v2_action,
+    get_live_v2_open_orders,
+    get_live_v2_orderbook,
+    get_live_v2_positions,
+    list_audit_records as list_live_v2_audit_records,
+    reconcile_live_v2_orders,
+    search_live_v2_markets,
+    submit_live_v2_order,
+)
 from .live_ops import build_live_adapter_verification, build_live_readiness_checklist, build_operator_runbook, live_adapter_verification_to_csv, live_readiness_checklist_to_csv
 from .market_data import build_execution_quality_board, build_execution_quality_simulation, build_market_data_board, execution_quality_to_csv, fetch_market_data_preview, get_execution_quality_simulation, get_market_snapshot, list_execution_quality_simulations, list_market_snapshots, market_data_alerts, market_snapshots_to_csv, parse_orderbook_metrics, record_execution_quality_simulation, record_market_snapshot, summarize_execution_quality, summarize_market_data
 from .ui import build_ui_system_reference, build_workflow_map, compact_id, console_globals, status_tone
+
+from .config_console import (
+    CONFIG_CONFIRMATION_PHRASE,
+    apply_preset,
+    build_config_schema,
+    config_presets,
+    config_status,
+    config_audit_history,
+    export_sanitized_configuration,
+    preview_config_diff,
+    preset_diff,
+    sanitized_env_template,
+    save_config_changes,
+    setup_runtime_status,
+    settings_dashboard,
+    validate_config_values,
+)
 
 
 from .internet_ops import (
@@ -413,6 +446,199 @@ async def maintenance_delete_backup_api(filename: str, user: dict = Depends(requ
 @app.get("/administration/config", response_class=HTMLResponse)
 async def administration_config(request: Request, user: dict = Depends(require_admin)):
     return templates.TemplateResponse("administration_config.html", {"request": request, "user": user, "deployment": deployment_status()})
+
+
+
+
+# v1.9.0 streamlined settings and configuration UX refresh.
+def _config_changes_from_form(form) -> dict[str, object]:
+    schema_keys = {option.key: option for option in build_config_schema()}
+    changes: dict[str, object] = {}
+    for key, option in schema_keys.items():
+        form_key = f"cfg__{key}"
+        if option.control == "multi_select":
+            if form_key in form:
+                changes[key] = form.getlist(form_key)
+            continue
+        if form_key in form:
+            value = form.get(form_key)
+            if option.secret and not str(value or "").strip():
+                continue
+            changes[key] = value
+    return changes
+
+
+
+@app.get("/settings", response_class=HTMLResponse)
+async def settings_landing_page(request: Request, user: dict = Depends(require_admin)):
+    return templates.TemplateResponse(
+        "settings_dashboard_v190.html",
+        {"request": request, "user": user, "dashboard": settings_dashboard()},
+    )
+
+@app.get("/settings/configuration", response_class=HTMLResponse)
+async def settings_configuration_page(request: Request, focus: str = Query(default=""), user: dict = Depends(require_admin)):
+    return templates.TemplateResponse(
+        "configuration_console_v190.html",
+        {
+            "request": request,
+            "user": user,
+            "status": config_status(),
+            "presets": config_presets(),
+            "setup_status": setup_runtime_status(),
+            "focus": focus,
+            "confirmation_phrase": CONFIG_CONFIRMATION_PHRASE,
+            "diff_result": None,
+            "save_result": None,
+        },
+    )
+
+
+@app.get("/setup/environment", response_class=HTMLResponse)
+async def setup_environment_page(request: Request, user: dict = Depends(require_admin)):
+    return await settings_configuration_page(request, focus="", user=user)
+
+
+@app.get("/setup/status", response_class=HTMLResponse)
+async def setup_status_page(request: Request, user: dict = Depends(require_admin)):
+    return templates.TemplateResponse(
+        "setup_status_v190.html",
+        {"request": request, "user": user, "setup_status": setup_runtime_status(), "status": config_status()},
+    )
+
+
+@app.get("/setup/wizard", response_class=HTMLResponse)
+async def setup_wizard_page(request: Request, preset_id: str = Query(default=""), user: dict = Depends(require_admin)):
+    selected = preset_id or "locked_down_safe_mode"
+    return templates.TemplateResponse(
+        "setup_wizard_v190.html",
+        {
+            "request": request,
+            "user": user,
+            "presets": config_presets(),
+            "selected_preset_id": selected,
+            "diff_result": preset_diff(selected) if selected else None,
+            "save_result": None,
+            "confirmation_phrase": CONFIG_CONFIRMATION_PHRASE,
+        },
+    )
+
+
+@app.post("/settings/configuration")
+async def settings_configuration_submit(request: Request, user: dict = Depends(require_admin)):
+    form = await request.form()
+    changes = _config_changes_from_form(form)
+    confirmation = str(form.get("confirmation", ""))
+    intent = str(form.get("intent", "preview"))
+    diff_result = preview_config_diff(changes, confirmation=confirmation)
+    save_result = None
+    if intent == "save":
+        save_result = save_config_changes(changes, confirmation=confirmation, requested_by=user.get("username", "local"))
+        diff_result = save_result
+    return templates.TemplateResponse(
+        "configuration_console_v190.html",
+        {
+            "request": request,
+            "user": user,
+            "status": config_status(),
+            "presets": config_presets(),
+            "setup_status": setup_runtime_status(),
+            "focus": "",
+            "confirmation_phrase": CONFIG_CONFIRMATION_PHRASE,
+            "diff_result": diff_result,
+            "save_result": save_result,
+        },
+    )
+
+
+@app.post("/setup/wizard")
+async def setup_wizard_submit(request: Request, user: dict = Depends(require_admin)):
+    form = await request.form()
+    preset_id = str(form.get("preset_id", ""))
+    confirmation = str(form.get("confirmation", ""))
+    intent = str(form.get("intent", "preview"))
+    diff_result = preset_diff(preset_id, confirmation=confirmation)
+    save_result = None
+    if intent == "apply":
+        save_result = apply_preset(preset_id, confirmation=confirmation, requested_by=user.get("username", "local"))
+        diff_result = save_result
+    return templates.TemplateResponse(
+        "setup_wizard_v190.html",
+        {
+            "request": request,
+            "user": user,
+            "presets": config_presets(),
+            "selected_preset_id": preset_id,
+            "diff_result": diff_result,
+            "save_result": save_result,
+            "confirmation_phrase": CONFIG_CONFIRMATION_PHRASE,
+        },
+    )
+
+
+@app.get("/api/config/schema")
+async def config_schema_api(user: dict = Depends(require_admin)):
+    return {"source": "local", "app_version": APP_VERSION, "items": [option.__dict__ for option in build_config_schema()]}
+
+
+@app.get("/api/config/status")
+async def config_status_api(user: dict = Depends(require_admin)):
+    return config_status()
+
+
+@app.post("/api/config/validate")
+async def config_validate_api(payload: dict[str, Any] = Body(default_factory=dict), user: dict = Depends(require_admin)):
+    changes = payload.get("changes", payload) if isinstance(payload, dict) else {}
+    confirmation = payload.get("confirmation", "") if isinstance(payload, dict) else ""
+    return validate_config_values(changes, confirmation=confirmation)
+
+
+@app.post("/api/config/diff")
+async def config_diff_api(payload: dict[str, Any] = Body(default_factory=dict), user: dict = Depends(require_admin)):
+    changes = payload.get("changes", payload) if isinstance(payload, dict) else {}
+    confirmation = payload.get("confirmation", "") if isinstance(payload, dict) else ""
+    return preview_config_diff(changes, confirmation=confirmation)
+
+
+@app.post("/api/config/save")
+async def config_save_api(payload: dict[str, Any] = Body(default_factory=dict), user: dict = Depends(require_admin)):
+    changes = payload.get("changes", payload) if isinstance(payload, dict) else {}
+    confirmation = payload.get("confirmation", "") if isinstance(payload, dict) else ""
+    return save_config_changes(changes, confirmation=confirmation, requested_by=user.get("username", "local"))
+
+
+@app.get("/api/config/export-sanitized")
+async def config_export_sanitized_api(user: dict = Depends(require_admin)):
+    return export_sanitized_configuration()
+
+@app.get("/api/config/audit-history")
+async def config_audit_history_api(limit: int = Query(default=20), user: dict = Depends(require_admin)):
+    return config_audit_history(limit=limit)
+
+
+@app.get("/api/config/export-sanitized.env", response_class=PlainTextResponse)
+async def config_export_sanitized_env_api(user: dict = Depends(require_admin)):
+    return PlainTextResponse(sanitized_env_template(), media_type="text/plain", headers={"Content-Disposition": "attachment; filename=polymarket_gamma_sanitized.env"})
+
+
+@app.get("/api/config/presets")
+async def config_presets_api(user: dict = Depends(require_admin)):
+    return {"source": "local", "items": config_presets()}
+
+
+@app.post("/api/config/presets/{preset_id}/preview")
+async def config_preset_preview_api(preset_id: str, payload: dict[str, Any] = Body(default_factory=dict), user: dict = Depends(require_admin)):
+    return preset_diff(preset_id, confirmation=payload.get("confirmation", "") if isinstance(payload, dict) else "")
+
+
+@app.post("/api/config/presets/{preset_id}/apply")
+async def config_preset_apply_api(preset_id: str, payload: dict[str, Any] = Body(default_factory=dict), user: dict = Depends(require_admin)):
+    return apply_preset(preset_id, confirmation=payload.get("confirmation", "") if isinstance(payload, dict) else "", requested_by=user.get("username", "local"))
+
+
+@app.get("/api/setup/status")
+async def setup_runtime_status_api(user: dict = Depends(require_admin)):
+    return setup_runtime_status()
 
 
 @app.get("/api/deployment/status")
@@ -917,6 +1143,151 @@ async def live_manual_cancel_create_api(
     )
     return {"ok": True, "recorded": True, "item": item}
 
+
+
+
+@app.get("/v2-live", response_class=HTMLResponse)
+async def live_v2_console(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {
+            "request": request,
+            "section": "dashboard",
+            "status": build_live_v2_status(),
+            "audit_rows": list_live_v2_audit_records(limit=25),
+            "user": current_user(request),
+        },
+    )
+
+
+@app.get("/v2-live/readiness", response_class=HTMLResponse)
+async def live_v2_readiness_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "readiness", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=25), "user": current_user(request)},
+    )
+
+
+@app.get("/v2-live/market-data", response_class=HTMLResponse)
+async def live_v2_market_data_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "market_data", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=25), "user": current_user(request)},
+    )
+
+
+@app.get("/v2-live/trade-ticket", response_class=HTMLResponse)
+async def live_v2_trade_ticket_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "trade_ticket", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=25), "user": current_user(request)},
+    )
+
+
+@app.get("/v2-live/orders", response_class=HTMLResponse)
+async def live_v2_orders_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "orders", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=100), "user": current_user(request)},
+    )
+
+
+@app.get("/v2-live/positions", response_class=HTMLResponse)
+async def live_v2_positions_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "positions", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=25), "user": current_user(request)},
+    )
+
+
+@app.get("/v2-live/risk", response_class=HTMLResponse)
+async def live_v2_risk_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "risk", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=25), "user": current_user(request)},
+    )
+
+
+@app.get("/v2-live/audit", response_class=HTMLResponse)
+async def live_v2_audit_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "audit", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=200), "user": current_user(request)},
+    )
+
+
+@app.get("/v2-live/emergency", response_class=HTMLResponse)
+async def live_v2_emergency_page(request: Request):
+    return templates.TemplateResponse(
+        "live_v2_dashboard.html",
+        {"request": request, "section": "emergency", "status": build_live_v2_status(), "audit_rows": list_live_v2_audit_records(limit=25), "user": current_user(request)},
+    )
+
+
+@app.get("/api/v2/live/status")
+async def api_live_v2_status():
+    return build_live_v2_status()
+
+
+@app.get("/api/v2/live/readiness")
+async def api_live_v2_readiness():
+    return build_live_v2_readiness()
+
+
+@app.get("/api/v2/live/markets")
+async def api_live_v2_markets(q: str = "", limit: int = 25):
+    return await search_live_v2_markets(query=q, limit=limit)
+
+
+@app.get("/api/v2/live/orderbook/{token_id}")
+async def api_live_v2_orderbook(token_id: str):
+    return await get_live_v2_orderbook(token_id)
+
+
+@app.post("/api/v2/live/ticket/preview")
+async def api_live_v2_ticket_preview(payload: dict[str, Any] = Body(default_factory=dict)):
+    return build_live_v2_ticket_preview(payload)
+
+
+@app.post("/api/v2/live/order/submit")
+async def api_live_v2_order_submit(payload: dict[str, Any] = Body(default_factory=dict)):
+    return submit_live_v2_order(payload)
+
+
+@app.post("/api/v2/live/order/cancel")
+async def api_live_v2_order_cancel(payload: dict[str, Any] = Body(default_factory=dict)):
+    return cancel_live_v2_order(payload)
+
+
+@app.get("/api/v2/live/orders/open")
+async def api_live_v2_open_orders():
+    return get_live_v2_open_orders()
+
+
+@app.get("/api/v2/live/positions")
+async def api_live_v2_positions():
+    return await get_live_v2_positions()
+
+
+@app.post("/api/v2/live/reconcile")
+async def api_live_v2_reconcile():
+    return reconcile_live_v2_orders()
+
+
+@app.get("/api/v2/live/audit")
+async def api_live_v2_audit(limit: int = 200):
+    rows = list_live_v2_audit_records(limit=limit)
+    return {"items": rows, "count": len(rows)}
+
+
+@app.get("/api/v2/live/audit.csv", response_class=PlainTextResponse)
+async def api_live_v2_audit_csv():
+    return live_v2_audit_to_csv(list_live_v2_audit_records(limit=10000))
+
+
+@app.post("/api/v2/live/emergency")
+async def api_live_v2_emergency(payload: dict[str, Any] = Body(default_factory=dict)):
+    return emergency_live_v2_action(payload)
 
 
 @app.get("/live-clob-adapter", response_class=HTMLResponse)

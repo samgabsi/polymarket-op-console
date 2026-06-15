@@ -1,8 +1,57 @@
-# Polymarket Gamma Starter v1.7.0-real
+# Polymarket Gamma Starter v2.0.0-real
 
 Local-first Polymarket market-intelligence, paper-ops, staged live-readiness, and guarded execution-control console.
 
 
+## What changed in v2.0.0-real
+
+Fully Functional Live Trading Build milestone:
+
+- Added a new guarded Live Trading v2 console at `/v2-live` with dedicated pages for readiness, market data, trade tickets, orders, positions, risk, audit, and emergency controls.
+- Added `app/live_v2.py`, a live-trading control plane that builds ticket previews, calculates notional/max-loss, enforces risk checks, requires human approval and typed confirmation, writes a local JSONL/CSV audit ledger, and routes real submit/cancel attempts through the existing fail-closed CLOB adapter boundary.
+- Added public Gamma market search and CLOB order-book endpoints under `/api/v2/live/*`, plus read-only open-order, position, and reconciliation endpoints that degrade safely when credentials/network are disabled.
+- Added v2 environment controls such as `POLYMARKET_V2_TRADING_MODE`, `POLYMARKET_V2_REQUIRE_APPROVAL`, `POLYMARKET_V2_CONFIRMATION_PHRASE`, order-type toggles, slippage/default exposure controls, Data API base URL, and SDK-family selection.
+- Added a live readiness checklist covering environment, Gamma/CLOB/Data URLs, credentials, wallet derivability, SDK/runtime availability, risk caps, kill switch, read-only mode, real-network mode, submit/cancel gates, approval requirements, and CLOB boundary readiness.
+- Added documentation for live setup, environment variables, risk controls, order lifecycle, emergency/kill switch usage, troubleshooting, and v2 release notes.
+- Preserved all v1.9 settings/configuration UX, data ingestion, training, research, paper workflow, audit, and existing manual live control-plane routes.
+- Preserved safety boundaries: live trading remains default-off, kill switch remains default-on, READ_ONLY remains default-true, submit/cancel gates remain default-off, no tests place real orders, and secrets are masked/redacted in UI/API/audit outputs.
+
+## What changed in v1.9.0-real
+
+Streamlined Settings & Configuration UX Refresh milestone:
+
+- Added a unified `/settings` landing page that acts as a dashboard for configuration health, operator mode, feature enablement, LAN exposure, restart-needed state, changed-from-default counts, warnings, blockers, missing secrets, last save, and last backup/audit references.
+- Reworked `/settings/configuration` into a streamlined console with Simple Mode and Advanced Mode, search by env key/label/help text, category filters, changed/restart/warning/blocker/secret/advanced/dangerous/live/training/LAN filters, sticky quick navigation, compact setting rows, reset/source metadata, and copy-key buttons.
+- Added a Recommended Setup panel that explains safe next actions and links directly to the relevant wizard preset or filtered configuration section without making automatic changes.
+- Improved `/setup/wizard` with richer preset cards showing safety level, use case, enabled keys, disabled keys, LAN/internet/host-training/live-readiness impact, restart expectations, and a final review checkbox before applying.
+- Improved diff previews by grouping changes into safe, warning, dangerous/live-related, restart-required, and blocked sections while keeping secrets masked.
+- Improved `/setup/status` into read-only App, Python, Virtual Environment, Launch, Filesystem, Environment, Dependencies, and Restart Status sections with copyable recommended commands. The UI still does not execute shell commands, run pip, or mutate virtual environments.
+- Added configuration health states: Safe, Needs Attention, Restart Required, Blocked, and Advanced / Dangerous Values Present.
+- Added `/api/config/audit-history` for secret-safe runtime audit history inspection.
+- Added docs for the Settings overview, Simple vs Advanced Mode, improved configuration UX, preset flow, diff preview, runtime status, and safe 100K host-training configuration through the GUI.
+- Preserved v1.8 functionality: schema-backed config registry, safe .env read/write, unknown-key preservation where practical, backups, audits, validation, sanitized exports, setup/runtime status, CLI/API commands, setup wizard, no arbitrary shell execution, secret masking, and live-trading safety gates.
+- Preserved safety boundaries: no autonomous live trading, no order submission, no cancellation, no signing, no wallet access, no pip execution, no venv mutation, no secret exposure, no weakened auth/LAN warnings, and training/signal outputs remain `manual_review_only=true` and `can_live_trade=false`.
+
+### GUI routes
+
+- Settings landing dashboard: `/settings`
+- Full configuration console: `/settings/configuration`
+- Alias: `/setup/environment`
+- Guided setup wizard: `/setup/wizard`
+- Runtime/venv status: `/setup/status`
+- Secret-safe audit history: `/api/config/audit-history`
+
+### Configuration CLI examples
+
+```bash
+python -m app.cli --config-schema
+python -m app.cli --config-status
+python -m app.cli --config-validate --config-changes '{"POLYMARKET_TRAINING_MAX_ROWS":"100000"}'
+python -m app.cli --config-diff --config-changes '{"POLYMARKET_TRAINING_HOST_JOBS_ENABLED":"true"}'
+python -m app.cli --config-export-sanitized
+python -m app.cli --config-presets
+python -m app.cli --setup-status
+```
 
 ## What changed in v1.7.0-real
 

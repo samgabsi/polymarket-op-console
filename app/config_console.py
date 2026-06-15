@@ -146,6 +146,8 @@ def _group_for_key(key: str) -> str:
         return "Data source registry"
     if key.startswith("LIVE_"):
         return "Live-trading readiness"
+    if key.startswith("POLYMARKET_V2_"):
+        return "Live v2 control plane"
     if key.startswith("POLYMARKET_MARKET_DATA_"):
         return "Market data intelligence"
     if key.startswith("POLYMARKET_AUTONOMOUS_"):
@@ -170,7 +172,7 @@ def _is_secret_key(key: str) -> bool:
 
 
 def _is_live_key(key: str) -> bool:
-    return key.startswith("LIVE_") or key.startswith("POLYMARKET_LIVE_") or key.startswith("POLYMARKET_AUTONOMOUS_") or key in {
+    return key.startswith("LIVE_") or key.startswith("POLYMARKET_LIVE_") or key.startswith("POLYMARKET_V2_") or key.startswith("POLYMARKET_AUTONOMOUS_") or key in {
         "LIVE_TRADING_ENABLED", "POLY_PRIVATE_KEY", "POLYMARKET_PRIVATE_KEY", "POLY_API_KEY", "POLYMARKET_CLOB_API_KEY", "CLOB_API_KEY", "POLY_SECRET", "POLYMARKET_CLOB_SECRET", "CLOB_SECRET", "POLY_PASSPHRASE", "POLYMARKET_CLOB_PASSPHRASE", "CLOB_PASSPHRASE",
     }
 
@@ -183,14 +185,14 @@ def _is_dangerous_key(key: str) -> bool:
 
 
 def _is_advanced_key(key: str) -> bool:
-    return _is_live_key(key) or key.startswith("POLYMARKET_MARKET_DATA_") or "SDK" in key or key.endswith("CONFIRMATION") or key.endswith("PHRASE") or key.startswith("POLYMARKET_AUTONOMOUS_")
+    return _is_live_key(key) or key.startswith("POLYMARKET_MARKET_DATA_") or key.startswith("POLYMARKET_V2_") or "SDK" in key or key.endswith("CONFIRMATION") or key.endswith("PHRASE") or key.startswith("POLYMARKET_AUTONOMOUS_")
 
 
 def _looks_bool(default: str, key: str) -> bool:
     if str(default).strip().lower() in TRUE_VALUES | FALSE_VALUES:
         return True
     suffixes = ("_ENABLED", "_REQUIRED", "_ONLY", "_READONLY", "_SECURE", "_MODE", "_FETCH_ENABLED", "_ALLOW_NETWORK", "_ALLOW_INTERNET")
-    if key.endswith(suffixes) and key not in {"APP_MODE", "POLYMARKET_LIVE_SDK_SUBMIT_METHOD", "POLYMARKET_LIVE_SDK_CANCEL_METHOD"}:
+    if key.endswith(suffixes) and key not in {"APP_MODE", "POLYMARKET_V2_TRADING_MODE", "POLYMARKET_LIVE_SDK_SUBMIT_METHOD", "POLYMARKET_LIVE_SDK_CANCEL_METHOD"}:
         return True
     return False
 
@@ -214,6 +216,8 @@ def _allowed_values_for(key: str) -> list[str]:
         "POLYMARKET_LIVE_SDK_FAMILY": ["current_py_clob_client", "manual_review_only", "unconfigured"],
         "POLYMARKET_LIVE_SDK_SUBMIT_METHOD": ["create_order+post_order", "post_order", "disabled"],
         "POLYMARKET_LIVE_SDK_CANCEL_METHOD": ["cancel", "disabled"],
+        "POLYMARKET_V2_TRADING_MODE": ["research_only", "paper", "live_read_only", "live_trading_armed"],
+        "POLYMARKET_V2_SDK_FAMILY": ["official_unified_python_sdk_then_clob_fallback", "official_unified_python_sdk", "py_clob_client_v2", "current_py_clob_client", "manual_review_only"],
         "POLYMARKET_TRAINING_ALLOWED_JOB_TYPES": ["baseline_training", "threshold_training", "momentum_training", "walk_forward_backtest", "dataset_quality_scan", "feature_build", "signal_generation_preview"],
         "POLYMARKET_AUTONOMOUS_STRATEGY_ALLOWLIST": ["manual", "baseline", "threshold", "momentum", "walk_forward"],
     }
@@ -230,6 +234,9 @@ def _describe_key(key: str, group: str) -> tuple[str, str]:
         "POLYMARKET_LIVE_ALLOW_REAL_NETWORK": ("Allows the live adapter to use real network paths when all other gates pass.", "Dangerous: keep disabled unless performing a deliberate live-readiness review."),
         "POLYMARKET_LIVE_ENABLE_SUBMIT": ("Enables the real submit gate when all other manual gates pass.", "Dangerous: this does not submit on its own but is execution-facing."),
         "POLYMARKET_LIVE_ENABLE_CANCEL": ("Enables the real cancel gate when all other manual gates pass.", "Dangerous: this does not cancel on its own but is execution-facing."),
+        "POLYMARKET_V2_TRADING_MODE": ("Selects the v2 control-plane mode.", "Use research_only or paper by default. live_trading_armed requires all backend gates, risk checks, human approval, and typed confirmation."),
+        "POLYMARKET_V2_REQUIRE_APPROVAL": ("Requires explicit human approval for v2 live order submission.", "Keep true. Turning it off is blocked by readiness/risk posture in this package."),
+        "POLYMARKET_V2_CONFIRMATION_PHRASE": ("Typed confirmation phrase required before a v2 live order submit/cancel.", "Default is LIVE ORDER APPROVED; do not use secrets as confirmation phrases."),
         "HOST": ("Network interface the local web server binds to.", "Use 127.0.0.1 for local-only. Use 0.0.0.0 only when you intend LAN access."),
         "ALLOWED_HOSTS": ("Comma-separated HTTP Host allowlist.", "Use * only for local/LAN demo convenience; fixed hostnames/IPs are safer."),
     }
@@ -951,7 +958,7 @@ def setup_runtime_status() -> dict[str, Any]:
     }
     deps_missing = [row for row in dependency_rows if not row.get("available")]
     status["sections"] = [
-        {"name": "App", "tone": "ok", "rows": [{"label": "App version", "detected": APP_VERSION, "expected": "1.9.0-real"}, {"label": "Package mode", "detected": status["package_mode"], "expected": "source_tree"}]},
+        {"name": "App", "tone": "ok", "rows": [{"label": "App version", "detected": APP_VERSION, "expected": "2.0.0-real"}, {"label": "Package mode", "detected": status["package_mode"], "expected": "source_tree"}]},
         {"name": "Python", "tone": "ok", "rows": [{"label": "Python version", "detected": status["python_version"], "expected": "3.10+"}, {"label": "Executable", "detected": status["python_executable"], "expected": "Project venv executable recommended"}]},
         {"name": "Virtual Environment", "tone": "ok" if venv_detected else "warning", "rows": [{"label": "Venv detected", "detected": "yes" if venv_detected else "no", "expected": "yes for local operator installs"}, {"label": "sys.prefix", "detected": sys.prefix, "expected": "Inside .venv when activated"}]},
         {"name": "Launch", "tone": "info", "rows": [{"label": "Expected launch", "detected": status["expected_launch_command"], "expected": "Copy and run manually; UI does not execute commands"}]},

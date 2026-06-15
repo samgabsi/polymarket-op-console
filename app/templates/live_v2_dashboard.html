@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Live Trading v2{% endblock %}
+{% block breadcrumbs %}<a href="/">Overview</a> / <span>Live Trading v2</span>{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">v2.0.0-real · Fully functional live trading control plane</p>
+    <h1>Live Trading v2</h1>
+    <p class="page-subtitle">End-to-end live market data, trade ticket preview, human approval, risk checks, guarded CLOB submit/cancel, positions/open-order reads, reconciliation, emergency controls, and audit exports.</p>
+    <div class="action-bar">
+      <a class="button-link" href="/v2-live">Dashboard</a>
+      <a class="button-link quiet" href="/v2-live/readiness">Live readiness</a>
+      <a class="button-link quiet" href="/v2-live/market-data">Market data</a>
+      <a class="button-link quiet" href="/v2-live/trade-ticket">Trade ticket</a>
+      <a class="button-link quiet" href="/v2-live/orders">Orders</a>
+      <a class="button-link quiet" href="/v2-live/positions">Positions</a>
+      <a class="button-link quiet" href="/v2-live/risk">Risk</a>
+      <a class="button-link quiet" href="/v2-live/audit">Audit</a>
+      <a class="button-link quiet" href="/v2-live/emergency">Emergency</a>
+    </div>
+  </div>
+</section>
+
+<div class="callout danger"><strong>Live-money guardrail:</strong> the submit endpoint requires armed mode, real-network gates, risk pass, human approval, warning acknowledgement, and the configured typed confirmation phrase. This page never bypasses backend gates.</div>
+
+<section class="metric-grid" aria-label="Live v2 summary">
+  <article class="metric-card"><strong>{{ status.overall_status }}</strong><span>Overall status</span></article>
+  <article class="metric-card"><strong>{{ status.ready_to_arm }}</strong><span>Ready to arm</span></article>
+  <article class="metric-card"><strong>{{ status.readiness.config.trading_mode }}</strong><span>Trading mode</span></article>
+  <article class="metric-card"><strong>{{ status.readiness.config.kill_switch_active }}</strong><span>Kill switch</span></article>
+  <article class="metric-card"><strong>{{ status.readiness.config.enable_submit }}</strong><span>Submit gate</span></article>
+  <article class="metric-card"><strong>{{ status.audit_summary.count }}</strong><span>v2 audit records</span></article>
+</section>
+
+{% if section in ["dashboard", "readiness"] %}
+<section class="content-card">
+  <div class="section-header"><div><h2>Live Trading Readiness</h2><p class="help-text">Pass/fail/unknown checks for environment, credentials, SDK/runtime, risk controls, live arming, and CLOB boundary.</p></div><a class="button-link quiet" href="/api/v2/live/readiness">JSON</a></div>
+  <div class="table-wrap"><table><thead><tr><th>Check</th><th>Status</th><th>Detail</th><th>Remediation</th></tr></thead><tbody>{% for row in status.readiness.checks %}<tr><td>{{ row.label }}</td><td><span class="status-badge tone-{{ row.status|status_tone }}">{{ row.status }}</span></td><td>{{ row.detail }}</td><td>{{ row.remediation }}</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="two-col">
+  <article class="content-card"><h2>Credential summary</h2><dl class="metadata-grid">{% for key, value in status.readiness.credentials.items() %}<div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl></article>
+  <article class="content-card"><h2>SDK/runtime summary</h2><dl class="metadata-grid">{% for key, value in status.readiness.sdk.items() %}<div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl></article>
+</section>
+{% endif %}
+
+{% if section in ["dashboard", "market_data"] %}
+<section class="content-card">
+  <h2>Market Discovery + Order Book</h2>
+  <p class="help-text">Use these API routes for live public market/order-book data. They do not require wallet credentials and do not submit orders.</p>
+  <div class="grid">
+    <article class="card"><h3>Search active markets</h3><p><code>/api/v2/live/markets?q=bitcoin&limit=25</code></p><a class="button-link quiet" href="/api/v2/live/markets?limit=25">Fetch top markets JSON</a></article>
+    <article class="card"><h3>Inspect an order book</h3><p>Call <code>/api/v2/live/orderbook/&lt;token_id&gt;</code> after selecting a CLOB token ID from Gamma market data.</p></article>
+  </div>
+</section>
+{% endif %}
+
+{% if section in ["dashboard", "trade_ticket", "risk"] %}
+<section class="content-card">
+  <h2>Trade Ticket Preview</h2>
+  <p class="help-text">POST JSON to <code>/api/v2/live/ticket/preview</code> to create a draft ticket, calculate notional/max loss, and run strict risk checks. POST the same payload to <code>/api/v2/live/order/submit</code> only after human approval, warning acknowledgement, and typed confirmation.</p>
+  <div class="table-wrap"><table><thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead><tbody>
+    <tr><td>market_id</td><td>Yes</td><td>Gamma market or condition identifier.</td></tr>
+    <tr><td>token_id</td><td>Yes</td><td>CLOB token/asset id for selected outcome.</td></tr>
+    <tr><td>side</td><td>Yes</td><td>BUY or SELL.</td></tr>
+    <tr><td>price</td><td>Yes</td><td>Strictly between 0 and 1.</td></tr>
+    <tr><td>size</td><td>Yes</td><td>Outcome shares.</td></tr>
+    <tr><td>order_type</td><td>No</td><td>GTC default; FOK/FAK require market-order permission.</td></tr>
+    <tr><td>human_approval</td><td>Submit only</td><td>Must be true when approval is required.</td></tr>
+    <tr><td>acknowledge_warnings</td><td>Submit only</td><td>Must be true when warnings exist.</td></tr>
+    <tr><td>confirmation_phrase</td><td>Submit only</td><td>Must exactly match configured phrase; default is LIVE ORDER APPROVED.</td></tr>
+  </tbody></table></div>
+</section>
+{% endif %}
+
+{% if section in ["dashboard", "orders", "positions"] %}
+<section class="two-col">
+  <article class="content-card"><h2>Open orders</h2><p class="help-text">Read-only live CLOB order lookup is gated by real-network/read-only settings.</p><a class="button-link quiet" href="/api/v2/live/orders/open">Open orders JSON</a></article>
+  <article class="content-card"><h2>Positions / balances</h2><p class="help-text">Positions use the configured public Data API wallet address and degrade safely if disabled or unavailable.</p><a class="button-link quiet" href="/api/v2/live/positions">Positions JSON</a></article>
+</section>
+<section class="content-card"><h2>Reconciliation</h2><p class="help-text">POST <code>/api/v2/live/reconcile</code> to compare local v2 audit records with remote open-order state when available.</p></section>
+{% endif %}
+
+{% if section in ["dashboard", "audit"] %}
+<section class="content-card">
+  <div class="section-header"><div><h2>Audit ledger</h2><p class="help-text">Local JSONL ledger with CSV export. Secrets are redacted before writing.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/audit">JSON</a><a class="button-link quiet" href="/api/v2/live/audit.csv">CSV</a></div></div>
+  <div class="table-wrap"><table><thead><tr><th>Time</th><th>Mode</th><th>Action</th><th>Status</th><th>Market</th><th>Token</th><th>Notional</th><th>Network</th></tr></thead><tbody>{% for row in audit_rows %}<tr><td>{{ row.timestamp }}</td><td>{{ row.mode }}</td><td>{{ row.action }}</td><td><span class="status-badge tone-{{ row.status|status_tone }}">{{ row.status }}</span></td><td>{{ row.market_id|compact_id }}</td><td>{{ row.token_id|compact_id }}</td><td>{{ row.notional }}</td><td>{{ row.network_attempted }}</td></tr>{% else %}<tr><td colspan="8" class="empty-state">No v2 audit records yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endif %}
+
+{% if section in ["dashboard", "emergency"] %}
+<section class="content-card">
+  <h2>Emergency Controls</h2>
+  <p class="help-text">POST <code>/api/v2/live/emergency</code> with action <code>force_read_only</code>, <code>disable_new_live_orders</code>, <code>record_kill_switch</code>, or <code>cancel_all_preview</code>. Runtime environment changes remain explicit and auditable through Settings/.env so hidden background mutation cannot arm or disarm trading unexpectedly.</p>
+  <div class="grid">
+    <article class="card"><h3>Force read-only</h3><p>Records an emergency read-only action and directs the operator to persist READ_ONLY=true and submit gates false.</p></article>
+    <article class="card"><h3>Disable new live orders</h3><p>Records a control action for turning off submit gates.</p></article>
+    <article class="card"><h3>Cancel all preview</h3><p>Preview-only safety action; targeted cancellation remains confirmed and audited.</p></article>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

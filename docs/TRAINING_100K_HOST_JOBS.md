@@ -1,6 +1,6 @@
 # 100K Dataset-Backed Host Training Jobs
 
-Version: 1.7.0-real
+Version: 1.9.0-real
 
 This guide covers the v1.7.0-real host training runner for local 100K-row dataset jobs.
 

@@ -1,8 +1,8 @@
 # Host Training Jobs
 
-Version: 1.7.0-real
+Version: 1.9.0-real
 
-Host training jobs let the operator start approved internal training, backtest, feature, dataset-quality, and signal-preview tasks on the local host. In v1.7.0-real these jobs are dataset-backed: they resolve local Training Lab datasets, Dataset Builder manifests, scoped/category dataset metadata, raw snapshots, normalized records, and custom CSV/JSON/JSONL files where available.
+Host training jobs let the operator start approved internal training, backtest, feature, dataset-quality, and signal-preview tasks on the local host. In v1.7.0-real and later these jobs are dataset-backed: they resolve local Training Lab datasets, Dataset Builder manifests, scoped/category dataset metadata, raw snapshots, normalized records, and custom CSV/JSON/JSONL files where available.
 
 Safety defaults:
 
@@ -72,7 +72,7 @@ Each artifact is SHA-256 hashed and recorded in the job ledger.
 
 ## Troubleshooting: why did this only process 100 rows?
 
-In v1.6.0 the internal host job completion path capped processing around 100 rows. v1.7.0 removes that placeholder cap. If a job still processes fewer than expected, check:
+In v1.6.0 the internal host job completion path capped processing around 100 rows. v1.7.0 and later remove that placeholder cap. If a job still processes fewer than expected, check:
 
 1. `/api/training/host-jobs/caps` for current row caps and hard cap.
 2. The dataset reference has readable local rows, not just metadata.
