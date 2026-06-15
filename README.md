@@ -30,7 +30,7 @@ Most trading systems focus on execution.
 Polymarket Gamma Starter focuses on decision quality.
 
 The goal is not to automate trading.
-
+Version 1.6.0-real ships with extensive safeguards that keep live execution disabled by default and require deliberate operator action before any live trading workflow can occur.
 The goal is to create a structured environment where operators can:
 
 1. Research markets
@@ -290,7 +290,8 @@ Audit
 
 # Autonomous Trading
 
-Autonomous live trading is NOT enabled in Version 1.0.1-real.
+Autonomous live trading is NOT enabled in Version 1.6.0-real.
+
 
 The platform supports:
 
