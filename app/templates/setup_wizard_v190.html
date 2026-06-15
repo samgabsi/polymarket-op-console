@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Setup Wizard{% endblock %}
+{% block breadcrumbs %}<a href="/">Overview</a> / <a href="/settings">Settings</a> / <span>Setup wizard</span>{% endblock %}
+{% block content %}
+<section class="page-header settings-hero">
+  <div>
+    <p class="eyebrow">v1.9.0 · STREAMLINED PRESET WIZARD</p>
+    <h1>Guided Setup Wizard</h1>
+    <p class="page-subtitle">Choose a clear operator preset, review what it enables and keeps disabled, preview the grouped .env diff, then apply only after confirmation.</p>
+  </div>
+</section>
+
+<div class="callout warning"><strong>Confirmation rule:</strong> dangerous live/execution-facing enabling values require this phrase: <code>{{ confirmation_phrase }}</code>. Safe presets still preview before saving.</div>
+<div class="settings-toolbar"><a class="button-link quiet" href="/settings">Settings hub</a><a class="button-link quiet" href="/settings/configuration">Configuration console</a><a class="button-link quiet" href="/setup/status">Runtime status</a><a class="button-link quiet" href="/api/config/presets">Presets JSON</a></div>
+
+{% if save_result %}
+<section class="content-card"><h2>Apply result</h2>{% if save_result.ok and save_result.saved %}<div class="callout ok"><strong>Preset applied.</strong> Backup: {{ save_result.backup_file or 'created new .env' }} · Audit: {{ save_result.audit_file }}. Restart the app for process-level values to take effect.</div>{% else %}<div class="callout danger"><strong>Preset not applied.</strong> Resolve blockers below.</div>{% endif %}</section>
+{% endif %}
+
+<form method="post" action="/setup/wizard" class="wizard-form">
+  <section class="content-card">
+    <div class="section-header"><div><h2>Choose an operator mode</h2><p class="help-text">Each preset is a constrained set of supported .env changes. The wizard does not submit orders, cancel orders, sign messages, touch wallets, run pip, or mutate venvs.</p></div></div>
+    <div class="preset-grid preset-grid-v190">
+      {% for preset in presets %}
+      <label class="preset-card preset-card-v190 {% if preset.preset_id == selected_preset_id %}selected{% endif %}">
+        <input type="radio" name="preset_id" value="{{ preset.preset_id }}" {% if preset.preset_id == selected_preset_id %}checked{% endif %}>
+        <span class="status-badge tone-{{ 'ok' if preset.safety_level in ['Safe','Safest'] else 'warning' }}">{{ preset.safety_level }}</span>
+        <strong>{{ preset.label }}</strong>
+        <span>{{ preset.description }}</span>
+        <small>{{ preset.recommended_use_case }}</small>
+        <div class="preset-badges">
+          {% if preset.lan_exposure_changes %}<span class="status-badge tone-warning">LAN changes</span>{% endif %}
+          {% if preset.internet_access_changes %}<span class="status-badge tone-info">internet/data</span>{% endif %}
+          {% if preset.host_training_changes %}<span class="status-badge tone-local">host training</span>{% endif %}
+          {% if preset.live_readiness_changes %}<span class="status-badge tone-danger">live-readiness</span>{% endif %}
+          {% if preset.live_trading_remains_disabled %}<span class="status-badge tone-ok">live disabled</span>{% else %}<span class="status-badge tone-danger">review live gates</span>{% endif %}
+          {% if preset.restart_required %}<span class="status-badge tone-warning">restart</span>{% endif %}
+        </div>
+        <details><summary>What changes?</summary><p class="muted small"><strong>Enables:</strong> {{ preset.enabled_keys|join(', ') or 'none' }}</p><p class="muted small"><strong>Keeps disabled:</strong> {{ preset.disabled_keys|join(', ') or 'none' }}</p></details>
+      </label>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="content-card save-panel">
+    <div><h2>Final review controls</h2><p class="help-text">Preview the preset diff first. Apply creates runtime-only backup and audit records. Check the box only after reviewing warnings and blockers.</p></div>
+    <label for="wizard-confirmation">Dangerous-change confirmation phrase<input id="wizard-confirmation" name="confirmation" type="text" placeholder="{{ confirmation_phrase }}" autocomplete="off"></label>
+    <label class="toggle-row"><input type="checkbox" name="review_ack" value="yes"> I will review the diff, warnings, blockers, restart-required keys, and backup notice before applying.</label>
+    <div class="action-bar"><button class="button-link" name="intent" value="preview" type="submit">Preview preset diff</button><button class="button-link danger-button" name="intent" value="apply" type="submit">Apply validated preset</button></div>
+  </section>
+</form>
+
+{% if diff_result %}
+<section class="content-card" id="preset-diff-preview">
+  <h2>Preset diff preview</h2>
+  {% if diff_result.validation.blockers %}<div class="callout danger"><strong>Blockers:</strong><ul>{% for item in diff_result.validation.blockers %}<li>{{ item }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if diff_result.validation.warnings %}<div class="callout warning"><strong>Warnings:</strong><ul>{% for item in diff_result.validation.warnings %}<li>{{ item }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if diff_result.diff_groups %}
+    {% for group_name, rows in diff_result.diff_groups.items() %}
+    <details class="diff-group" open><summary>{{ group_name|replace('_',' ')|title }} · {{ rows|length }}</summary><div class="table-wrap"><table><thead><tr><th>Setting</th><th>Old</th><th>New</th><th>Restart</th><th>Status</th></tr></thead><tbody>{% for row in rows %}<tr><td><strong>{{ row.label }}</strong><br><code>{{ row.key }}</code></td><td>{{ row.old_displayed_value or '(blank)' }}</td><td>{{ row.new_displayed_value or '(blank)' }}</td><td>{{ 'yes' if row.restart_required else 'no' }}</td><td>{% if row.blockers %}<span class="status-badge tone-danger">blocked</span>{% endif %}{% if row.warnings %}<span class="status-badge tone-warning">warning</span>{% endif %}{% if row.dangerous %}<span class="status-badge tone-danger">danger/live</span>{% endif %}</td></tr>{% endfor %}</tbody></table></div></details>
+    {% endfor %}
+  {% else %}<p class="empty-state">No changes in this preset.</p>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

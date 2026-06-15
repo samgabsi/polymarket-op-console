@@ -1,6 +1,21 @@
-# Setup Wizard v1.8.0-real
+# Setup Wizard v1.9.0-real
 
-The setup wizard at `/setup/wizard` offers safe presets for common operating modes. The wizard previews `.env` changes before writing and uses the same validation engine as the full configuration console.
+The setup wizard at `/setup/wizard` provides card-based presets for common operator modes.
+
+Each preset card shows:
+
+- preset name
+- plain-English description
+- safety level
+- recommended use case
+- enabled keys
+- disabled keys
+- LAN exposure impact
+- internet/data impact
+- host-training impact
+- live-readiness impact
+- whether live trading remains disabled
+- restart expectation
 
 ## Presets
 
@@ -14,10 +29,26 @@ The setup wizard at `/setup/wizard` offers safe presets for common operating mod
 - Live-readiness review mode
 - Manual live execution readiness mode
 
-Each preset explains what it enables, what it does not enable, whether LAN exposure is involved, whether host training jobs or internet ingestion are changed, and whether live-readiness gates are touched.
+## Final review
+
+The wizard requires a final review step with:
+
+- grouped diff preview
+- warnings
+- blockers
+- restart-required keys
+- backup notice
+- explicit review checkbox
+
+No preset is saved until the operator confirms and submits the apply action.
 
 ## 100K host training through the GUI
 
-Open `/setup/wizard`, select `100K host training mode`, preview the diff, and apply after validation. This preset sets local host training caps such as 100,000 max/default rows, a 1,000,000 hard cap, 5,000-row batches, runtime caps, and `TRAINING_ALLOW_LIVE_EXECUTION=false`.
+Open `/setup/wizard`, select `100K host training mode`, preview the diff, review warnings, and apply if the machine can safely handle local batch processing.
 
-Host training remains local and manual-review-only. It cannot place orders, cancel orders, sign messages, or touch wallets.
+This enables local host training jobs and row caps while preserving:
+
+```text
+TRAINING_OUTPUTS_MANUAL_REVIEW_ONLY=true
+TRAINING_ALLOW_LIVE_EXECUTION=false
+```

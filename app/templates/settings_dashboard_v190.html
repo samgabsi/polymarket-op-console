@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block breadcrumbs %}<a href="/">Overview</a> / <span>Settings</span>{% endblock %}
+{% block content %}
+{% set status = dashboard.status %}
+{% set features = status.feature_summary %}
+<section class="page-header settings-hero">
+  <div>
+    <p class="eyebrow">v1.9.0 · STREAMLINED SETTINGS HUB</p>
+    <h1>Settings & Configuration</h1>
+    <p class="page-subtitle">A guided hub for setup, environment, runtime status, presets, safe .env editing, exports, audits, and safety-gated controls. Live execution remains disabled unless explicitly gated elsewhere by backend checks.</p>
+  </div>
+  <div class="settings-health tone-{{ status.health.tone }}">
+    <span>Configuration health</span>
+    <strong>{{ status.health.state }}</strong>
+    <small>{{ status.health.detail }}</small>
+  </div>
+</section>
+
+<section class="metric-grid settings-summary-grid" aria-label="Settings summary">
+  <article class="metric-card"><strong>{{ status.app_version }}</strong><span>App version</span></article>
+  <article class="metric-card"><strong>{{ 'enabled' if features.host_training_enabled else 'disabled' }}</strong><span>Host training</span></article>
+  <article class="metric-card"><strong>{{ 'enabled' if features.internet_ingestion_enabled else 'disabled' }}</strong><span>Internet ingestion</span></article>
+  <article class="metric-card"><strong>{{ 'enabled' if features.paper_trading_enabled else 'disabled' }}</strong><span>Paper mode</span></article>
+  <article class="metric-card"><strong>{{ 'enabled' if features.live_trading_enabled else 'disabled' }}</strong><span>Live trading</span></article>
+  <article class="metric-card"><strong>{{ features.lan_exposure_status }}</strong><span>LAN exposure</span></article>
+  <article class="metric-card"><strong>{{ status.restart_required_count }}</strong><span>Restart-required differences</span></article>
+  <article class="metric-card"><strong>{{ status.changed_from_default_count }}</strong><span>Changed from defaults</span></article>
+  <article class="metric-card"><strong>{{ status.warning_count }}</strong><span>Warnings</span></article>
+  <article class="metric-card"><strong>{{ status.blocker_count }}</strong><span>Blockers</span></article>
+  <article class="metric-card"><strong>{{ status.secret_missing_count }}</strong><span>Missing secret values</span></article>
+  <article class="metric-card"><strong>{{ status.last_config_save_timestamp or 'none' }}</strong><span>Last config save</span></article>
+</section>
+
+<section class="content-card recommended-panel">
+  <div class="section-header">
+    <div>
+      <h2>Recommended setup actions</h2>
+      <p class="help-text">Recommendations are explanatory only. The app will not make automatic changes.</p>
+    </div>
+    <a class="button-link quiet" href="/setup/wizard">Open setup wizard</a>
+  </div>
+  {% if status.recommendations %}
+  <div class="recommendation-grid">
+    {% for rec in status.recommendations %}
+    <article class="recommendation-card tone-{{ rec.tone }}">
+      <h3>{{ rec.title }}</h3>
+      <p>{{ rec.message }}</p>
+      <a class="button-link quiet" href="{{ rec.href }}">Review</a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><h3>No recommendations right now</h3><p>No blockers or major warnings were detected. Live trading and autonomous execution remain off by default.</p></div>
+  {% endif %}
+</section>
+
+<section class="content-card">
+  <div class="section-header">
+    <div>
+      <h2>Configuration tasks</h2>
+      <p class="help-text">Start with Simple Mode for common settings. Use Advanced Mode for every schema-backed key, dangerous controls, and detailed validation metadata.</p>
+    </div>
+  </div>
+  <div class="settings-link-grid">
+    {% for link in dashboard.quick_links %}
+    <a class="settings-link-card" href="{{ link.href }}">
+      <strong>{{ link.label }}</strong>
+      <span>{{ link.description }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="content-card" id="config-audit">
+  <h2>Last save / backup references</h2>
+  {% if status.last_config_save_timestamp or status.last_config_backup_reference %}
+  <dl class="metadata-grid">
+    <div><dt>Last save timestamp</dt><dd>{{ status.last_config_save_timestamp or 'none' }}</dd></div>
+    <div><dt>Last audit</dt><dd><code>{{ status.last_config_audit_reference or 'none' }}</code></dd></div>
+    <div><dt>Last backup</dt><dd><code>{{ status.last_config_backup_reference or 'none' }}</code></dd></div>
+    <div><dt>Audit API</dt><dd><a href="/api/config/audit-history">/api/config/audit-history</a></dd></div>
+  </dl>
+  {% else %}
+  <div class="empty-state"><h3>No config saves yet</h3><p>Use the setup wizard or configuration console to preview and save a validated .env change. Runtime backups and audits remain outside release ZIPs.</p></div>
+  {% endif %}
+</section>
+
+<section class="content-card">
+  <h2>Safety reminder</h2>
+  <div class="callout ok"><strong>Manual review boundary preserved.</strong> Training outputs and signal previews remain <code>manual_review_only=true</code> and <code>can_live_trade=false</code>. This settings UX does not submit orders, cancel orders, sign messages, touch wallets, run pip, mutate venvs, or execute arbitrary shell commands.</div>
+</section>
+{% endblock %}

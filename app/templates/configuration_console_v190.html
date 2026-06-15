@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% block title %}Configuration Console{% endblock %}
+{% block breadcrumbs %}<a href="/">Overview</a> / <a href="/settings">Settings</a> / <span>Configuration console</span>{% endblock %}
+{% block content %}
+<section class="page-header settings-hero">
+  <div>
+    <p class="eyebrow">v1.9.0 · STREAMLINED CONFIGURATION CONSOLE</p>
+    <h1>Configuration Console</h1>
+    <p class="page-subtitle">Search, filter, validate, diff, and save supported .env values through guided controls. Simple Mode shows common operator settings; Advanced Mode exposes every schema-backed key.</p>
+  </div>
+  <div class="settings-health tone-{{ status.health.tone }}">
+    <span>Health</span>
+    <strong>{{ status.health.state }}</strong>
+    <small>{{ status.warning_count }} warnings · {{ status.blocker_count }} blockers</small>
+  </div>
+</section>
+
+<div class="callout warning"><strong>Safety posture:</strong> This UI does not execute shell commands, mutate the venv, expose full secrets, bypass live gates, or bypass manual review. Secrets remain masked in previews, exports, audits, and logs.</div>
+
+<div class="settings-toolbar" role="navigation" aria-label="Configuration actions">
+  <a class="button-link quiet" href="/settings">Settings hub</a>
+  <a class="button-link quiet" href="/setup/wizard">Setup wizard</a>
+  <a class="button-link quiet" href="/setup/status">Runtime status</a>
+  <a class="button-link quiet" href="/api/config/export-sanitized">Sanitized export</a>
+  <a class="button-link quiet" href="/api/config/schema">Schema JSON</a>
+</div>
+
+{% if not status.env_present %}
+<div class="empty-state warning-state">
+  <h3>No .env file exists yet</h3>
+  <p>The app is running from defaults and process environment values. Use the setup wizard to create a validated .env file, or preview/save selected changes below.</p>
+  <a class="button-link" href="/setup/wizard">Open setup wizard</a>
+</div>
+{% endif %}
+
+{% if save_result %}
+<section class="content-card">
+  <h2>Save result</h2>
+  {% if save_result.ok and save_result.saved %}
+    <div class="callout ok"><strong>Saved.</strong> Backup: {{ save_result.backup_file or 'created new .env' }} · Audit: {{ save_result.audit_file }}. Restart the app for process-level values to take effect.</div>
+  {% else %}
+    <div class="callout danger"><strong>Not saved.</strong> Resolve blockers below and preview again.</div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if diff_result %}
+<section class="content-card" id="diff-preview">
+  <h2>Grouped diff preview</h2>
+  {% if diff_result.validation.blockers %}<div class="callout danger"><strong>Blockers:</strong><ul>{% for item in diff_result.validation.blockers %}<li>{{ item }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if diff_result.validation.warnings %}<div class="callout warning"><strong>Warnings:</strong><ul>{% for item in diff_result.validation.warnings %}<li>{{ item }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if diff_result.diff_groups %}
+    {% for group_name, rows in diff_result.diff_groups.items() %}
+    <details class="diff-group" open>
+      <summary>{{ group_name|replace('_',' ')|title }} · {{ rows|length }}</summary>
+      <div class="table-wrap"><table><thead><tr><th>Setting</th><th>Old</th><th>New</th><th>Source</th><th>Restart</th><th>Status</th></tr></thead><tbody>
+      {% for row in rows %}
+      <tr>
+        <td><strong>{{ row.label }}</strong><br><code>{{ row.key }}</code></td>
+        <td>{{ row.old_displayed_value or '(blank)' }}</td>
+        <td>{{ row.new_displayed_value or '(blank)' }}</td>
+        <td>{{ row.source }}</td>
+        <td>{% if row.restart_required %}<span class="status-badge tone-warning">restart</span>{% else %}<span class="status-badge tone-ok">active</span>{% endif %}</td>
+        <td>{% if row.blockers %}<span class="status-badge tone-danger">blocked</span>{% endif %}{% if row.warnings %}<span class="status-badge tone-warning">warning</span>{% endif %}{% if row.dangerous %}<span class="status-badge tone-danger">danger/live</span>{% endif %}{% if row.secret %}<span class="status-badge tone-neutral">secret</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody></table></div>
+    </details>
+    {% endfor %}
+  {% else %}
+    <p class="empty-state">No changes selected.</p>
+  {% endif %}
+</section>
+{% endif %}
+
+<section class="content-card recommended-panel">
+  <div class="section-header">
+    <div>
+      <h2>Recommended setup</h2>
+      <p class="help-text">Suggestions link directly to safe presets or filtered settings. Nothing changes automatically.</p>
+    </div>
+  </div>
+  <div class="recommendation-grid">
+    {% for rec in status.recommendations %}
+    <article class="recommendation-card tone-{{ rec.tone }}"><h3>{{ rec.title }}</h3><p>{{ rec.message }}</p><a class="button-link quiet" href="{{ rec.href }}">Review</a></article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="content-card config-controls" aria-label="Configuration filters">
+  <div class="section-header">
+    <div>
+      <h2>Find settings</h2>
+      <p class="help-text">Search by env key, label, description, or help text. Simple Mode hides advanced/dangerous settings by default.</p>
+    </div>
+    <div class="segmented-control" role="group" aria-label="View mode">
+      <button type="button" class="mode-button" data-mode-button="simple">Simple Mode</button>
+      <button type="button" class="mode-button" data-mode-button="advanced">Advanced Mode</button>
+    </div>
+  </div>
+  <div class="filter-grid">
+    <label for="config-search">Search<input id="config-search" type="search" placeholder="Search env key, label, help text"></label>
+    <label for="config-category">Category<select id="config-category"><option value="">All categories</option>{% for group in status.ux_group_order %}<option value="{{ group }}">{{ group }}</option>{% endfor %}</select></label>
+    <label for="config-filter">Filter<select id="config-filter"><option value="">All settings</option><option value="changed">Changed from default</option><option value="restart">Restart required</option><option value="warnings">Warnings</option><option value="blockers">Blockers</option><option value="secret">Secrets</option><option value="advanced">Advanced</option><option value="dangerous">Dangerous</option><option value="live">Live-related</option><option value="training">Training-related</option><option value="lan">LAN-related</option></select></label>
+  </div>
+</section>
+
+<form method="post" action="/settings/configuration" class="settings-form">
+  <section class="content-card save-panel" id="save-controls">
+    <div>
+      <h2>Preview and save</h2>
+      <p class="help-text">Preview first. Saving creates a timestamped runtime-only backup and audit record. Restart the app for process-level values to take effect.</p>
+    </div>
+    <label for="confirmation">Dangerous-change confirmation phrase<input id="confirmation" name="confirmation" type="text" placeholder="{{ confirmation_phrase }}" autocomplete="off"></label>
+    <div class="action-bar"><button class="button-link" type="submit" name="intent" value="preview">Preview diff</button><button class="button-link danger-button" type="submit" name="intent" value="save">Save validated .env changes</button></div>
+  </section>
+
+  <div class="settings-layout">
+    <aside class="settings-side-nav" aria-label="Settings categories">
+      <strong>Quick navigation</strong>
+      {% for group in status.ux_group_order %}<a href="#ux-{{ group|replace(' ','-')|lower }}">{{ group }}</a>{% endfor %}
+    </aside>
+    <div class="settings-main-list">
+      {% for group, options in status.ux_groups.items() %}
+      <section class="content-card config-group" id="ux-{{ group|replace(' ','-')|lower }}" data-group-section="{{ group }}">
+        <div class="section-header"><div><h2>{{ group }}</h2><p class="help-text">{{ options|length }} setting{{ '' if options|length == 1 else 's' }}</p></div></div>
+        <div class="setting-list">
+        {% for option in options %}
+          <article class="setting-row" id="{{ option.anchor }}" data-search="{{ option.search_text }}" data-category="{{ option.ux_group }}" data-advanced="{{ 'true' if option.advanced or option.dangerous else 'false' }}" data-changed="{{ 'true' if option.changed_from_default else 'false' }}" data-restart="{{ 'true' if option.saved_not_active or option.differs_from_saved_env else 'false' }}" data-warnings="{{ 'true' if option.warning_messages else 'false' }}" data-blockers="{{ 'true' if option.blocker_messages else 'false' }}" data-secret="{{ 'true' if option.secret else 'false' }}" data-dangerous="{{ 'true' if option.dangerous else 'false' }}" data-live="{{ 'true' if option.affects_live_trading else 'false' }}" data-training="{{ 'true' if option.affects_training_jobs else 'false' }}" data-lan="{{ 'true' if option.affects_lan_exposure else 'false' }}">
+            <div class="setting-row-main">
+              <div class="setting-title-block">
+                <h3>{{ option.label }}</h3>
+                <div class="setting-key-line"><code>{{ option.key }}</code><button type="button" class="tiny-button" data-copy="{{ option.key }}">Copy key</button></div>
+                <p class="help-text">{{ option.description }}</p>
+              </div>
+              <div class="setting-control-block">
+                {% if option.control == 'toggle' %}
+                  <input type="hidden" name="cfg__{{ option.key }}" value="false">
+                  <label class="toggle-row"><input id="cfg-{{ option.key }}" type="checkbox" name="cfg__{{ option.key }}" value="true" {% if option.current_value in ['true','1','yes','on'] %}checked{% endif %}> Enabled / true</label>
+                {% elif option.control == 'radio' %}
+                  <div class="radio-stack" role="radiogroup" aria-label="{{ option.label }}">
+                  {% for allowed in option.allowed_values %}<label><input type="radio" name="cfg__{{ option.key }}" value="{{ allowed }}" {% if option.current_value == allowed %}checked{% endif %}> {{ allowed }}</label>{% endfor %}
+                  </div>
+                {% elif option.control == 'select' %}
+                  <label class="visually-hidden" for="cfg-{{ option.key }}">{{ option.label }}</label><select id="cfg-{{ option.key }}" name="cfg__{{ option.key }}">{% for allowed in option.allowed_values %}<option value="{{ allowed }}" {% if option.current_value == allowed %}selected{% endif %}>{{ allowed }}</option>{% endfor %}</select>
+                {% elif option.control == 'multi_select' %}
+                  {% set selected_values = option.current_value.split(',') if option.current_value else [] %}
+                  <div class="checkbox-grid" aria-label="{{ option.label }}">{% for allowed in option.allowed_values %}<label><input type="checkbox" name="cfg__{{ option.key }}" value="{{ allowed }}" {% if allowed in selected_values %}checked{% endif %}> {{ allowed }}</label>{% endfor %}</div>
+                {% elif option.control == 'number' %}
+                  <label class="visually-hidden" for="cfg-{{ option.key }}">{{ option.label }}</label><input id="cfg-{{ option.key }}" type="number" name="cfg__{{ option.key }}" value="{{ option.current_value }}" {% if option.min_value is not none %}min="{{ option.min_value }}"{% endif %} {% if option.max_value is not none %}max="{{ option.max_value }}"{% endif %} {% if option.step is not none %}step="{{ option.step }}"{% endif %}>
+                {% elif option.control == 'masked_secret' %}
+                  <label class="visually-hidden" for="cfg-{{ option.key }}">{{ option.label }}</label><input id="cfg-{{ option.key }}" type="password" name="cfg__{{ option.key }}" value="" placeholder="{{ option.current_value or 'blank / not set' }}" autocomplete="off"><p class="muted small">Leave blank to preserve the current saved secret value.</p>
+                {% else %}
+                  <label class="visually-hidden" for="cfg-{{ option.key }}">{{ option.label }}</label><input id="cfg-{{ option.key }}" type="text" name="cfg__{{ option.key }}" value="{{ option.current_value }}" placeholder="{{ option.default_value }}">
+                {% endif %}
+              </div>
+            </div>
+            <div class="config-flags">
+              <span class="status-badge tone-neutral">{{ option.control }}</span>
+              {% if option.changed_from_default %}<span class="status-badge tone-info">changed</span>{% else %}<span class="status-badge tone-neutral">default</span>{% endif %}
+              {% if option.saved_not_active %}<span class="status-badge tone-warning">saved not active</span>{% endif %}
+              {% if option.overridden_by_process_environment %}<span class="status-badge tone-warning">process override</span>{% endif %}
+              {% if option.restart_required %}<span class="status-badge tone-warning">restart</span>{% endif %}
+              {% if option.secret %}<span class="status-badge tone-neutral">secret</span>{% endif %}
+              {% if option.advanced %}<span class="status-badge tone-info">advanced</span>{% endif %}
+              {% if option.dangerous %}<span class="status-badge tone-danger">dangerous</span>{% endif %}
+              {% if option.affects_live_trading %}<span class="status-badge tone-danger">live-related</span>{% endif %}
+              {% if option.affects_training_jobs %}<span class="status-badge tone-local">training/data</span>{% endif %}
+              {% if option.affects_lan_exposure %}<span class="status-badge tone-warning">LAN</span>{% endif %}
+            </div>
+            <details class="setting-details">
+              <summary>Details, validation, and reset value</summary>
+              <dl class="metadata-grid">
+                <div><dt>Current effective value</dt><dd>{{ option.current_value or '(blank)' }}</dd></div>
+                <div><dt>Saved .env value</dt><dd>{{ option.saved_env_value or '(blank)' }}</dd></div>
+                <div><dt>Default value</dt><dd>{{ option.default_value or '(blank)' }}</dd></div>
+                <div><dt>Source</dt><dd>{{ option.source }}</dd></div>
+              </dl>
+              <p class="help-text">{{ option.help_text }}</p>
+              <ul>{% for rule in option.validation_rules %}<li>{{ rule }}</li>{% endfor %}{% for warning in option.warning_messages %}<li class="warning-text">{{ warning }}</li>{% endfor %}{% for blocker in option.blocker_messages %}<li class="danger-text">{{ blocker }}</li>{% endfor %}</ul>
+            </details>
+          </article>
+        {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+      <div id="no-settings-match" class="empty-state" hidden><h3>No settings match</h3><p>Clear search or filters, or switch to Advanced Mode.</p></div>
+    </div>
+  </div>
+</form>
+
+<script>
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  let mode = params.get('mode') || 'simple';
+  const initialFilter = params.get('filter') || '';
+  const search = document.getElementById('config-search');
+  const category = document.getElementById('config-category');
+  const filter = document.getElementById('config-filter');
+  const rows = Array.from(document.querySelectorAll('.setting-row'));
+  const sections = Array.from(document.querySelectorAll('[data-group-section]'));
+  const empty = document.getElementById('no-settings-match');
+  const modeButtons = Array.from(document.querySelectorAll('[data-mode-button]'));
+  if (filter && initialFilter) filter.value = initialFilter;
+  function setMode(next){ mode = next; modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.modeButton === mode)); applyFilters(); }
+  function rowMatches(row){
+    const term = (search && search.value || '').trim().toLowerCase();
+    const cat = category && category.value || '';
+    const f = filter && filter.value || '';
+    if (mode === 'simple' && row.dataset.advanced === 'true') return false;
+    if (term && !row.dataset.search.includes(term)) return false;
+    if (cat && row.dataset.category !== cat) return false;
+    if (f && row.dataset[f] !== 'true') return false;
+    return true;
+  }
+  function applyFilters(){
+    let visible = 0;
+    rows.forEach(row => { const show = rowMatches(row); row.hidden = !show; if (show) visible++; });
+    sections.forEach(section => { const hasVisible = Array.from(section.querySelectorAll('.setting-row')).some(row => !row.hidden); section.hidden = !hasVisible; });
+    if (empty) empty.hidden = visible !== 0;
+  }
+  [search, category, filter].forEach(el => el && el.addEventListener('input', applyFilters));
+  modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.modeButton)));
+  document.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', async () => { try { await navigator.clipboard.writeText(btn.dataset.copy); btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy key', 1200); } catch (e) { btn.textContent = btn.dataset.copy; } }));
+  setMode(mode === 'advanced' ? 'advanced' : 'simple');
+})();
+</script>
+{% endblock %}

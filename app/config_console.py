@@ -396,19 +396,192 @@ def mask_value(key: str, value: Any, *, secret: bool | None = None) -> str:
     return f"***masked***:{digest}"
 
 
+
+UX_GROUP_ORDER = [
+    "Start Here",
+    "Safe Operating Mode",
+    "Server & Access",
+    "Authentication",
+    "Data & Ingestion",
+    "Datasets",
+    "Training & Backtesting",
+    "Signal Preview",
+    "Paper Trading",
+    "Live-Readiness",
+    "Risk Controls",
+    "Runtime & Storage",
+    "Logs, Audits & Exports",
+    "UI Preferences",
+    "Advanced",
+]
+
+
+def _ux_group_for_option(option: ConfigOption) -> str:
+    key = option.key
+    group = option.group
+    if key in {"APP_MODE", "READ_ONLY"}:
+        return "Safe Operating Mode"
+    if key in {"HOST", "PORT", "APP_RELOAD", "ALLOWED_HOSTS", "SECURITY_HEADERS_ENABLED", "SESSION_COOKIE_SECURE", "SESSION_COOKIE_SAMESITE"}:
+        return "Server & Access"
+    if option.secret or key in {"POLY_ADDRESS", "POLYMARKET_WALLET_ADDRESS", "POLYMARKET_FUNDER_ADDRESS", "POLYMARKET_CHAIN_ID", "POLYMARKET_SIGNATURE_TYPE"}:
+        return "Authentication"
+    if key.startswith("PAPER_"):
+        return "Paper Trading"
+    if "TRAINING" in key:
+        if "SIGNAL" in key:
+            return "Signal Preview"
+        return "Training & Backtesting"
+    if key.startswith("POLYMARKET_DATA_") or key in {"GAMMA_BASE_URL", "CLOB_BASE_URL", "REQUEST_TIMEOUT_SECONDS", "SOURCE_CHECK_TIMEOUT", "DEFAULT_LIMIT"}:
+        if any(token in key for token in ["DATASET", "BACKFILL", "SPLIT", "LABEL", "NORMALIZED"]):
+            return "Datasets"
+        return "Data & Ingestion"
+    if option.affects_live_trading:
+        if option.dangerous or "SUBMIT" in key or "CANCEL" in key or "AUTH" in key or "KILL" in key or "ORDER" in key:
+            return "Risk Controls"
+        return "Live-Readiness"
+    if key.endswith("_DIR") or key.endswith("_PATH") or key in {"SNAPSHOT_DIR", "LATEST_PATH"}:
+        return "Runtime & Storage"
+    if "LOG" in key or "AUDIT" in key or "EXPORT" in key:
+        return "Logs, Audits & Exports"
+    if group in {"First-run setup"}:
+        return "Start Here"
+    return "Advanced" if option.advanced else group
+
+
+def _audit_files() -> list[Path]:
+    try:
+        return sorted(CONFIG_AUDIT_DIR.glob("config_audit_*.json"), reverse=True)
+    except Exception:
+        return []
+
+
+def _backup_files() -> list[Path]:
+    try:
+        return sorted(CONFIG_BACKUP_DIR.glob("env_backup_*.env"), reverse=True)
+    except Exception:
+        return []
+
+
+def _latest_audit_summary() -> dict[str, str]:
+    files = _audit_files()
+    if not files:
+        return {"timestamp": "", "path": "", "changed_keys": ""}
+    path = files[0]
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return {
+            "timestamp": str(data.get("timestamp", "")),
+            "path": str(path),
+            "changed_keys": ",".join(data.get("changed_keys", [])[:8]),
+        }
+    except Exception:
+        return {"timestamp": "", "path": str(path), "changed_keys": ""}
+
+
+def _settings_bool(values: dict[str, str], *keys: str) -> bool:
+    for key in keys:
+        if key in values:
+            return _bool_text(values.get(key))
+    return False
+
+
+def _feature_summary_from_values(values: dict[str, str]) -> dict[str, Any]:
+    host = values.get("HOST", "")
+    allowed_hosts = values.get("ALLOWED_HOSTS", "")
+    lan_exposed = host == "0.0.0.0" or allowed_hosts == "*"
+    live_enabled = _settings_bool(values, "LIVE_TRADING_ENABLED", "POLYMARKET_LIVE_MODE", "POLYMARKET_LIVE_ENABLE_SUBMIT", "POLYMARKET_LIVE_ENABLE_CANCEL", "POLYMARKET_LIVE_ENABLE_AUTONOMOUS")
+    return {
+        "host_training_enabled": _settings_bool(values, "POLYMARKET_TRAINING_HOST_JOBS_ENABLED"),
+        "internet_ingestion_enabled": _settings_bool(values, "POLYMARKET_DATA_ALLOW_INTERNET", "POLYMARKET_DATA_ALLOW_NETWORK"),
+        "paper_trading_enabled": values.get("APP_MODE", "") == "paper" or not _bool_text(values.get("READ_ONLY", "true")),
+        "live_trading_enabled": live_enabled,
+        "lan_exposed": lan_exposed,
+        "lan_exposure_status": "LAN exposed" if lan_exposed else "local-only / restricted",
+        "training_max_rows": values.get("POLYMARKET_TRAINING_MAX_ROWS", ""),
+        "training_batch_size": values.get("POLYMARKET_TRAINING_BATCH_SIZE", ""),
+    }
+
+
+def _compute_health(*, blockers: list[str], warnings: list[str], restart_required_count: int, feature_summary: dict[str, Any], dangerous_enabled_count: int) -> dict[str, str]:
+    if blockers:
+        return {"state": "Blocked", "tone": "danger", "detail": "One or more configuration blockers must be resolved before saving or using related features."}
+    if restart_required_count:
+        return {"state": "Restart Required", "tone": "warning", "detail": "Saved .env or process overrides differ from the running process; restart to activate saved values."}
+    if dangerous_enabled_count:
+        return {"state": "Advanced / Dangerous Values Present", "tone": "danger", "detail": "Execution-facing or dangerous values are enabled. Backend gates still remain fail-closed."}
+    if warnings or feature_summary.get("lan_exposed"):
+        return {"state": "Needs Attention", "tone": "warning", "detail": "Review warnings, LAN exposure, missing values, or advanced settings before operating."}
+    return {"state": "Safe", "tone": "ok", "detail": "No blockers detected. Live trading and autonomous execution remain disabled by default."}
+
+
+def _recommendations(status: dict[str, Any], feature_summary: dict[str, Any], warnings: list[str], blockers: list[str]) -> list[dict[str, str]]:
+    recs: list[dict[str, str]] = []
+    if not status.get("env_present"):
+        recs.append({"tone": "warning", "title": "No .env file found", "message": "Use the setup wizard to generate a validated local .env file before relying on saved settings.", "href": "/setup/wizard"})
+    if blockers:
+        recs.append({"tone": "danger", "title": "Configuration blockers detected", "message": "Open Advanced Mode, review blockers, and preview the diff before saving.", "href": "/settings/configuration?mode=advanced&filter=blockers"})
+    if not feature_summary.get("host_training_enabled"):
+        recs.append({"tone": "info", "title": "Host training jobs are disabled", "message": "Enable only when you want local dataset-backed training runs. Signal previews remain manual-review-only.", "href": "/setup/wizard?preset_id=host_training_100k_mode"})
+    else:
+        try:
+            max_rows = int(float(str(feature_summary.get("training_max_rows") or "0") or 0))
+        except Exception:
+            max_rows = 0
+        if max_rows < 100000:
+            recs.append({"tone": "warning", "title": "Training cap below 100K", "message": "Use the 100K Host Training preset if this machine can handle local batch processing.", "href": "/setup/wizard?preset_id=host_training_100k_mode"})
+    if feature_summary.get("lan_exposed"):
+        recs.append({"tone": "warning", "title": "LAN exposure detected", "message": "Confirm HOST and ALLOWED_HOSTS are intentional for your local network.", "href": "/settings/configuration?mode=advanced&filter=lan"})
+    if not feature_summary.get("live_trading_enabled"):
+        recs.append({"tone": "ok", "title": "Live trading remains disabled", "message": "This is the safest default while using data, training, backtesting, and signal preview tools.", "href": "/settings"})
+    if warnings and not blockers:
+        recs.append({"tone": "warning", "title": "Warnings need review", "message": "Warnings are not blockers, but they should be understood before saving or running new modes.", "href": "/settings/configuration?mode=advanced&filter=warnings"})
+    return recs[:6]
+
 def config_status() -> dict[str, Any]:
     defaults = _example_values()
     dotenv = _dot_env_values()
+    effective_values: dict[str, str] = {}
     options = []
     grouped: dict[str, list[dict[str, Any]]] = {}
+    ux_groups: dict[str, list[dict[str, Any]]] = {name: [] for name in UX_GROUP_ORDER}
     warnings: list[str] = []
     blockers: list[str] = []
+    changed_from_default_count = 0
+    restart_required_count = 0
+    process_override_count = 0
+    secret_missing_count = 0
+    advanced_count = 0
+    dangerous_count = 0
+    dangerous_enabled_count = 0
+
     for option in build_config_schema():
         effective = _effective_value(option.key, dotenv, defaults)
         saved = dotenv.get(option.key, "")
+        default = defaults.get(option.key, option.default_value)
         source = _source_for(option.key, dotenv, defaults)
+        differs_from_saved = option.key in os.environ and option.key in dotenv and os.environ.get(option.key, "") != dotenv.get(option.key, "")
+        changed_from_default = effective != default
+        using_default = source in {".env.example_default", "unset"} and effective == default
+        missing_required = option.secret and not effective and (option.affects_live_trading or option.key in {"OPENAI_API_KEY", "NEWS_API_KEY"})
+        saved_not_active = differs_from_saved
         displayed = mask_value(option.key, effective, secret=option.secret)
         saved_displayed = mask_value(option.key, saved, secret=option.secret)
+        effective_values[option.key] = effective
+        if changed_from_default:
+            changed_from_default_count += 1
+        if saved_not_active:
+            restart_required_count += 1
+        if source == "process_environment":
+            process_override_count += 1
+        if missing_required:
+            secret_missing_count += 1
+        if option.advanced:
+            advanced_count += 1
+        if option.dangerous:
+            dangerous_count += 1
+            if _bool_text(effective):
+                dangerous_enabled_count += 1
+        ux_group = _ux_group_for_option(option)
         item = asdict(option)
         item.update(
             {
@@ -417,16 +590,32 @@ def config_status() -> dict[str, Any]:
                 "saved_env_value": saved_displayed,
                 "raw_effective_value_present": bool(effective),
                 "source": source,
-                "differs_from_saved_env": option.key in os.environ and option.key in dotenv and os.environ.get(option.key, "") != dotenv.get(option.key, ""),
+                "differs_from_saved_env": differs_from_saved,
+                "changed_from_default": changed_from_default,
+                "using_default": using_default,
+                "saved_not_active": saved_not_active,
+                "overridden_by_process_environment": source == "process_environment",
+                "missing_required": missing_required,
+                "invalid_saved_value": False,
+                "ux_group": ux_group,
                 "anchor": option.key.lower(),
+                "search_text": f"{option.key} {option.label} {option.description} {option.help_text} {option.group} {ux_group}".lower(),
             }
         )
         options.append(item)
         grouped.setdefault(option.group, []).append(item)
+        ux_groups.setdefault(ux_group, []).append(item)
+
+    # Preserve configured UX group order while including any legacy groups not mapped above.
+    ux_groups = {key: value for key, value in ux_groups.items() if value} | {key: value for key, value in ux_groups.items() if key not in UX_GROUP_ORDER and value}
     validation = validate_config_values({})
     warnings.extend(validation.get("warnings", []))
     blockers.extend(validation.get("blockers", []))
-    return {
+    feature_summary = _feature_summary_from_values(effective_values)
+    backup_files = _backup_files()
+    latest_audit = _latest_audit_summary()
+    health = _compute_health(blockers=blockers, warnings=warnings, restart_required_count=restart_required_count, feature_summary=feature_summary, dangerous_enabled_count=dangerous_enabled_count)
+    base_status = {
         "app_version": APP_VERSION,
         "env_path": str(ENV_PATH),
         "env_present": ENV_PATH.exists(),
@@ -437,13 +626,30 @@ def config_status() -> dict[str, Any]:
         "confirmation_phrase": CONFIG_CONFIRMATION_PHRASE,
         "option_count": len(options),
         "groups": grouped,
+        "ux_groups": ux_groups,
+        "ux_group_order": list(ux_groups),
         "options": options,
-        "warnings": warnings,
-        "blockers": blockers,
+        "warnings": sorted(set(warnings)),
+        "blockers": sorted(set(blockers)),
+        "warning_count": len(set(warnings)),
+        "blocker_count": len(set(blockers)),
+        "changed_from_default_count": changed_from_default_count,
+        "restart_required_count": restart_required_count,
+        "process_override_count": process_override_count,
+        "secret_missing_count": secret_missing_count,
+        "advanced_count": advanced_count,
+        "dangerous_count": dangerous_count,
+        "dangerous_enabled_count": dangerous_enabled_count,
+        "feature_summary": feature_summary,
+        "health": health,
+        "last_config_save_timestamp": latest_audit.get("timestamp", ""),
+        "last_config_audit_reference": latest_audit.get("path", ""),
+        "last_config_backup_reference": str(backup_files[0]) if backup_files else "",
         "manual_review_only": True,
         "can_live_trade": False,
     }
-
+    base_status["recommendations"] = _recommendations(base_status, feature_summary, base_status["warnings"], base_status["blockers"])
+    return base_status
 
 def _normalize_value(option: ConfigOption, value: Any) -> tuple[str, list[str], list[str]]:
     warnings: list[str] = []
@@ -612,7 +818,20 @@ def preview_config_diff(changes: dict[str, Any] | None = None, *, confirmation: 
                 "secret": option.secret,
             }
         )
-    return {"ok": validation["ok"], "preset_id": preset_id or "", "diff": rows, "validation": validation, "restart_required": bool(rows)}
+    grouped_rows = {"safe": [], "warning": [], "dangerous_live_related": [], "restart_required": [], "blocked": []}
+    for row in rows:
+        if row.get("blockers"):
+            grouped_rows["blocked"].append(row)
+        if row.get("dangerous"):
+            grouped_rows["dangerous_live_related"].append(row)
+        if row.get("warnings"):
+            grouped_rows["warning"].append(row)
+        if row.get("restart_required"):
+            grouped_rows["restart_required"].append(row)
+        if not row.get("blockers") and not row.get("warnings") and not row.get("dangerous"):
+            grouped_rows["safe"].append(row)
+    grouped_rows = {key: value for key, value in grouped_rows.items() if value}
+    return {"ok": validation["ok"], "preset_id": preset_id or "", "diff": rows, "diff_groups": grouped_rows, "validation": validation, "restart_required": bool(rows)}
 
 
 def _quote_env_value(value: str) -> str:
@@ -706,7 +925,7 @@ def setup_runtime_status() -> dict[str, Any]:
     for key, saved in dotenv.items():
         if key in os.environ and os.environ.get(key, "") != saved:
             current_differs.append({"key": key, "process_value": mask_value(key, os.environ.get(key, "")), "saved_env_value": mask_value(key, saved)})
-    return {
+    status = {
         "app_version": APP_VERSION,
         "python_version": sys.version.split()[0],
         "python_executable": sys.executable,
@@ -730,9 +949,21 @@ def setup_runtime_status() -> dict[str, Any]:
         "manual_review_only": True,
         "can_live_trade": False,
     }
+    deps_missing = [row for row in dependency_rows if not row.get("available")]
+    status["sections"] = [
+        {"name": "App", "tone": "ok", "rows": [{"label": "App version", "detected": APP_VERSION, "expected": "1.9.0-real"}, {"label": "Package mode", "detected": status["package_mode"], "expected": "source_tree"}]},
+        {"name": "Python", "tone": "ok", "rows": [{"label": "Python version", "detected": status["python_version"], "expected": "3.10+"}, {"label": "Executable", "detected": status["python_executable"], "expected": "Project venv executable recommended"}]},
+        {"name": "Virtual Environment", "tone": "ok" if venv_detected else "warning", "rows": [{"label": "Venv detected", "detected": "yes" if venv_detected else "no", "expected": "yes for local operator installs"}, {"label": "sys.prefix", "detected": sys.prefix, "expected": "Inside .venv when activated"}]},
+        {"name": "Launch", "tone": "info", "rows": [{"label": "Expected launch", "detected": status["expected_launch_command"], "expected": "Copy and run manually; UI does not execute commands"}]},
+        {"name": "Filesystem", "tone": "ok", "rows": [{"label": "Project root", "detected": status["project_root"], "expected": "Package root"}, {"label": "Runtime data", "detected": status["runtime_data_directory"], "expected": "Excluded from release ZIPs"}]},
+        {"name": "Environment", "tone": "ok" if status["env_present"] else "warning", "rows": [{"label": ".env present", "detected": "yes" if status["env_present"] else "no", "expected": "yes after setup wizard"}, {"label": ".env.example present", "detected": "yes" if status["env_example_present"] else "no", "expected": "yes"}]},
+        {"name": "Dependencies", "tone": "ok" if not deps_missing else "warning", "rows": [{"label": "Missing imports", "detected": str(len(deps_missing)), "expected": "0"}]},
+        {"name": "Restart Status", "tone": "warning" if current_differs else "ok", "rows": [{"label": "Process/.env differences", "detected": str(len(current_differs)), "expected": "0 before assuming saved values are active"}]},
+    ]
+    return status
 
 
-def config_presets() -> list[dict[str, Any]]:
+def _config_presets_base() -> list[dict[str, Any]]:
     return [
         {
             "preset_id": "locked_down_safe_mode",
@@ -791,6 +1022,58 @@ def config_presets() -> list[dict[str, Any]]:
     ]
 
 
+
+def _preset_metadata(preset: dict[str, Any]) -> dict[str, Any]:
+    changes = preset.get("changes", {})
+    enabled = [key for key, value in changes.items() if _bool_text(value)]
+    disabled = [key for key, value in changes.items() if str(value).strip().lower() in FALSE_VALUES]
+    lan_changes = [key for key in changes if key in {"HOST", "ALLOWED_HOSTS", "PORT"}]
+    internet_changes = [key for key in changes if "ALLOW_INTERNET" in key or "ALLOW_NETWORK" in key]
+    host_training_changes = [key for key in changes if key.startswith("POLYMARKET_TRAINING_")]
+    live_changes = [key for key in changes if _is_live_key(key)]
+    live_disabled = not any(key in changes and _bool_text(changes[key]) for key in ["LIVE_TRADING_ENABLED", "POLYMARKET_LIVE_MODE", "POLYMARKET_LIVE_ENABLE_SUBMIT", "POLYMARKET_LIVE_ENABLE_CANCEL", "POLYMARKET_LIVE_ENABLE_AUTONOMOUS"])
+    if "locked" in preset.get("preset_id", ""):
+        safety_level = "Safest"
+    elif live_changes and not live_disabled:
+        safety_level = "Advanced"
+    elif lan_changes or internet_changes or host_training_changes:
+        safety_level = "Review"
+    else:
+        safety_level = "Safe"
+    use_cases = {
+        "locked_down_safe_mode": "Reset to a fail-closed local posture.",
+        "local_demo_mode": "Run the app on this computer only.",
+        "lan_demo_mode": "Reach the console from other devices on your LAN.",
+        "paper_trading_only": "Use simulations and paper operations without live execution.",
+        "data_ingestion_mode": "Prepare controlled data ingestion workflows.",
+        "training_backtesting_mode": "Use Training Lab and backtests without host job execution.",
+        "host_training_100k_mode": "Run local dataset-backed jobs up to 100K rows.",
+        "live_readiness_review_mode": "Review live readiness while keeping submit/cancel disabled.",
+        "manual_live_execution_readiness_mode": "Prepare manual execution reviews while gates stay fail-closed.",
+    }
+    return {
+        "safety_level": safety_level,
+        "enabled_keys": enabled,
+        "disabled_keys": disabled,
+        "lan_exposure_changes": bool(lan_changes),
+        "internet_access_changes": bool(internet_changes),
+        "host_training_changes": bool(host_training_changes),
+        "live_readiness_changes": bool(live_changes),
+        "live_trading_remains_disabled": live_disabled,
+        "restart_required": True,
+        "recommended_use_case": use_cases.get(preset.get("preset_id", ""), "Specialized operator configuration."),
+    }
+
+
+def config_presets() -> list[dict[str, Any]]:
+    presets = []
+    for preset in _config_presets_base():
+        enriched = dict(preset)
+        enriched.update(_preset_metadata(preset))
+        presets.append(enriched)
+    return presets
+
+
 def get_preset(preset_id: str) -> dict[str, Any] | None:
     for preset in config_presets():
         if preset["preset_id"] == preset_id:
@@ -810,6 +1093,58 @@ def apply_preset(preset_id: str, *, confirmation: str = "", requested_by: str = 
     if not preset:
         return {"ok": False, "saved": False, "validation": {"ok": False, "blockers": ["Unknown preset"], "warnings": []}}
     return save_config_changes(preset["changes"], confirmation=confirmation, requested_by=requested_by, preset_id=preset_id)
+
+
+
+
+def config_audit_history(limit: int = 20) -> dict[str, Any]:
+    rows = []
+    for path in _audit_files()[: max(1, min(limit, 100))]:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            rows.append({"path": str(path), "error": str(exc)})
+            continue
+        rows.append({
+            "path": str(path),
+            "timestamp": data.get("timestamp", ""),
+            "requested_by": data.get("requested_by", ""),
+            "preset_id": data.get("preset_id", ""),
+            "changed_keys": data.get("changed_keys", []),
+            "validation_status": data.get("validation_status", ""),
+            "backup_file": data.get("backup_file", ""),
+            "manual_confirmation_supplied": data.get("manual_confirmation_supplied", False),
+            "manual_review_only": True,
+            "can_live_trade": False,
+        })
+    return {"app_version": APP_VERSION, "audit_dir": str(CONFIG_AUDIT_DIR), "items": rows, "manual_review_only": True, "can_live_trade": False}
+
+
+def settings_dashboard() -> dict[str, Any]:
+    status = config_status()
+    setup = setup_runtime_status()
+    quick_links = [
+        {"label": "Configuration Console", "href": "/settings/configuration", "description": "Search, filter, validate, diff, and save supported .env keys."},
+        {"label": "Setup Wizard", "href": "/setup/wizard", "description": "Apply safe presets after previewing exactly what will change."},
+        {"label": "Runtime / Venv Status", "href": "/setup/status", "description": "Read-only Python, venv, launch, dependency, and path diagnostics."},
+        {"label": "Configuration Export", "href": "/api/config/export-sanitized", "description": "Download a secret-safe troubleshooting report."},
+        {"label": "Environment Diff Preview", "href": "/settings/configuration#save-controls", "description": "Preview pending .env changes before writing anything."},
+        {"label": "Configuration Audit History", "href": "/api/config/audit-history", "description": "See recent runtime-only save audits with secrets masked."},
+        {"label": "Host Training Configuration", "href": "/settings/configuration?mode=simple&filter=training", "description": "Configure host jobs, row caps, and 100K batch training safely."},
+        {"label": "Data / Internet Ingestion", "href": "/settings/configuration?mode=simple&filter=data", "description": "Review data source, dataset, and internet-ingestion switches."},
+        {"label": "Paper Trading", "href": "/settings/configuration?mode=simple&filter=paper", "description": "Tune local simulation and paper-workflow settings."},
+        {"label": "Live-Readiness", "href": "/settings/configuration?mode=advanced&filter=live", "description": "Review live-readiness fields without enabling execution."},
+        {"label": "Risk Controls", "href": "/settings/configuration?mode=advanced&filter=dangerous", "description": "Inspect dangerous and execution-facing controls."},
+        {"label": "Advanced Settings", "href": "/settings/configuration?mode=advanced", "description": "Expose all supported schema-backed settings."},
+    ]
+    return {
+        "status": status,
+        "setup_status": setup,
+        "quick_links": quick_links,
+        "presets": config_presets(),
+        "manual_review_only": True,
+        "can_live_trade": False,
+    }
 
 
 def export_sanitized_configuration() -> dict[str, Any]:

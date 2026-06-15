@@ -1,15 +1,33 @@
-# Runtime and Virtual Environment Status v1.8.0-real
+# Runtime and Virtual Environment Status v1.9.0-real
 
-The runtime status page at `/setup/status` is a read-only setup diagnostic surface. It shows Python version, app version, venv detection, dependency availability, launch command, current working directory, project root, runtime data directory, `.env` path, `.env.example` path, platform, and process-vs-saved `.env` differences.
+The runtime status page at `/setup/status` is read-only guidance.
 
-The page intentionally does not execute shell commands, run `pip`, mutate a virtual environment, install packages, or evaluate arbitrary user input. It only displays copyable commands that the operator may run manually in a terminal.
+It is organized into sections:
 
-Runtime status is also available at:
+- App
+- Python
+- Virtual Environment
+- Launch
+- Filesystem
+- Environment
+- Dependencies
+- Restart Status
 
-```bash
-python -m app.cli --setup-status
-```
+Each section shows detected values, recommended/expected values, and status badges.
 
-and:
+## What it can do
 
-`GET /api/setup/status`
+- show Python version
+- show app version
+- show whether a venv is detected
+- show dependency import availability
+- show expected launch command
+- show current working directory
+- show runtime data directory
+- show `.env` and `.env.example` status
+- show process-vs-saved `.env` differences
+- show copyable setup commands
+
+## What it cannot do
+
+The page does not execute shell commands, run pip, install packages, mutate the virtual environment, or turn user input into a command line.
