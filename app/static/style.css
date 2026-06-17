@@ -865,6 +865,7 @@ pre {
 }
 
 /* v2.1.0 Live v2 operator console redesign: decluttered, step-based, and faster by default */
+/* v2.2.0 layers browser polish, saved safe UI preferences, and interactive tables on top. */
 .live-v2-hero { align-items: stretch; }
 .live-v2-hero-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
 .live-v2-statusbar {
@@ -994,3 +995,53 @@ button:disabled, .button-link[aria-disabled="true"] { opacity: .55; cursor: not-
   .live-tool-form, .ticket-form fieldset { grid-template-columns: 1fr; }
   .stepper { grid-template-columns: 1fr; }
 }
+
+/* v2.2.0 browser polish: saved preferences, interactive tables, smoother states */
+.live-v2-preferences-panel { border-color: rgba(143,199,255,.24); }
+.preference-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+.preference-grid label { display: grid; gap: 6px; }
+.table-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 10px 0 12px;
+}
+.table-controls input[type="search"], .table-controls select {
+  max-width: 340px;
+  min-width: 180px;
+}
+.result-count { color: var(--muted); font-size: 12px; }
+.interactive-table th[data-sort] { cursor: pointer; user-select: none; }
+.interactive-table th[data-sort]::after { content: " ↕"; color: var(--muted); font-size: 11px; }
+.interactive-table tr[hidden] { display: none; }
+.advanced-detail:not([open]) pre { display: none; }
+.live-v2-compact .content-card, .live-v2-compact .card, .live-v2-compact .metric-card { padding: 11px; }
+.live-v2-compact .live-v2-statusbar { padding: 8px 10px; }
+.live-v2-compact .stepper li { padding: 7px 8px; }
+.live-v2-compact table td, .live-v2-compact table th { padding: 7px 8px; }
+button[disabled]::after { content: ""; }
+.docs-grid .settings-link-card span { min-height: 2.5em; }
+.loading-inline { color: var(--muted); }
+@media (max-width: 900px) {
+  .preference-grid, .audit-filters { grid-template-columns: 1fr; }
+  .table-controls input[type="search"], .table-controls select { width: 100%; max-width: none; }
+}
+
+/* v2.3.0 release/demo hardening and live read-only verification */
+.verify-panel { border-color: rgba(115, 214, 175, .32); }
+.verify-panel .live-tool-form { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.live-v2-tabs a[href="/v2-live/verify"].active { background: rgba(115,214,175,.16); box-shadow: inset 0 0 0 1px rgba(115,214,175,.35); }
+.release-checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.release-checklist-item { border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: rgba(255,255,255,.025); }
+
+/* v2.5.0 research intake and source workflow layer */
+.strategy-dashboard-grid .critical-card { border-color: rgba(246,196,85,.4); }
+.strategy-forms-grid { align-items: start; }
+.strategy-forms-grid .content-card { min-height: 100%; }
+.live-v2-tabs a[href="/v2-live/strategy"].active { background: rgba(143,199,255,.16); box-shadow: inset 0 0 0 1px rgba(143,199,255,.35); }

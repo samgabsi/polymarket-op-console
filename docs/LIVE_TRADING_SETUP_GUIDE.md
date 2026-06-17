@@ -1,4 +1,4 @@
-# Live Trading Setup Guide — v2.1.0-real
+# Live Trading Setup Guide — v2.3.0-real
 
 This guide describes the intended operator path for enabling live trading. Do not skip directly to armed mode.
 
@@ -64,10 +64,10 @@ Use conservative numbers first.
 Never put real secrets in a release ZIP or public repo.
 
 ```env
-POLYMARKET_PRIVATE_KEY=...
-POLYMARKET_CLOB_API_KEY=...
-POLYMARKET_CLOB_SECRET=...
-POLYMARKET_CLOB_PASSPHRASE=...
+POLYMARKET_PRIVATE_KEY=CHANGE_ME_LOCAL_ONLY
+POLYMARKET_CLOB_API_KEY=CHANGE_ME_LOCAL_ONLY
+POLYMARKET_CLOB_SECRET=CHANGE_ME_LOCAL_ONLY
+POLYMARKET_CLOB_PASSPHRASE=CHANGE_ME_LOCAL_ONLY
 POLYMARKET_FUNDER_ADDRESS=...
 POLYMARKET_CHAIN_ID=137
 POLYMARKET_SIGNATURE_TYPE=

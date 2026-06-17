@@ -9,22 +9,30 @@
   ('dashboard','Dashboard','/v2-live'),
   ('market_data','Markets','/v2-live/markets'),
   ('trade_ticket','Trade Ticket','/v2-live/trade-ticket'),
+  ('strategy','Strategy','/v2-live/strategy'),
+  ('research','Research','/v2-live/research'),
+  ('monitoring','Monitoring','/v2-live/monitoring'),
+  ('portfolio','Portfolio','/v2-live/portfolio'),
+  ('governance','Governance','/v2-live/governance'),
+  ('data','Data','/v2-live/data'),
   ('orders','Orders','/v2-live/orders'),
   ('positions','Positions','/v2-live/positions'),
   ('risk','Risk','/v2-live/risk'),
   ('audit','Audit','/v2-live/audit'),
   ('settings','Settings','/v2-live/settings'),
   ('emergency','Emergency','/v2-live/emergency'),
+  ('verify','Verify','/v2-live/verify'),
   ('docs','Docs','/v2-live/docs')
 ] %}
 
-<section class="page-header live-v2-hero">
+<section class="page-header live-v2-hero" data-live-v2-section="{{ section }}">
   <div>
-    <p class="eyebrow">v2.1.0-real · UI/UX cleanup · operator console</p>
+    <p class="eyebrow">v3.3.0-real · data integrity / backup / recovery layer</p>
     <div class="page-title-row"><h1>Live v2 Console</h1><span class="status-badge tone-{{ ui.mode_tone|default('neutral') }}">{{ ui.mode_label|default(cfg.trading_mode) }}</span></div>
-    <p class="page-subtitle">A decluttered control center for readiness, market discovery, trade-ticket rehearsal, order operations, risk, audit exports, settings, and emergency actions. Backend gates remain the source of truth for every live action.</p>
+    <p class="page-subtitle">A durable local-first research-to-thesis-to-ticket workstation for data health, backups, restore previews, migrations, governance, portfolio exposure, monitoring alerts, source freshness, ticket rehearsal, audit exports, verification, and emergency controls. Backend gates remain the source of truth for every live action.</p>
   </div>
   <div class="live-v2-hero-actions">
+    <button class="button-link quiet js-status-refresh" type="button">Refresh status</button>
     <a class="button-link quiet" href="/api/v2/live/status">Status JSON</a>
     <a class="button-link quiet" href="/api/v2/live/audit.csv">Export CSV</a>
     <a class="button-link danger" href="/v2-live/emergency">Kill Switch</a>
@@ -40,7 +48,19 @@
   <span class="status-badge tone-{{ ui.readiness_tone|default('neutral') }}">READINESS: {{ ui.readiness_label|default(status.overall_status) }}</span>
   <span class="status-badge tone-info">{{ ui.gamma_label|default('Gamma Unknown') }}</span>
   <span class="status-badge tone-info">{{ ui.clob_label|default('CLOB Unknown') }}</span>
-  <span class="status-badge tone-neutral">Refresh {{ ui.last_refresh|default(status.generated_at) }}</span>
+  <span class="status-badge tone-neutral" id="status-last-refresh">Refresh {{ ui.last_refresh|default(status.generated_at) }}</span>
+  <span class="status-badge tone-warning" id="status-critical-error">Critical: {{ ui.last_critical_error|default('None') }}</span>
+</section>
+
+<section class="content-card live-v2-preferences-panel" aria-label="Saved UI preferences">
+  <div class="section-header"><div><h2>Saved UI Preferences</h2><p class="help-text">Browser-only preferences for comfort and speed. Secrets, API keys, private keys, auth headers, wallet data, and account payloads are never stored here.</p></div><button class="button-link quiet" type="button" id="reset-ui-prefs">Reset preferences</button></div>
+  <div class="preference-grid">
+    <label>Default table size<select id="pref-page-size"><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option><option value="100">100</option></select></label>
+    <label>Default market query<input id="pref-market-query" type="text" placeholder="Optional, non-sensitive"></label>
+    <label class="checkbox-line"><input id="pref-compact-mode" type="checkbox"> Compact mode</label>
+    <label class="checkbox-line"><input id="pref-show-advanced" type="checkbox"> Show advanced/debug by default</label>
+  </div>
+  <p class="small">Preference schema: <a href="/api/v2/live/ui/preferences/schema">/api/v2/live/ui/preferences/schema</a></p>
 </section>
 
 {% if ui.last_critical_error and ui.last_critical_error != 'None' %}
@@ -72,7 +92,13 @@
     <div class="operator-next-steps">
       <a href="/v2-live/markets"><strong>Search market</strong><span>Find an outcome and inspect order-book context.</span></a>
       <a href="/v2-live/trade-ticket"><strong>Preview ticket</strong><span>Rehearse sizing, risk, approval, and confirmation.</span></a>
+      <a href="/v2-live/strategy"><strong>Build thesis</strong><span>Structure evidence, criteria, and scorecards before drafting.</span></a>
+      <a href="/v2-live/research"><strong>Review sources</strong><span>Capture sources, notes, freshness, and evidence candidates.</span></a>
+      <a href="/v2-live/monitoring"><strong>Check alerts</strong><span>Review monitoring rules, reminders, and active alerts.</span></a>
+      <a href="/v2-live/portfolio"><strong>Review exposure</strong><span>Inspect portfolio, concentration, bankroll, and scenario impact before ticketing.</span></a>
+      <a href="/v2-live/governance"><strong>Govern decisions</strong><span>Record rationale, run checklists, track reviews, and identify mistake patterns.</span></a>
       <a href="/v2-live/emergency"><strong>Emergency controls</strong><span>Review kill switch and read-only posture.</span></a>
+      <a href="/v2-live/verify"><strong>Verify read-only</strong><span>Run release/demo safe checks without trading.</span></a>
     </div>
   </article>
   <article class="content-card">
@@ -84,11 +110,82 @@
 </section>
 {% endif %}
 
+{% if section == "strategy" %}
+{% set strategy_summary = strategy.summary %}
+<section class="live-v2-dashboard-grid strategy-dashboard-grid">
+  <article class="metric-card"><span>Active Theses</span><strong>{{ strategy_summary.active_theses }}</strong><small>{{ strategy_summary.ready_for_ticket }} ready for ticket</small></article>
+  <article class="metric-card"><span>Evidence Items</span><strong>{{ strategy_summary.evidence }}</strong><small>{{ strategy_summary.stale_evidence }} stale or needing review</small></article>
+  <article class="metric-card"><span>Watchlist</span><strong>{{ strategy_summary.watchlist }}</strong><small>Markets under structured observation</small></article>
+  <article class="metric-card"><span>Scorecards</span><strong>{{ strategy_summary.scorecards }}</strong><small>Transparent decision criteria</small></article>
+  <article class="metric-card"><span>Post-Trade Reviews</span><strong>{{ strategy_summary.reviews }}</strong><small>Accountability after action</small></article>
+  <article class="metric-card critical-card"><span>Safety</span><strong>Draft Only</strong><small>A thesis, score, or watchlist item is not an order.</small></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Strategy Workspace</h2><p class="help-text">Local-first research objects for thesis quality, evidence discipline, entry/exit/invalidation criteria, and post-trade review. Strategy actions never place or cancel orders.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/strategy/export.json">Export JSON</a><a class="button-link quiet" href="/api/v2/live/strategy/export.md">Export Markdown</a></div></div>
+  <p class="callout warning"><strong>Safety boundary:</strong> Creating a thesis, scorecard, watchlist item, or ticket draft does not submit a live order. The existing risk checks, human approval, warning acknowledgement, typed confirmation phrase, live armed mode, read-only gate, kill switch gate, and backend submit gates still apply.</p>
+  <div class="operator-next-steps"><a href="#create-thesis"><strong>Create Thesis</strong><span>Structure a market idea before any ticket.</span></a><a href="#add-evidence"><strong>Add Evidence</strong><span>Track supporting and contradicting facts.</span></a><a href="#add-scorecard"><strong>Score Market</strong><span>Use transparent criteria, not hidden automation.</span></a><a href="#post-review"><strong>Review Outcome</strong><span>Compare action vs original thesis.</span></a></div>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Active theses</h2><p class="help-text">Drafts, watching ideas, and ticket-ready theses. Raw details are expandable.</p></div><span class="result-count">{{ strategy.theses|length }} shown</span></div>
+  <div class="table-controls"><input class="js-table-filter" data-table="strategy-theses-table" type="search" placeholder="Filter theses by market, status, tag"><span class="result-count" data-count-for="strategy-theses-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="strategy-theses-table"><thead><tr><th data-sort="text">Status</th><th data-sort="text">Market</th><th data-sort="text">Outcome</th><th data-sort="number">Probability</th><th data-sort="text">Confidence</th><th>Actions</th><th>Details</th></tr></thead><tbody>
+    {% for item in strategy.theses %}<tr><td><span class="status-badge tone-{{ item.status|status_tone }}">{{ item.status }}</span></td><td><strong>{{ item.market_title or item.market_id|compact_id }}</strong><br><span class="small">{{ item.id }}</span></td><td>{{ item.outcome }}</td><td>{{ item.probability_estimate }}</td><td>{{ item.confidence_level }}</td><td><button class="tiny-button js-post" data-target="/api/v2/live/strategy/theses/{{ item.id }}/ticket-draft" data-result="strategy-results">Draft ticket</button></td><td><details class="advanced-detail"><summary>Thesis</summary><pre>{{ item|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="7" class="empty-state">No theses yet. Create a draft thesis below before building a trade ticket.</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+<section class="grid strategy-forms-grid">
+  <article class="content-card" id="create-thesis"><h2>Create thesis</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/strategy/theses" data-result="strategy-results"><label>Market title<input name="market_title" placeholder="Market being evaluated"></label><label>Market ID / slug<input name="market_id" placeholder="condition/market id"></label><label>Outcome<input name="outcome" placeholder="YES / NO / candidate"></label><label>Probability estimate<input name="probability_estimate" type="number" min="0" max="1" step="0.01" value="0.50"></label><label>Confidence<select name="confidence_level"><option>low</option><option selected>medium</option><option>high</option></select></label><label>Status<select name="status"><option>draft</option><option>watching</option><option>ready_for_ticket</option></select></label><label class="full-span">Thesis summary<textarea name="thesis_summary" placeholder="Why this market/outcome deserves attention"></textarea></label><label class="full-span">Entry criteria<textarea name="entry_criteria" placeholder="Price, liquidity, evidence, catalyst, and operator review requirements"></textarea></label><label class="full-span">Exit criteria<textarea name="exit_criteria" placeholder="Target price, time-based exit, changed evidence, manual review"></textarea></label><label class="full-span">Invalidation criteria<textarea name="invalidation_criteria" placeholder="What would make this thesis wrong or stale"></textarea></label><label>Max acceptable exposure<input name="maximum_acceptable_exposure" type="number" step="0.01" min="0" value="0"></label><label>Tags<input name="tags" placeholder="macro, sports, election"></label><button type="submit">Create thesis</button></form></article>
+  <article class="content-card" id="add-evidence"><h2>Add evidence</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/strategy/evidence" data-result="strategy-results"><label>Thesis ID<input name="thesis_id" placeholder="optional thesis id"></label><label>Title<input name="title" placeholder="Evidence title"></label><label>Source URL<input name="source_url" placeholder="https://..."></label><label>Source type<input name="source_type" placeholder="manual_note, news, filing, data"></label><label>Direction<select name="direction"><option>supports</option><option>weakly_supports</option><option selected>neutral</option><option>weakly_contradicts</option><option>contradicts</option></select></label><label>Relevance<input name="relevance_score" type="number" min="0" max="5" value="3"></label><label>Credibility<input name="credibility_score" type="number" min="0" max="5" value="3"></label><label class="full-span">Notes<textarea name="notes" placeholder="Operator evidence notes"></textarea></label><button type="submit">Add evidence</button></form></article>
+</section>
+<section class="grid strategy-forms-grid">
+  <article class="content-card" id="add-scorecard"><h2>Create scorecard</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/strategy/scorecards" data-result="strategy-results"><label>Thesis ID<input name="thesis_id" placeholder="optional thesis id"></label><label>Market title<input name="market_title"></label><label>Liquidity<input name="liquidity" type="number" min="0" max="5" value="3"></label><label>Spread<input name="spread" type="number" min="0" max="5" value="3"></label><label>Market clarity<input name="market_clarity" type="number" min="0" max="5" value="3"></label><label>Information quality<input name="information_quality" type="number" min="0" max="5" value="3"></label><label>Evidence strength<input name="evidence_strength" type="number" min="0" max="5" value="3"></label><label>Risk/reward<input name="risk_reward" type="number" min="0" max="5" value="3"></label><label>Operator confidence<input name="operator_confidence" type="number" min="0" max="5" value="3"></label><label>Execution readiness<input name="execution_readiness" type="number" min="0" max="5" value="3"></label><label class="full-span">Blockers<textarea name="blockers" placeholder="One blocker per line"></textarea></label><button type="submit">Create scorecard</button></form></article>
+  <article class="content-card"><h2>Add watchlist item</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/strategy/watchlist" data-result="strategy-results"><label>Market title<input name="market_title"></label><label>Market ID / slug<input name="market_id"></label><label>Outcome<input name="outcome"></label><label>Priority<select name="priority"><option>low</option><option selected>medium</option><option>high</option><option>urgent</option></select></label><label>Target entry price<input name="target_entry_price" type="number" min="0" max="1" step="0.01"></label><label>Target exit price<input name="target_exit_price" type="number" min="0" max="1" step="0.01"></label><label class="full-span">Reason for watching<textarea name="reason_for_watching"></textarea></label><label class="full-span">Invalidation condition<textarea name="invalidation_condition"></textarea></label><button type="submit">Add watchlist item</button></form></article>
+</section>
+<section class="grid strategy-forms-grid">
+  <article class="content-card" id="post-review"><h2>Post-trade review</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/strategy/reviews" data-result="strategy-results"><label>Thesis ID<input name="thesis_id"></label><label>Ticket ID<input name="ticket_id"></label><label>Order ID<input name="order_id"></label><label>Original probability<input name="original_probability_estimate" type="number" min="0" max="1" step="0.01"></label><label>Fill/cancel status<input name="fill_cancel_status" placeholder="unknown / filled / cancelled / partial"></label><label>Thesis validity<select name="thesis_validity"><option>unknown</option><option>valid</option><option>partially_valid</option><option>invalid</option></select></label><label class="checkbox-line"><input name="execution_followed_plan" type="checkbox" value="true"> Execution followed plan</label><label class="checkbox-line"><input name="risk_rules_followed" type="checkbox" value="true"> Risk rules followed</label><label class="full-span">What went right<textarea name="what_went_right"></textarea></label><label class="full-span">What went wrong<textarea name="what_went_wrong"></textarea></label><label class="full-span">Lesson learned<textarea name="lesson_learned"></textarea></label><button type="submit">Create review</button></form></article>
+  <article class="content-card"><h2>Strategy result</h2><div id="strategy-results" class="live-result empty-state">Strategy API results appear here. They are research artifacts only and never place orders.</div></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Evidence, watchlist, scorecards, reviews</h2><p class="help-text">Recent local research objects. Use exports for offline review.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/strategy/evidence.csv">Evidence CSV</a><a class="button-link quiet" href="/api/v2/live/strategy/watchlist.csv">Watchlist CSV</a><a class="button-link quiet" href="/api/v2/live/strategy/scorecards.csv">Scorecards CSV</a></div></div>
+  <div class="grid"><article class="card"><h3>Evidence</h3><ul class="clean-list compact">{% for item in strategy.evidence[:6] %}<li><strong>{{ item.title }}</strong><br><span class="small">{{ item.direction }} · relevance {{ item.relevance_score }} · thesis {{ item.thesis_id|compact_id }}</span></li>{% else %}<li class="empty-state">No evidence yet.</li>{% endfor %}</ul></article><article class="card"><h3>Watchlist</h3><ul class="clean-list compact">{% for item in strategy.watchlist[:6] %}<li><strong>{{ item.market_title or item.market_id|compact_id }}</strong><br><span class="small">{{ item.priority }} · entry {{ item.target_entry_price }} · {{ item.status }}</span></li>{% else %}<li class="empty-state">No watchlist items yet.</li>{% endfor %}</ul></article><article class="card"><h3>Scorecards</h3><ul class="clean-list compact">{% for item in strategy.scorecards[:6] %}<li><strong>{{ item.market_title or item.thesis_id|compact_id }}</strong><br><span class="small">{{ item.total_score }} total · {{ item.recommended_next_action }}</span></li>{% else %}<li class="empty-state">No scorecards yet.</li>{% endfor %}</ul></article><article class="card"><h3>Reviews</h3><ul class="clean-list compact">{% for item in strategy.reviews[:6] %}<li><strong>{{ item.thesis_id|compact_id or 'Review' }}</strong><br><span class="small">{{ item.thesis_validity }} · risk followed {{ item.risk_rules_followed }}</span></li>{% else %}<li class="empty-state">No post-trade reviews yet.</li>{% endfor %}</ul></article></div>
+</section>
+{% endif %}
+
+
+{% if section == "research" %}
+{% set research_summary = research.summary %}
+<section class="live-v2-dashboard-grid research-dashboard-grid">
+  <article class="metric-card"><span>Sources</span><strong>{{ research_summary.sources }}</strong><small>{{ research_summary.reviewed_sources }} reviewed</small></article>
+  <article class="metric-card"><span>Research Queue</span><strong>{{ research_summary.queue_items }}</strong><small>Operator-managed review flow</small></article>
+  <article class="metric-card"><span>Source Notes</span><strong>{{ research_summary.source_notes }}</strong><small>Claims and interpretation</small></article>
+  <article class="metric-card"><span>Evidence Candidates</span><strong>{{ research_summary.evidence_candidates }}</strong><small>Awaiting human conversion</small></article>
+  <article class="metric-card"><span>Stale Items</span><strong>{{ research_summary.stale_items }}</strong><small>Refresh before relying on thesis</small></article>
+  <article class="metric-card critical-card"><span>Safety</span><strong>Research Only</strong><small>Research output never places, signs, arms, or cancels orders.</small></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Research Intake Workspace</h2><p class="help-text">Local-first source registry, source notes, evidence candidates, freshness warnings, thesis comparison, and exports. A source is not evidence until reviewed and converted by the operator.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/research/export.json">Export JSON</a><a class="button-link quiet" href="/api/v2/live/research/export.md">Export Markdown</a><a class="button-link quiet" href="/api/v2/live/research/sources.csv">Sources CSV</a></div></div>
+  <p class="callout info">{{ research.next_action }} Research scores are workflow guidance only; they are not trade recommendations and never bypass live gates.</p>
+</section>
+<section class="two-col strategy-form-grid research-form-grid">
+  <article class="content-card"><h2>Add Source</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/research/sources" data-result="research-results"><label>Title<input name="title" required></label><label>URL<input name="source_url" placeholder="https://example.com/source"></label><label>Type<select name="source_type"><option>news</option><option>official_announcement</option><option>market_page</option><option>data_source</option><option>social_post</option><option>analyst_note</option><option>operator_note</option><option>other</option></select></label><label>Publisher / author<input name="publisher"></label><label>Related thesis ID<input name="related_thesis_id"></label><label>Credibility 0-5<input name="credibility_rating" type="number" min="0" max="5" value="3"></label><label>Relevance 0-5<input name="relevance_rating" type="number" min="0" max="5" value="3"></label><label>Freshness<select name="freshness_status"><option>unknown</option><option>fresh</option><option>aging</option><option>stale</option><option>expired</option></select></label><label class="full-span">Notes<textarea name="operator_notes"></textarea></label><button type="submit">Add source</button></form></article>
+  <article class="content-card"><h2>Add Queue Item</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/research/queue" data-result="research-results"><label>Title<input name="title" required></label><label>Source ID<input name="source_id"></label><label>Priority<select name="priority"><option>medium</option><option>low</option><option>high</option><option>urgent</option></select></label><label>Desired output<select name="desired_output"><option>evidence_item</option><option>thesis_update</option><option>scorecard_update</option><option>watchlist_update</option><option>post_trade_review_note</option><option>archive_no_action</option></select></label><label>Related thesis ID<input name="related_thesis_id"></label><label class="full-span">Research question<textarea name="research_question"></textarea></label><button type="submit">Add queue item</button></form></article>
+  <article class="content-card"><h2>Add Source Note</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/research/notes" data-result="research-results"><label>Title<input name="title" placeholder="Note title"></label><label>Source ID<input name="source_id"></label><label>Related thesis ID<input name="related_thesis_id"></label><label class="full-span">Summary<textarea name="summary"></textarea></label><label class="full-span">Key claims<textarea name="key_claims"></textarea></label><label class="full-span">Supporting details<textarea name="supporting_details"></textarea></label><label class="full-span">Contradicting details<textarea name="contradicting_details"></textarea></label><label class="full-span">Operator interpretation<textarea name="operator_interpretation"></textarea></label><button type="submit">Add source note</button></form></article>
+  <article class="content-card"><h2>Create Evidence Candidate</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/research/evidence-candidates" data-result="research-results"><label>Title<input name="title" required></label><label>Source ID<input name="source_id"></label><label>Note ID<input name="note_id"></label><label>Related thesis ID<input name="related_thesis_id"></label><label>Direction<select name="direction"><option>supports</option><option>weakly_supports</option><option>neutral</option><option>weakly_contradicts</option><option>contradicts</option></select></label><label>Relevance 0-5<input name="evidence_relevance_score" type="number" min="0" max="5" value="3"></label><label>Credibility 0-5<input name="credibility_score" type="number" min="0" max="5" value="3"></label><label>Freshness 0-5<input name="freshness_score" type="number" min="0" max="5" value="3"></label><label>Freshness status<select name="freshness_status"><option>unknown</option><option>fresh</option><option>aging</option><option>stale</option><option>expired</option></select></label><label class="full-span">Notes<textarea name="operator_notes"></textarea></label><button type="submit">Create candidate</button></form></article>
+  <article class="content-card"><h2>Convert Candidate</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/research/evidence-candidates/{candidate_id}/convert" data-path-field="candidate_id" data-result="research-results"><label>Evidence candidate ID<input name="candidate_id" required></label><button type="submit">Convert into strategy evidence</button></form><p class="help-text">Conversion is deliberate and audited. It creates a strategy evidence item only; no ticket or order is submitted.</p></article>
+  <article class="content-card"><h2>Thesis Comparison</h2><form class="live-tool-form" data-method="GET" data-target="/api/v2/live/research/thesis-comparison" data-result="research-results" data-render="table" data-kind="research"><label>Thesis ID<input name="thesis_id" placeholder="optional"></label><button type="submit">Generate comparison</button></form></article>
+  <article class="content-card"><h2>Research result</h2><div id="research-results" class="live-result empty-state">Research API results appear here. They never place orders, sign orders, arm live trading, or cancel orders.</div></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Source registry, queue, notes, and candidates</h2><p class="help-text">Recent local research objects. Use filters, exports, and expandable details for review.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/research/queue.csv">Queue CSV</a><a class="button-link quiet" href="/api/v2/live/research/evidence-candidates.csv">Candidates CSV</a><a class="button-link quiet" href="/api/v2/live/research/stale.csv">Stale CSV</a></div></div>
+  <div class="grid"><article class="card"><h3>Sources</h3><ul class="clean-list compact">{% for item in research.sources[:6] %}<li><strong>{{ item.title }}</strong><br><span class="small">{{ item.status }} · {{ item.source_type }} · credibility {{ item.credibility_rating }} · {{ item.freshness_status }}</span></li>{% else %}<li class="empty-state">No sources yet.</li>{% endfor %}</ul></article><article class="card"><h3>Queue</h3><ul class="clean-list compact">{% for item in research.queue[:6] %}<li><strong>{{ item.title }}</strong><br><span class="small">{{ item.priority }} · {{ item.status }} · {{ item.desired_output }}</span></li>{% else %}<li class="empty-state">No queue items yet.</li>{% endfor %}</ul></article><article class="card"><h3>Evidence Candidates</h3><ul class="clean-list compact">{% for item in research.evidence_candidates[:6] %}<li><strong>{{ item.title }}</strong><br><span class="small">{{ item.direction }} · {{ item.review_recommendation }} · thesis {{ item.related_thesis_id|compact_id }}</span></li>{% else %}<li class="empty-state">No evidence candidates yet.</li>{% endfor %}</ul></article><article class="card"><h3>Stale warnings</h3><ul class="clean-list compact">{% for item in research.freshness.stale_sources[:6] %}<li><strong>{{ item.title }}</strong><br><span class="small">{{ item.freshness_status }} · {{ item.status }}</span></li>{% else %}<li class="empty-state">No stale sources flagged.</li>{% endfor %}</ul></article></div>
+</section>
+{% endif %}
+
 {% if section in ["readiness", "risk"] %}
 <section class="content-card">
   <div class="section-header"><div><h2>Risk and Readiness Center</h2><p class="help-text">Clear pass/fail status for arming live trading. Failures block live submit; warnings require deliberate review.</p></div><a class="button-link quiet" href="/api/v2/live/readiness">Readiness JSON</a></div>
-  <div class="table-wrap"><table><thead><tr><th>Status</th><th>Check</th><th>Details</th><th>Remediation</th></tr></thead><tbody>
-    {% for row in readiness.checks %}<tr><td><span class="status-badge tone-{{ row.status|status_tone }}">{{ row.status }}</span></td><td><strong>{{ row.label }}</strong><br><span class="small">{{ row.key }}</span></td><td>{{ row.detail }}</td><td>{{ row.remediation }}</td></tr>{% endfor %}
+  <div class="table-controls"><input class="js-table-filter" data-table="risk-table" type="search" placeholder="Filter checks, blockers, remediation"><span class="result-count" data-count-for="risk-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="risk-table"><thead><tr><th>Status</th><th>Check</th><th>Details</th><th>Remediation</th></tr></thead><tbody>
+    {% for row in readiness.checks %}<tr data-status="{{ row.status }}"><td><span class="status-badge tone-{{ row.status|status_tone }}">{{ row.status }}</span></td><td><strong>{{ row.label }}</strong><br><span class="small">{{ row.key }}</span></td><td>{{ row.detail }}</td><td>{{ row.remediation }}</td></tr>{% endfor %}
   </tbody></table></div>
 </section>
 <section class="grid">
@@ -99,41 +196,184 @@
 
 {% if section == "market_data" %}
 <section class="content-card">
-  <div class="section-header"><div><h2>Markets</h2><p class="help-text">Search and inspect public market/order-book data. Raw API payloads stay collapsed by default.</p></div><span class="status-badge tone-info">Read-only public data</span></div>
-  <form class="live-tool-form" data-method="GET" data-target="/api/v2/live/markets" data-result="market-results">
-    <label>Search query<input name="q" type="text" placeholder="bitcoin, election, fed"></label>
-    <label>Limit<input name="limit" type="number" min="1" max="100" value="10"></label>
+  <div class="section-header"><div><h2>Markets</h2><p class="help-text">Search and inspect public market/order-book data. Results render as a compact table with expandable raw details.</p></div><span class="status-badge tone-info">Read-only public data</span></div>
+  <form class="live-tool-form" data-method="GET" data-target="/api/v2/live/markets" data-result="market-results" data-render="table" data-kind="markets">
+    <label>Search query<input id="market-query" name="q" type="text" placeholder="bitcoin, election, fed"></label>
+    <label>Limit<input id="market-limit" name="limit" type="number" min="1" max="100" value="10"></label>
     <button type="submit">Search markets</button>
   </form>
-  <div id="market-results" class="live-result empty-state">Run a search to view compact JSON results. Select token IDs from market details and use the order-book lookup below.</div>
+  <div id="market-results" class="live-result empty-state">Run a search to view filtered market rows. Select token IDs from market details and use the order-book lookup below.</div>
 </section>
 <section class="content-card">
   <h2>Order-book preview</h2>
-  <form class="live-tool-form" data-method="GET" data-target="/api/v2/live/orderbook/{token_id}" data-path-field="token_id" data-result="orderbook-results">
+  <form class="live-tool-form" data-method="GET" data-target="/api/v2/live/orderbook/{token_id}" data-path-field="token_id" data-result="orderbook-results" data-render="table" data-kind="orderbook">
     <label>CLOB token ID<input name="token_id" type="text" placeholder="Token / asset id"></label>
     <button type="submit">Fetch order book</button>
   </form>
-  <div id="orderbook-results" class="live-result empty-state">Order-book data appears here with stale/error state surfaced by the API response.</div>
+  <div id="orderbook-results" class="live-result empty-state">Order-book data appears here with best bid/ask context when available and raw details collapsed.</div>
 </section>
 {% endif %}
 
 {% if section == "trade_ticket" %}
 <section class="content-card">
   <div class="section-header"><div><h2>Trade Ticket Workflow</h2><p class="help-text">Step-by-step ticket preview. Submit remains disabled until backend gates pass, approval is checked, warnings are acknowledged, and the typed phrase matches.</p></div><span class="status-badge tone-{{ ui.mode_tone }}">{{ ui.mode_label }}</span></div>
-  <ol class="stepper"><li>Select market/outcome</li><li>Enter order details</li><li>Preview</li><li>Risk check</li><li>Human approval</li><li>Submit/rehearse</li></ol>
+  <ol class="stepper"><li>Market / outcome</li><li>Order details</li><li>Preview</li><li>Risk check</li><li>Human approval</li><li>Submit / rehearse</li></ol>
   <form id="ticket-form" class="ticket-form">
-    <fieldset><legend>Step 1 · Market/outcome</legend><label>Market ID<input name="market_id" required placeholder="market or condition id"></label><label>Token ID<input name="token_id" required placeholder="CLOB token id"></label><label>Outcome<input name="outcome" placeholder="YES / NO / candidate"></label></fieldset>
+    <fieldset><legend>Step 1 · Market/outcome</legend><label>Market ID<input name="market_id" required placeholder="market or condition id" aria-describedby="ticket-market-help"></label><label>Token ID<input name="token_id" required placeholder="CLOB token id"></label><label>Outcome<input name="outcome" placeholder="YES / NO / candidate"></label><p id="ticket-market-help" class="small full-span">Use the Markets page to copy an outcome/token. Text is not sent to live endpoints until submit is deliberately requested.</p></fieldset>
     <fieldset><legend>Step 2 · Order details</legend><label>Side<select name="side"><option>BUY</option><option>SELL</option></select></label><label>Order type<select name="order_type"><option>GTC</option><option>GTD</option><option>FOK</option><option>FAK</option></select></label><label>Limit price<input name="price" type="number" step="0.0001" min="0.0001" max="0.9999" value="0.50"></label><label>Size / shares<input name="size" type="number" step="0.01" min="0.01" value="1"></label><label class="full-span">Rationale / notes<textarea name="note" placeholder="Why this trade belongs in the queue"></textarea></label></fieldset>
-    <fieldset><legend>Step 5 · Approval friction</legend><label class="checkbox-line"><input name="human_approval" type="checkbox" value="true"> Human Approval Required</label><label class="checkbox-line"><input name="acknowledge_warnings" type="checkbox" value="true"> Warning Acknowledgement Required</label><label>Typed confirmation<input name="confirmation_phrase" type="text" placeholder="LIVE ORDER APPROVED"></label></fieldset>
-    <div class="action-bar"><button type="button" id="preview-ticket">Preview + risk check</button><button type="button" id="submit-ticket" class="danger" disabled title="Submit unlocks only after a passing preview and deliberate confirmation.">Submit live order</button><span id="submit-state" class="status-badge tone-neutral">Submit locked</span></div>
+    <fieldset><legend>Step 5 · Approval friction</legend><label class="checkbox-line"><input name="human_approval" type="checkbox" value="true"> Human Approval Required</label><label class="checkbox-line"><input name="acknowledge_warnings" type="checkbox" value="true"> Warning Acknowledgement Required</label><label>Typed confirmation<input name="confirmation_phrase" type="text" placeholder="LIVE ORDER APPROVED"></label><p class="small full-span">Live submit remains disabled until Preview + Risk Check passes. Backend gates still block even if the browser state is manipulated.</p></fieldset>
+    <div class="action-bar"><button type="button" id="preview-ticket">Preview + risk check</button><button type="button" id="reset-ticket" class="button-link quiet">Reset ticket</button><button type="button" id="copy-ticket" class="button-link quiet">Copy ticket summary</button><button type="button" id="submit-ticket" class="danger" disabled title="Submit unlocks only after a passing preview and deliberate confirmation.">Submit live order</button><span id="submit-state" class="status-badge tone-neutral">Submit locked: preview has not passed</span></div>
   </form>
   <div id="ticket-results" class="live-result empty-state">Preview results, blocker reasons, estimates, and raw details appear here.</div>
 </section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Governance status</h2><p class="help-text">A checklist is not approval to trade. It supports discipline while backend gates remain authoritative.</p></div><a class="button-link quiet" href="/v2-live/governance">Open Governance</a></div>
+  <p class="callout info">Link a decision journal entry and complete a pre-trade checklist before serious ticket submission. This panel does not submit, sign, approve, arm, or cancel orders.</p>
+</section>
+{% endif %}
+
+
+{% if section == "data" %}
+{% set data_summary = data_layer.summary %}
+<section class="live-v2-dashboard-grid data-dashboard-grid">
+  <article class="metric-card"><span>Subsystems</span><strong>{{ data_summary.subsystems }}</strong><small>Audit, strategy, research, monitoring, portfolio, governance, settings</small></article>
+  <article class="metric-card"><span>Inventory Items</span><strong>{{ data_summary.inventory_items }}</strong><small>Runtime storage roots tracked</small></article>
+  <article class="metric-card {{ 'critical-card' if data_summary.health_failures else '' }}"><span>Health Failures</span><strong>{{ data_summary.health_failures }}</strong><small>Operator-triggered repair/restore only</small></article>
+  <article class="metric-card"><span>Health Warnings</span><strong>{{ data_summary.health_warnings }}</strong><small>Review before relying on data</small></article>
+  <article class="metric-card"><span>Backup Bundles</span><strong>{{ data_summary.backup_count }}</strong><small>Default backups are redacted</small></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Data Integrity / Backup / Recovery</h2><p class="help-text">Local-first runtime-data health checks, secret scanning, backup bundles, restore previews, import/export bundles, migration registry, and recovery reports. Data workflows never submit, sign, approve, arm, or cancel orders.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/data/reports/health.md">Health MD</a><a class="button-link quiet" href="/api/v2/live/data/reports/recovery.md">Recovery MD</a><a class="button-link quiet" href="/api/v2/live/data/reports/checks.csv">Checks CSV</a></div></div>
+  <p class="callout info">{{ data_layer.safety_statement }} Backup/export defaults exclude secrets. Restore/import/migration actions require explicit confirmation and do not authorize live trading.</p>
+</section>
+<section class="two-col strategy-form-grid data-form-grid">
+  <article class="content-card"><h2>Run Data Health Check</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/health/run" data-result="data-results"><label class="checkbox-line"><input name="deep" type="checkbox" value="true"> Include deeper secret-like content scan</label><button type="submit">Run health check</button></form><p class="help-text">Deep scans are operator-triggered so page load stays fast.</p></article>
+  <article class="content-card"><h2>Secret Scan</h2><button class="button-link quiet js-fetch" data-target="/api/v2/live/data/secrets/scan" data-result="data-results" data-render="table">Run redacted scan</button><p class="help-text">Findings show paths and pattern types only; values are never printed.</p></article>
+  <article class="content-card"><h2>Create Backup Bundle</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/backup" data-result="data-results"><label>Name<input name="name" placeholder="backup_v2_9"></label><label>Subsystems<input name="subsystems" placeholder="audit,strategy,research,monitoring,portfolio,governance,settings"></label><label class="checkbox-line"><input name="metadata_only" type="checkbox" value="true"> Metadata only</label><label class="checkbox-line"><input name="redacted" type="checkbox" value="true" checked> Redacted / exclude secrets</label><button type="submit">Create backup</button></form></article>
+  <article class="content-card"><h2>Validate Backup</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/backup/validate" data-result="data-results"><label>Bundle path<input name="bundle_path" required></label><button type="submit">Validate backup</button></form></article>
+  <article class="content-card"><h2>Restore Preview / Apply</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/restore/preview" data-result="data-results"><label>Bundle path<input name="bundle_path" required></label><button type="submit">Preview restore</button></form><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/restore/apply" data-result="data-results"><label>Bundle path<input name="bundle_path" required></label><label>Confirmation<input name="confirmation" placeholder="RESTORE DATA"></label><button type="submit" class="danger">Apply restore</button></form><p class="help-text">Restore writes only after explicit confirmation and never places/cancels orders.</p></article>
+  <article class="content-card"><h2>Import / Export Bundles</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/export" data-result="data-results"><label>Name<input name="name" placeholder="runtime_export"></label><label>Subsystems<input name="subsystems" placeholder="audit,strategy,research"></label><button type="submit">Create export</button></form><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/import/preview" data-result="data-results"><label>Bundle path<input name="bundle_path"></label><button type="submit">Preview import</button></form></article>
+  <article class="content-card"><h2>Migration Registry</h2><div class="action-bar"><button class="button-link quiet js-fetch" data-target="/api/v2/live/data/migrations" data-result="data-results" data-render="table">View registry</button><button class="button-link quiet js-post" data-target="/api/v2/live/data/migrations/dry-run" data-result="data-results" data-render="table">Dry run</button></div><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/data/migrations/apply" data-result="data-results"><label>Confirmation<input name="confirmation" placeholder="APPLY MIGRATION"></label><button type="submit">Apply migration</button></form></article>
+  <article class="content-card"><h2>Data result</h2><div id="data-results" class="live-result empty-state">Data health, backup, restore, import/export, migration, and recovery results appear here.</div></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Runtime Inventory</h2><p class="help-text">Package/runtime separation keeps release ZIPs clean and runtime data local.</p></div><button class="button-link quiet js-fetch" data-target="/api/v2/live/data/inventory" data-result="data-fetch-results" data-render="table">Refresh inventory</button></div>
+  <div class="table-wrap"><table class="interactive-table"><thead><tr><th>Subsystem</th><th>Exists</th><th>Files</th><th>Bytes</th><th>Path</th></tr></thead><tbody>{% for item in data_layer.inventory['items'] %}<tr><td>{{ item.subsystem }}</td><td>{{ item.exists }}</td><td>{{ item.file_count }}</td><td>{{ item.total_bytes }}</td><td><code>{{ item.path }}</code></td></tr>{% else %}<tr><td colspan="5" class="empty-state">No runtime inventory found.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Recent Data Events</h2><p class="help-text">Backup, restore, import/export, migration, and health-check actions are audit logged without secrets.</p></div><a class="button-link quiet" href="/api/v2/live/data">Data JSON</a></div>
+  <div class="table-wrap"><table class="interactive-table"><thead><tr><th>Time</th><th>Action</th><th>Status</th><th>Details</th></tr></thead><tbody>{% for item in data_layer.events %}<tr><td>{{ item.timestamp }}</td><td>{{ item.action }}</td><td>{{ item.status }}</td><td><details class="advanced-detail"><summary>Details</summary><pre>{{ item|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="4" class="empty-state">No data integrity events yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endif %}
+
+
+{% if section == "monitoring" %}
+{% set monitoring_summary = monitoring.summary %}
+<section class="live-v2-dashboard-grid monitoring-dashboard-grid">
+  <article class="metric-card"><span>Alert Rules</span><strong>{{ monitoring_summary.rules }}</strong><small>{{ monitoring_summary.enabled_rules }} enabled</small></article>
+  <article class="metric-card"><span>Active Alerts</span><strong>{{ monitoring_summary.active_alerts }}</strong><small>Operator review required</small></article>
+  <article class="metric-card critical-card"><span>Critical Alerts</span><strong>{{ monitoring_summary.critical_alerts }}</strong><small>No action is taken automatically</small></article>
+  <article class="metric-card"><span>Watchlist Items</span><strong>{{ monitoring_summary.watchlist_items }}</strong><small>Threshold and review reminders</small></article>
+  <article class="metric-card"><span>Stale Evidence</span><strong>{{ monitoring_summary.stale_evidence_items }}</strong><small>Refresh before relying on research</small></article>
+  <article class="metric-card"><span>Readiness Failures</span><strong>{{ monitoring_summary.readiness_failures }}</strong><small>Safety posture awareness only</small></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Monitoring / Alert Workflow</h2><p class="help-text">Local-first alert rules, watchlist thresholds, thesis reminders, evidence freshness alerts, readiness posture alerts, and notification-center workflow. Alerts never place, cancel, approve, sign, or arm orders.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/monitoring/export.json">Export JSON</a><a class="button-link quiet" href="/api/v2/live/monitoring/export.md">Export Markdown</a><a class="button-link quiet" href="/api/v2/live/monitoring/export/rules.csv">Rules CSV</a><a class="button-link quiet" href="/api/v2/live/monitoring/export/alerts.csv">Alerts CSV</a></div></div>
+  <p class="callout info">{{ monitoring.next_action }} Alerts are workflow guidance only. A threshold trigger is not approval, not financial advice, and not an order.</p>
+</section>
+<section class="two-col strategy-form-grid monitoring-form-grid">
+  <article class="content-card"><h2>Create Alert Rule</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/monitoring/rules" data-result="monitoring-results"><label>Rule name<input name="rule_name" required placeholder="Review market when threshold is reached"></label><label>Rule type<select name="rule_type"><option>price_threshold</option><option>spread</option><option>liquidity</option><option>market_status</option><option>watchlist</option><option>thesis</option><option>evidence_freshness</option><option>readiness_posture</option></select></label><label>Condition<select name="condition"><option>above</option><option>below</option><option>review_due</option><option>stale</option><option>aging</option><option>expired</option><option>failed</option><option>manual</option></select></label><label>Threshold / target value<input name="threshold_value" type="number" step="0.0001" value="0"></label><label>Severity<select name="severity"><option>info</option><option selected>watch</option><option>warning</option><option>critical</option></select></label><label>Status<select name="status"><option selected>enabled</option><option>disabled</option><option>archived</option></select></label><label>Market ID / slug<input name="related_market_id"></label><label>Outcome<input name="related_outcome"></label><label>Thesis ID<input name="related_thesis_id"></label><label>Evidence ID<input name="related_evidence_id"></label><label>Watchlist ID<input name="related_watchlist_id"></label><label>Review by date<input name="review_by" type="date"></label><label class="full-span">Notes<textarea name="operator_notes" placeholder="Operator reminder or condition context"></textarea></label><button type="submit">Create rule</button></form></article>
+  <article class="content-card"><h2>Evaluate Rule</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/monitoring/rules/{rule_id}/evaluate" data-path-field="rule_id" data-result="monitoring-results"><label>Rule ID<input name="rule_id" required></label><label>Sample current value<input name="current_value" type="number" step="0.0001" value="0"></label><label>Status / freshness<input name="status" placeholder="fresh / stale / failed / active"></label><button type="submit">Evaluate rule</button></form><p class="help-text">Evaluation is read-only. It never submits, signs, approves, arms, or cancels orders.</p><button class="button-link quiet js-post" data-target="/api/v2/live/monitoring/evaluate" data-result="monitoring-results" data-render="table">Evaluate all enabled rules</button></article>
+  <article class="content-card"><h2>Acknowledge Alert</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/monitoring/alerts/{alert_id}/acknowledge" data-path-field="alert_id" data-result="monitoring-results"><label>Alert ID<input name="alert_id" required></label><button type="submit">Acknowledge alert</button></form></article>
+  <article class="content-card"><h2>Snooze Alert</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/monitoring/alerts/{alert_id}/snooze" data-path-field="alert_id" data-result="monitoring-results"><label>Alert ID<input name="alert_id" required></label><label>Snooze minutes<input name="minutes" type="number" min="1" value="60"></label><button type="submit">Snooze alert</button></form></article>
+  <article class="content-card"><h2>Disable / Archive Rule</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/monitoring/rules/{rule_id}/disable" data-path-field="rule_id" data-result="monitoring-results"><label>Rule ID<input name="rule_id" required></label><button type="submit">Disable rule</button></form><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/monitoring/rules/{archive_rule_id}/archive" data-path-field="archive_rule_id" data-result="monitoring-results"><label>Rule ID<input name="archive_rule_id" required></label><button type="submit" class="button-link quiet">Archive rule</button></form></article>
+  <article class="content-card"><h2>Monitoring result</h2><div id="monitoring-results" class="live-result empty-state">Monitoring API results appear here. No alert action places or cancels orders.</div></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Notification Center</h2><p class="help-text">Active alerts, alert rules, and recent monitoring history. Use filters, result counts, and expandable details for local operator review.</p></div><div class="action-bar"><button class="button-link quiet js-fetch" data-target="/api/v2/live/monitoring" data-result="monitoring-fetch-results" data-render="table">Refresh monitoring</button><a class="button-link quiet" href="/api/v2/live/monitoring/history">History JSON</a></div></div>
+  <div class="table-controls"><input class="js-table-filter" data-table="active-alerts-table" type="search" placeholder="Filter active alerts"><span class="result-count" data-count-for="active-alerts-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="active-alerts-table"><thead><tr><th data-sort="text">Triggered</th><th data-sort="text">Severity</th><th data-sort="text">Rule</th><th data-sort="text">Status</th><th>Reason / action</th></tr></thead><tbody>{% for item in monitoring.active_alerts %}<tr><td>{{ item.triggered_at }}</td><td><span class="status-badge tone-{{ 'danger' if item.severity == 'critical' else 'warning' if item.severity == 'warning' else 'info' }}">{{ item.severity }}</span></td><td>{{ item.rule_name }}</td><td>{{ item.status }}</td><td>{{ item.reason }}<br><span class="small">{{ item.recommended_operator_action }}</span><details class="advanced-detail"><summary>Raw</summary><pre>{{ item|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="5" class="empty-state">No active alerts. Create or evaluate a rule to populate the notification center.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Alert Rules</h2><p class="help-text">Read-only rule definitions. Rules can trigger alerts, but never execution.</p></div><a class="button-link quiet" href="/api/v2/live/monitoring/export/rules.csv">Export rules CSV</a></div>
+  <div class="table-controls"><input class="js-table-filter" data-table="rules-table" type="search" placeholder="Filter rules"><span class="result-count" data-count-for="rules-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="rules-table"><thead><tr><th data-sort="text">Updated</th><th data-sort="text">Name</th><th data-sort="text">Type</th><th data-sort="text">Status</th><th data-sort="text">Severity</th><th data-sort="number">Threshold</th><th>Details</th></tr></thead><tbody>{% for item in monitoring.rules %}<tr><td>{{ item.updated_at }}</td><td>{{ item.rule_name }}</td><td>{{ item.rule_type }}</td><td>{{ item.status }}</td><td>{{ item.severity }}</td><td>{{ item.threshold_value }}</td><td><button class="tiny-button js-copy-id" type="button" data-copy="{{ item.id }}">Copy ID</button><details class="advanced-detail"><summary>Raw</summary><pre>{{ item|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="7" class="empty-state">No rules yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="content-card"><h2>Fetched monitoring data</h2><div id="monitoring-fetch-results" class="live-result empty-state">Manual refresh results appear here.</div></section>
+{% endif %}
+
+
+{% if section == "portfolio" %}
+{% set portfolio_summary = portfolio.summary %}
+<section class="live-v2-dashboard-grid portfolio-dashboard-grid">
+  <article class="metric-card"><span>Total Exposure</span><strong>{{ "%.2f"|format(portfolio_summary.total_notional_exposure|float) }}</strong><small>Local/read-only estimate; unknown values stay explicit.</small></article>
+  <article class="metric-card"><span>Max Loss Estimate</span><strong>{{ "%.2f"|format(portfolio_summary.total_max_loss_estimate|float) }}</strong><small>Only where source data supports it.</small></article>
+  <article class="metric-card"><span>Exposure Records</span><strong>{{ portfolio_summary.exposure_records }}</strong><small>{{ portfolio_summary.unknown_exposure_records }} with unknown fields</small></article>
+  <article class="metric-card"><span>Market Groups</span><strong>{{ portfolio_summary.market_groups }}</strong><small>Market-linked exposure groups</small></article>
+  <article class="metric-card"><span>Warnings</span><strong>{{ portfolio.warnings|length }}</strong><small>Concentration and data-quality warnings</small></article>
+  <article class="metric-card critical-card"><span>Safety</span><strong>No Execution</strong><small>Exposure guidance never places, cancels, signs, approves, or arms orders.</small></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Portfolio / Exposure Intelligence</h2><p class="help-text">Local-first exposure summaries, bankroll/risk-budget settings, concentration warnings, scenario planning, and planned trade impact. Portfolio guidance is workflow guidance only, not financial advice.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/portfolio/export.json">Export JSON</a><a class="button-link quiet" href="/api/v2/live/portfolio/export.md">Export Markdown</a><a class="button-link quiet" href="/api/v2/live/portfolio/export/exposure.csv">Exposure CSV</a><a class="button-link quiet" href="/api/v2/live/portfolio/export/warnings.csv">Warnings CSV</a></div></div>
+  <p class="callout info">{{ portfolio.next_action }} Planned impact previews and scenarios do not submit anything. Existing live gates still apply.</p>
+</section>
+<section class="two-col strategy-form-grid portfolio-form-grid">
+  <article class="content-card"><h2>Bankroll / Risk Budget</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/portfolio/bankroll" data-result="portfolio-results"><label>Total bankroll<input name="total_bankroll" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.total_bankroll }}"></label><label>Live trading bankroll<input name="live_trading_bankroll" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.live_trading_bankroll }}"></label><label>Paper bankroll<input name="paper_bankroll" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.paper_bankroll }}"></label><label>Max portfolio exposure<input name="max_portfolio_exposure" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.max_portfolio_exposure }}"></label><label>Max per-market exposure<input name="max_per_market_exposure" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.max_per_market_exposure }}"></label><label>Max per-thesis exposure<input name="max_per_thesis_exposure" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.max_per_thesis_exposure }}"></label><label>Max per-tag exposure<input name="max_per_tag_exposure" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.max_per_tag_exposure }}"></label><label>Reserve cash / do-not-use<input name="reserve_cash" type="number" step="0.01" min="0" value="{{ portfolio.bankroll.reserve_cash }}"></label><label class="full-span">Notes<textarea name="operator_notes" placeholder="Local operator notes; never enter secrets.">{{ portfolio.bankroll.operator_notes }}</textarea></label><button type="submit">Save bankroll settings</button></form></article>
+  <article class="content-card"><h2>Manual Exposure Group</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/portfolio/exposure-groups" data-result="portfolio-results"><label>Group name<input name="group_name" required placeholder="Election basket / AI policy basket"></label><label>Market ID<input name="related_market_id"></label><label>Thesis ID<input name="related_thesis_id"></label><label>Watchlist ID<input name="related_watchlist_id"></label><label>Strategy tag<input name="strategy_tag"></label><label>Notional estimate<input name="notional_estimate" type="number" step="0.01" min="0" value="0"></label><label>Max loss estimate<input name="max_loss_estimate" type="number" step="0.01" min="0" value="0"></label><label class="full-span">Notes<textarea name="operator_notes" placeholder="Why this exposure group matters"></textarea></label><button type="submit">Create exposure group</button></form></article>
+  <article class="content-card"><h2>Scenario Planner</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/portfolio/scenarios" data-result="portfolio-results"><label>Scenario name<input name="scenario_name" required placeholder="Thesis fails / planned ticket fills"></label><label>Scenario type<select name="scenario_type"><option>market_resolves_yes</option><option>market_resolves_no</option><option>thesis_succeeds</option><option>thesis_fails</option><option>planned_ticket_fills_fully</option><option>planned_ticket_partially_fills</option><option>stale_evidence_invalidates_thesis</option><option>liquidity_disappears</option><option>manual</option></select></label><label>Market ID<input name="related_market_id"></label><label>Thesis ID<input name="related_thesis_id"></label><label>Planned notional<input name="planned_notional" type="number" step="0.01" min="0" value="0"></label><label>Assumed fill fraction<input name="assumed_fill_fraction" type="number" step="0.01" min="0" max="1" value="1"></label><label class="full-span">Notes<textarea name="operator_notes"></textarea></label><button type="submit">Create scenario</button></form><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/portfolio/scenarios/{scenario_id}/evaluate" data-path-field="scenario_id" data-result="portfolio-results"><label>Scenario ID<input name="scenario_id" required></label><button type="submit">Evaluate scenario</button></form></article>
+  <article class="content-card"><h2>Planned Trade Impact</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/portfolio/planned-impact" data-result="portfolio-results"><label>Market ID<input name="market_id"></label><label>Thesis ID<input name="thesis_id"></label><label>Strategy tag<input name="strategy_tag" value="planned"></label><label>Price<input name="price" type="number" step="0.0001" min="0" max="1" value="0.50"></label><label>Size<input name="size" type="number" step="0.01" min="0" value="1"></label><label>Planned notional override<input name="planned_notional" type="number" step="0.01" min="0" value="0"></label><button type="submit">Preview planned impact</button></form><p class="help-text">Preview only. No submit, sign, approval, arm, or cancel path is called.</p></article>
+  <article class="content-card"><h2>Portfolio result</h2><div id="portfolio-results" class="live-result empty-state">Portfolio API results appear here. No portfolio action places or cancels orders.</div></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Concentration Warnings</h2><p class="help-text">Warnings are workflow guidance only. Unknown/unavailable exposure must be treated cautiously.</p></div><div class="action-bar"><button class="button-link quiet js-fetch" data-target="/api/v2/live/portfolio" data-result="portfolio-fetch-results" data-render="table">Refresh portfolio</button><button class="button-link quiet js-post" data-target="/api/v2/live/portfolio/snapshot" data-result="portfolio-fetch-results" data-render="table">Record snapshot</button></div></div>
+  <div class="table-controls"><input class="js-table-filter" data-table="portfolio-warnings-table" type="search" placeholder="Filter warnings"><span class="result-count" data-count-for="portfolio-warnings-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="portfolio-warnings-table"><thead><tr><th data-sort="text">Severity</th><th data-sort="text">Type</th><th>Message</th><th data-sort="number">Observed</th><th data-sort="number">Limit</th></tr></thead><tbody>{% for item in portfolio.warnings %}<tr><td><span class="status-badge tone-{{ 'danger' if item.severity == 'critical' else 'warning' if item.severity == 'warning' else 'info' }}">{{ item.severity }}</span></td><td>{{ item.warning_type }}</td><td>{{ item.message }}<br><span class="small">{{ item.recommended_operator_action }}</span><details class="advanced-detail"><summary>Raw</summary><pre>{{ item|tojson(indent=2) }}</pre></details></td><td>{{ item.observed_value }}</td><td>{{ item.limit_value }}</td></tr>{% else %}<tr><td colspan="5" class="empty-state">No concentration warnings. Configure bankroll limits and generate exposure records for stronger checks.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Exposure Records</h2><p class="help-text">Clearly distinguishes locally audited, paper, planned, watchlist, thesis, and unknown/unavailable exposure.</p></div><a class="button-link quiet" href="/api/v2/live/portfolio/export/exposure.csv">Export exposure CSV</a></div>
+  <div class="table-controls"><input class="js-table-filter" data-table="portfolio-exposure-table" type="search" placeholder="Filter exposure"><span class="result-count" data-count-for="portfolio-exposure-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="portfolio-exposure-table"><thead><tr><th data-sort="text">Type</th><th data-sort="text">Market</th><th data-sort="text">Thesis</th><th data-sort="text">Tag</th><th data-sort="number">Notional</th><th data-sort="number">Max Loss</th><th>Details</th></tr></thead><tbody>{% for item in portfolio.exposures %}<tr><td>{{ item.exposure_type }}</td><td>{{ item.related_market_id|compact_id }}</td><td>{{ item.related_thesis_id|compact_id }}</td><td>{{ item.strategy_tag }}</td><td>{{ item.notional_estimate }}</td><td>{{ item.max_loss_estimate }}</td><td>{{ item.source }}<br><button class="tiny-button js-copy-id" type="button" data-copy="{{ item.id }}">Copy ID</button><details class="advanced-detail"><summary>Raw</summary><pre>{{ item|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="7" class="empty-state">No exposure records yet. Create a thesis limit, manual exposure group, or planned impact preview.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="content-card"><h2>Fetched portfolio data</h2><div id="portfolio-fetch-results" class="live-result empty-state">Manual portfolio refresh results appear here.</div></section>
+{% endif %}
+
+{% if section == "governance" %}
+{% set governance_summary = governance.summary %}
+<section class="live-v2-dashboard-grid governance-dashboard-grid">
+  <article class="metric-card"><span>Journal Entries</span><strong>{{ governance_summary.journal_entries }}</strong><small>{{ governance_summary.active_decisions }} active/draft decisions</small></article>
+  <article class="metric-card"><span>Checklists</span><strong>{{ governance_summary.checklists }}</strong><small>{{ governance_summary.unresolved_checklists }} unresolved</small></article>
+  <article class="metric-card"><span>Post-Trade Reviews</span><strong>{{ governance_summary.post_trade_reviews }}</strong><small>Lessons and follow-up actions</small></article>
+  <article class="metric-card"><span>Daily / Weekly Reviews</span><strong>{{ governance_summary.daily_reviews }} / {{ governance_summary.weekly_reviews }}</strong><small>Routine operator accountability</small></article>
+  <article class="metric-card critical-card"><span>Near-Misses</span><strong>{{ governance_summary.open_near_misses }}</strong><small>Open rule violations or near-misses</small></article>
+  <article class="metric-card"><span>Mistake Patterns</span><strong>{{ governance_summary.active_mistake_patterns }}</strong><small>Active process-improvement targets</small></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Governance / Decision Journal</h2><p class="help-text">Local-first decision journal, pre-trade checklist, review, mistake-pattern, and near-miss workflow. Governance records never place, cancel, approve, sign, arm, or bypass orders.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/governance/export.json">Export JSON</a><a class="button-link quiet" href="/api/v2/live/governance/export.md">Export Markdown</a><a class="button-link quiet" href="/api/v2/live/governance/export/journal.csv">Journal CSV</a><a class="button-link quiet" href="/api/v2/live/governance/export/checklists.csv">Checklists CSV</a><a class="button-link quiet" href="/api/v2/live/governance/export/mistakes.csv">Mistakes CSV</a></div></div>
+  <p class="callout info">{{ governance_summary.next_action }} A journal entry is not an order. A checklist is not approval. Governance guidance is workflow guidance only, not financial advice.</p>
+</section>
+<section class="two-col strategy-form-grid governance-form-grid">
+  <article class="content-card"><h2>Create Decision Journal Entry</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/governance/journal" data-result="governance-results"><label>Decision title<input name="decision_title" required placeholder="Why I am / am not drafting this ticket"></label><label>Decision type<select name="decision_type"><option>research_decision</option><option>thesis_decision</option><option>watchlist_decision</option><option>trade_ticket_decision</option><option>risk_decision</option><option>portfolio_decision</option><option>monitoring_decision</option><option>emergency_decision</option><option>no_trade_decision</option><option>other</option></select></label><label>Confidence 0-100<input name="confidence_level" type="number" min="0" max="100" value="50"></label><label>Status<select name="status"><option>draft</option><option>active</option><option>reviewed</option><option>closed</option><option>archived</option></select></label><label>Market ID<input name="related_market_id"></label><label>Thesis ID<input name="related_thesis_id"></label><label class="full-span">Decision summary<textarea name="decision_summary"></textarea></label><label class="full-span">Reasoning<textarea name="reasoning"></textarea></label><label class="full-span">Alternative considered<textarea name="alternative_considered" placeholder="No-trade or smaller-size alternative"></textarea></label><button type="submit">Create journal entry</button></form></article>
+  <article class="content-card"><h2>Create Pre-Trade Checklist</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/governance/checklists" data-result="governance-results"><label>Checklist title<input name="checklist_title" value="Pre-trade governance checklist"></label><label>Market ID<input name="related_market_id"></label><label>Thesis ID<input name="related_thesis_id"></label><label>Status<select name="status"><option>draft</option><option>in_progress</option><option>completed</option><option>archived</option></select></label><label class="checkbox-line"><input name="no_trade_alternative_considered" value="true" type="checkbox"> No-trade alternative considered</label><label class="full-span">Notes<textarea name="operator_notes"></textarea></label><button type="submit">Create checklist</button></form><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/governance/checklists/{checklist_id}" data-path-field="checklist_id" data-result="governance-results"><label>Checklist ID<input name="checklist_id" required></label><label>Status<select name="status"><option>completed</option><option>in_progress</option><option>archived</option></select></label><button type="submit">Update checklist</button></form></article>
+  <article class="content-card"><h2>Create Review</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/governance/reviews" data-result="governance-results"><label>Review title<input name="review_title" required></label><label>Review type<select name="review_type"><option>post_trade</option><option>daily</option><option>weekly</option><option>process</option><option>manual</option></select></label><label>Status<select name="status"><option>draft</option><option>completed</option><option>archived</option></select></label><label>Linked ticket/order<input name="related_trade_ticket_id"></label><label class="full-span">What went right<textarea name="what_went_right"></textarea></label><label class="full-span">What went wrong<textarea name="what_went_wrong"></textarea></label><label class="full-span">Lesson learned<textarea name="lesson_learned"></textarea></label><button type="submit">Create review</button></form></article>
+  <article class="content-card"><h2>Rules, Near-Misses, and Mistake Patterns</h2><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/governance/rules" data-result="governance-results"><label>Rule title<input name="rule_title" required></label><label>Category<select name="category"><option>process</option><option>risk</option><option>research</option><option>portfolio</option><option>monitoring</option><option>execution</option><option>emergency</option><option>other</option></select></label><label>Severity<select name="severity"><option>info</option><option selected>watch</option><option>warning</option><option>critical</option></select></label><label class="full-span">Description<textarea name="rule_description"></textarea></label><button type="submit">Create rule</button></form><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/governance/near-misses" data-result="governance-results"><label>Near-miss title<input name="title" required></label><label>Severity<select name="severity"><option>info</option><option selected>watch</option><option>warning</option><option>critical</option></select></label><label class="checkbox-line"><input name="money_was_at_risk" type="checkbox" value="true"> Money was at risk</label><label class="checkbox-line"><input name="live_execution_occurred" type="checkbox" value="true"> Live execution occurred</label><label class="full-span">What happened<textarea name="what_happened"></textarea></label><button type="submit">Record near-miss</button></form><form class="live-tool-form" data-method="POST" data-target="/api/v2/live/governance/mistake-patterns" data-result="governance-results"><label>Pattern title<input name="pattern_title" required></label><label>Pattern type<select name="pattern_type"><option>entered_thesis_too_early</option><option>ignored_counter_evidence</option><option>relied_on_stale_evidence</option><option>violated_exposure_limit</option><option>over_concentrated</option><option>missing_exit_criteria</option><option>missing_invalidation_criteria</option><option>ignored_monitoring_alert</option><option>insufficient_evidence</option><option>emotional_impulsive_decision</option><option>unclear_reasoning</option><option>other</option></select></label><label>Frequency<input name="frequency" type="number" min="0" value="1"></label><label class="full-span">Process improvement action<textarea name="process_improvement_action"></textarea></label><button type="submit">Create mistake pattern</button></form></article>
+  <article class="content-card"><h2>Governance result</h2><div id="governance-results" class="live-result empty-state">Governance API results appear here. No governance action places or cancels orders.</div></article>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Decision Journal</h2><p class="help-text">Filter, expand, and export decision rationale. Link IDs to strategy, research, monitoring, portfolio, tickets, and audit events.</p></div><button class="button-link quiet js-fetch" data-target="/api/v2/live/governance" data-result="governance-fetch-results" data-render="table">Refresh governance</button></div>
+  <div class="table-controls"><input class="js-table-filter" data-table="governance-journal-table" type="search" placeholder="Filter journal"><span class="result-count" data-count-for="governance-journal-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="governance-journal-table"><thead><tr><th data-sort="text">Type</th><th data-sort="text">Title</th><th data-sort="text">Status</th><th data-sort="number">Confidence</th><th>Linked</th><th>Details</th></tr></thead><tbody>{% for item in governance.journal %}<tr><td>{{ item.decision_type }}</td><td>{{ item.decision_title }}</td><td><span class="status-badge tone-{{ item.status|status_tone }}">{{ item.status }}</span></td><td>{{ item.confidence_level }}</td><td>{{ item.related_market_id|compact_id }} / {{ item.related_thesis_id|compact_id }}</td><td>{{ item.decision_summary }}<br><button class="tiny-button js-copy-id" type="button" data-copy="{{ item.id }}">Copy ID</button><details class="advanced-detail"><summary>Raw</summary><pre>{{ item|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="6" class="empty-state">No decision journal entries yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="two-col">
+  <article class="content-card"><div class="section-header"><div><h2>Checklists</h2><p class="help-text">A checklist is not approval; it records governance discipline.</p></div><a class="button-link quiet" href="/api/v2/live/governance/export/checklists.csv">Checklists CSV</a></div><ul class="clean-list compact">{% for item in governance.checklists[:12] %}<li><strong>{{ item.checklist_title }}</strong> <span class="status-badge tone-{{ item.status|status_tone }}">{{ item.status }}</span><br><span class="small">{{ item.completed_count }}/{{ item.total_count }} complete · {{ item.id }}</span></li>{% else %}<li class="empty-state">No governance checklists yet.</li>{% endfor %}</ul></article>
+  <article class="content-card"><div class="section-header"><div><h2>Mistake Patterns / Near-Misses</h2><p class="help-text">Track recurring process issues and corrective actions.</p></div><a class="button-link quiet" href="/api/v2/live/governance/export/mistakes.csv">Mistakes CSV</a></div><ul class="clean-list compact">{% for item in governance.mistake_patterns[:8] %}<li><strong>{{ item.pattern_title }}</strong> · {{ item.pattern_type }}<br><span class="small">freq {{ item.frequency }} · {{ item.status }}</span></li>{% else %}<li class="empty-state">No mistake patterns yet.</li>{% endfor %}{% for item in governance.near_misses[:8] %}<li><strong>{{ item.title }}</strong> <span class="status-badge tone-{{ item.severity|status_tone }}">{{ item.severity }}</span><br><span class="small">{{ item.status }} · live execution: {{ item.live_execution_occurred }}</span></li>{% endfor %}</ul></article>
+</section>
+<section class="content-card"><h2>Fetched governance data</h2><div id="governance-fetch-results" class="live-result empty-state">Manual governance refresh results appear here.</div></section>
 {% endif %}
 
 {% if section == "orders" %}
 <section class="content-card">
-  <div class="section-header"><div><h2>Orders</h2><p class="help-text">Open-order lookup, targeted cancellation, and raw payload inspection. Cancel-all remains preview-only unless an operator implements and enables it deliberately.</p></div><button class="button-link quiet js-fetch" data-target="/api/v2/live/orders/open" data-result="orders-results">Refresh open orders</button></div>
+  <div class="section-header"><div><h2>Orders</h2><p class="help-text">Open-order lookup, targeted cancellation, filters, and raw payload inspection. Cancel-all remains preview-only unless an operator implements and enables it deliberately.</p></div><button class="button-link quiet js-fetch" data-target="/api/v2/live/orders/open" data-result="orders-results" data-render="table" data-kind="orders">Refresh open orders</button></div>
+  <div class="table-controls"><input class="client-result-filter" data-result="orders-results" type="search" placeholder="Filter fetched orders by status, side, market"><span id="orders-count" class="result-count"></span></div>
   <div id="orders-results" class="live-result empty-state">Open orders are fetched only when requested.</div>
 </section>
 <section class="content-card">
@@ -147,20 +387,22 @@
 
 {% if section == "positions" %}
 <section class="content-card">
-  <div class="section-header"><div><h2>Positions and balances</h2><p class="help-text">Account data is read-only and shown as unknown/unavailable when reliable data is missing.</p></div><button class="button-link quiet js-fetch" data-target="/api/v2/live/positions" data-result="positions-results">Refresh positions</button></div>
+  <div class="section-header"><div><h2>Positions and balances</h2><p class="help-text">Account data is read-only and shown as unknown/unavailable when reliable data is missing.</p></div><button class="button-link quiet js-fetch" data-target="/api/v2/live/positions" data-result="positions-results" data-render="table" data-kind="positions">Refresh positions</button></div>
+  <div class="table-controls"><input class="client-result-filter" data-result="positions-results" type="search" placeholder="Filter fetched positions"><span id="positions-count" class="result-count"></span></div>
   <div id="positions-results" class="live-result empty-state">Positions are not fetched on page load.</div>
 </section>
 <section class="content-card">
-  <div class="section-header"><div><h2>Reconciliation</h2><p class="help-text">Compare local audit records with remote open-order state when read-only live data is enabled.</p></div><button class="button-link quiet js-post" data-target="/api/v2/live/reconcile" data-result="reconcile-results">Run reconciliation</button></div>
+  <div class="section-header"><div><h2>Reconciliation</h2><p class="help-text">Compare local audit records with remote open-order state when read-only live data is enabled.</p></div><button class="button-link quiet js-post" data-target="/api/v2/live/reconcile" data-result="reconcile-results" data-render="table" data-kind="reconciliation">Run reconciliation</button></div>
   <div id="reconcile-results" class="live-result empty-state">Reconciliation report appears here.</div>
 </section>
 {% endif %}
 
 {% if section == "audit" %}
 <section class="content-card">
-  <div class="section-header"><div><h2>Audit Ledger</h2><p class="help-text">Human-readable default view, expandable raw details, and export formats.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/audit">JSON</a><a class="button-link quiet" href="/api/v2/live/audit.csv">CSV</a><a class="button-link quiet" href="/api/v2/live/audit.md">Markdown</a></div></div>
-  <div class="table-wrap"><table><thead><tr><th>Time</th><th>Mode</th><th>Action</th><th>Status</th><th>Market</th><th>Token</th><th>Notional</th><th>Details</th></tr></thead><tbody>
-    {% for row in audit_rows %}<tr><td>{{ row.timestamp }}</td><td>{{ row.mode }}</td><td>{{ row.action }}</td><td><span class="status-badge tone-{{ row.status|status_tone }}">{{ row.status }}</span></td><td>{{ row.market_id|compact_id }}</td><td>{{ row.token_id|compact_id }}</td><td>{{ row.notional }}</td><td><details><summary>Raw</summary><pre>{{ row|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="8" class="empty-state">No v2 audit records yet.</td></tr>{% endfor %}
+  <div class="section-header"><div><h2>Audit Ledger</h2><p class="help-text">Human-readable default view, client filters, expandable raw details, and export formats.</p></div><div class="action-bar"><a class="button-link quiet" href="/api/v2/live/audit">JSON</a><a class="button-link quiet" href="/api/v2/live/audit.csv">CSV</a><a class="button-link quiet" href="/api/v2/live/audit.md">Markdown</a></div></div>
+  <div class="table-controls audit-filters"><input class="js-table-filter" data-table="audit-table" id="audit-search" type="search" placeholder="Search audit events"><select id="audit-mode-filter" data-filter-column="1"><option value="">All modes</option><option>research_only</option><option>paper</option><option>live_read_only</option><option>live_trading_armed</option></select><select id="audit-status-filter" data-filter-column="3"><option value="">All statuses</option><option>blocked</option><option>blocked_by_risk</option><option>blocked_by_confirmation</option><option>passed</option><option>recorded</option><option>ok</option></select><span class="result-count" data-count-for="audit-table"></span></div>
+  <div class="table-wrap"><table class="interactive-table" id="audit-table"><thead><tr><th data-sort="text">Time</th><th data-sort="text">Mode</th><th data-sort="text">Action</th><th data-sort="text">Status</th><th data-sort="text">Market</th><th data-sort="text">Order</th><th data-sort="number">Notional</th><th>Details</th></tr></thead><tbody>
+    {% for row in audit_rows %}<tr><td>{{ row.timestamp }}</td><td>{{ row.mode }}</td><td>{{ row.action }}</td><td><span class="status-badge tone-{{ row.status|status_tone }}">{{ row.status }}</span></td><td>{{ row.market_id|compact_id }}</td><td>{{ row.order_id|compact_id }}</td><td>{{ row.notional }}</td><td><button class="tiny-button js-copy-id" type="button" data-copy="{{ row.order_id or row.ticket_hash }}">Copy ID</button><details class="advanced-detail"><summary>Raw</summary><pre>{{ row|tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="8" class="empty-state">No v2 audit records yet.</td></tr>{% endfor %}
   </tbody></table></div>
 </section>
 {% endif %}
@@ -173,8 +415,8 @@
 </section>
 <section class="content-card">
   <h2>Validate setting changes</h2><p class="help-text">Paste a small JSON object of candidate environment values. This only validates and never writes files.</p>
-  <form class="live-tool-form json-form" data-method="POST" data-target="/api/v2/live/settings/validate" data-json-field="settings_json" data-result="settings-validate-results"><label class="full-span">Candidate JSON<textarea name="settings_json" placeholder='{"POLYMARKET_V2_TRADING_MODE":"paper"}'></textarea></label><button type="submit">Validate</button></form>
-  <div id="settings-validate-results" class="live-result empty-state">Validation output appears here.</div>
+  <form class="live-tool-form json-form" data-method="POST" data-target="/api/v2/live/settings/validate" data-json-field="settings_json" data-result="settings-validate-results"><label class="full-span">Candidate JSON<textarea name="settings_json" placeholder='{"POLYMARKET_V2_TRADING_MODE":"paper"}'></textarea></label><button type="submit">Validate</button><button type="reset" class="button-link quiet">Reset unsaved changes</button></form>
+  <div id="settings-validate-results" class="live-result empty-state">Validation output appears here with secret values redacted.</div>
 </section>
 {% endif %}
 
@@ -191,38 +433,160 @@
 </section>
 {% endif %}
 
+
+
+{% if section == "verify" %}
+<section class="content-card verify-panel">
+  <div class="section-header">
+    <div><h2>Live Read-Only Verification Harness</h2><p class="help-text">Explicit, operator-triggered checks for release/demo confidence. The harness does not place orders, sign orders for submission, arm live mode, mutate settings, or cancel orders.</p></div>
+    <div class="action-bar"><a class="button-link quiet" href="/api/v2/live/verify">Verification JSON</a><a class="button-link quiet" href="/api/v2/live/verify/report.md">Report Markdown</a></div>
+  </div>
+  <form class="live-tool-form" id="verification-form" data-method="GET" data-target="/api/v2/live/verify" data-result="verify-results" data-render="verify">
+    <label>Market query<input name="q" value="polymarket" placeholder="public read-only search query"></label>
+    <label>Optional CLOB token ID<input name="token_id" placeholder="leave blank to skip order-book read"></label>
+    <label class="checkbox-line"><input name="attempt_network" value="true" type="checkbox"> Attempt safe read-only network checks</label>
+    <button type="submit">Run verification</button>
+  </form>
+  <div id="verify-results" class="live-result empty-state">Verification results appear here only after you explicitly run the harness.</div>
+</section>
+<section class="content-card">
+  <div class="section-header"><div><h2>Demo Readiness</h2><p class="help-text">Local release/demo checks that do not require live credentials.</p></div><button class="button-link quiet js-fetch" data-target="/api/v2/live/demo-readiness" data-result="demo-readiness-results" data-render="verify">Run demo readiness</button></div>
+  <div id="demo-readiness-results" class="live-result empty-state">Demo readiness checks appear here.</div>
+</section>
+<section class="content-card">
+  <h2>Release exports</h2>
+  <div class="settings-link-grid docs-grid">
+    <a class="settings-link-card" href="/docs/LIVE_READ_ONLY_VERIFICATION_v2.3.0-real.md"><strong>Verification guide</strong><span>How to run safe live/read-only checks and exports.</span></a>
+    <a class="settings-link-card" href="/docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md"><strong>Manual QA checklist</strong><span>Browser and screenshot acceptance checks.</span></a>
+    <a class="settings-link-card" href="/docs/RELEASE_CHECKLIST_v3.3.0-real.md"><strong>Release checklist</strong><span>GitHub release, tag, asset, and rollback workflow.</span></a>
+    <a class="settings-link-card" href="/docs/VALIDATION_v3.3.0-real.md"><strong>Validation report</strong><span>Commands, safety checks, and known limitations.</span></a>
+  </div>
+</section>
+{% endif %}
+
 {% if section == "docs" %}
 <section class="content-card">
   <h2>Task-based docs</h2><p class="help-text">Fast paths for operators during a session.</p>
-  <div class="settings-link-grid">
+  <div class="settings-link-grid docs-grid">
     <a class="settings-link-card" href="/docs/LIVE_TRADING_SETUP_GUIDE.md"><strong>First Run / Live Read-Only</strong><span>Setup, credentials, readiness, safe defaults.</span></a>
+    <a class="settings-link-card" href="/docs/STRATEGY_PLAYBOOK_GUIDE_v2.4.0-real.md"><strong>Strategy / Playbook</strong><span>Theses, evidence, watchlists, scorecards, ticket linkage, and reviews.</span></a>
+    <a class="settings-link-card" href="/docs/MONITORING_ALERTS_GUIDE_v2.6.0-real.md"><strong>Monitoring / Alerts</strong><span>Alert rules, reminders, notification center, and exports.</span></a>
+    <a class="settings-link-card" href="/docs/PORTFOLIO_EXPOSURE_GUIDE_v2.7.0-real.md"><strong>Portfolio / Exposure</strong><span>Exposure intelligence, scenario planning, and planned impact previews.</span></a>
+    <a class="settings-link-card" href="/docs/DATA_INTEGRITY_BACKUP_RECOVERY_GUIDE_v3.3.0-real.md"><strong>Data Integrity / Backup / Recovery</strong><span>Health checks, backups, restore previews, import/export, migrations, and recovery reports.</span></a>
+    <a class="settings-link-card" href="/docs/GOVERNANCE_DECISION_JOURNAL_GUIDE_v2.8.0-real.md"><strong>Governance / Decision Journal</strong><span>Decision journal, checklists, reviews, near-misses, and mistake patterns.</span></a>
+    <a class="settings-link-card" href="/docs/RESEARCH_INTAKE_GUIDE_v2.5.0-real.md"><strong>Research Intake</strong><span>Sources, queue, notes, evidence candidates, freshness, and thesis comparison.</span></a>
     <a class="settings-link-card" href="/docs/LIVE_TRADING_V2.md"><strong>Live Trading</strong><span>Control-plane architecture and gates.</span></a>
+    <a class="settings-link-card" href="/docs/UI_UX_V2_2.md"><strong>Browser Polish</strong><span>Saved preferences, interactive filters, and refresh behavior.</span></a>
+    <a class="settings-link-card" href="/docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md"><strong>Manual QA Checklist</strong><span>Browser validation path and screenshot guidance.</span></a>
+    <a class="settings-link-card" href="/docs/LIVE_READ_ONLY_VERIFICATION_v2.3.0-real.md"><strong>Live Read-Only Verification</strong><span>Safe verification harness and export reports.</span></a>
     <a class="settings-link-card" href="/docs/RISK_CONTROLS_GUIDE.md"><strong>Risk Controls</strong><span>Limit, approval, warning, and blocker behavior.</span></a>
     <a class="settings-link-card" href="/docs/ORDER_LIFECYCLE_GUIDE.md"><strong>Order Lifecycle</strong><span>Preview, approval, submit, status, cancel, reconcile.</span></a>
     <a class="settings-link-card" href="/docs/EMERGENCY_KILL_SWITCH_GUIDE.md"><strong>Emergency Controls</strong><span>Kill switch, read-only, disable-orders, cancel preview.</span></a>
     <a class="settings-link-card" href="/docs/ENVIRONMENT_VARIABLES_REFERENCE.md"><strong>Environment Variables</strong><span>Grouped settings and secret handling.</span></a>
     <a class="settings-link-card" href="/docs/TROUBLESHOOTING_GUIDE.md"><strong>Troubleshooting</strong><span>Common failures and recovery paths.</span></a>
-    <a class="settings-link-card" href="/docs/RELEASE_NOTES_v2.1.0-real.md"><strong>Release Notes</strong><span>What changed in v2.1.0-real.</span></a>
+    <a class="settings-link-card" href="/docs/RELEASE_NOTES_v3.3.0-real.md"><strong>Release Notes</strong><span>What changed in v3.3.0-real.</span></a>
   </div>
 </section>
 {% endif %}
 
 <script>
 (function () {
+  const PREF_KEY = 'polymarketGamma.liveV2.uiPrefs.v2';
   const cache = new Map();
-  function showResult(id, data, tone) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.remove('empty-state');
-    el.innerHTML = '<details open><summary>' + (tone || 'Result') + '</summary><pre>' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre></details>';
+  const prefs = loadPrefs();
+
+  function loadPrefs() {
+    try { return JSON.parse(localStorage.getItem(PREF_KEY) || '{}') || {}; } catch (err) { return {}; }
+  }
+  function savePrefs(next) {
+    const safe = Object.assign({}, prefs, next || {});
+    delete safe.private_key; delete safe.api_key; delete safe.secret; delete safe.passphrase; delete safe.auth; delete safe.wallet;
+    localStorage.setItem(PREF_KEY, JSON.stringify(safe));
+    Object.assign(prefs, safe);
+  }
+  function applyPrefs() {
+    const pageSize = document.getElementById('pref-page-size');
+    const query = document.getElementById('pref-market-query');
+    const compact = document.getElementById('pref-compact-mode');
+    const advanced = document.getElementById('pref-show-advanced');
+    if (pageSize && prefs.table_page_size) pageSize.value = prefs.table_page_size;
+    if (query && prefs.default_market_query) query.value = prefs.default_market_query;
+    if (compact) compact.checked = !!prefs.compact_mode;
+    if (advanced) advanced.checked = !!prefs.show_advanced;
+    document.body.classList.toggle('live-v2-compact', !!prefs.compact_mode);
+    document.querySelectorAll('.advanced-detail').forEach(d => { if (prefs.show_advanced) d.setAttribute('open', 'open'); else d.removeAttribute('open'); });
+    const marketQuery = document.getElementById('market-query');
+    const marketLimit = document.getElementById('market-limit');
+    if (marketQuery && prefs.default_market_query) marketQuery.value = prefs.default_market_query;
+    if (marketLimit && prefs.table_page_size) marketLimit.value = Math.min(Number(prefs.table_page_size) || 25, 100);
+  }
+  function renderVerification(target, data) {
+    const checks = data.checks || [];
+    const count = checks.length;
+    const rows = checks.map(check => `<tr><td><span class="status-badge tone-${statusTone(check.status || 'unknown')}">${escapeHtml(check.status || 'unknown')}</span></td><td><strong>${escapeHtml(check.name || '')}</strong><br><span class="small">${escapeHtml(check.last_checked || '')}</span></td><td>${escapeHtml(check.explanation || '')}</td><td>${escapeHtml(check.error_redacted || '')}</td><td><details class="advanced-detail"><summary>Redacted raw</summary><pre>${escapeHtml(JSON.stringify(check.raw_redacted || {}, null, 2))}</pre></details></td></tr>`).join('');
+    target.innerHTML = `<div class="section-header"><div><h3>${escapeHtml(data.overall_status || 'unknown')}</h3><p class="help-text">${escapeHtml(data.safety_statement || 'No order placement or cancellation was performed.')}</p></div><span class="result-count">${count} checks</span></div><div class="table-wrap"><table class="interactive-table"><thead><tr><th>Status</th><th>Check</th><th>Explanation</th><th>Error</th><th>Details</th></tr></thead><tbody>${rows || '<tr><td colspan="5" class="empty-state">No checks returned.</td></tr>'}</tbody></table></div><details class="advanced-detail"><summary>Full redacted report</summary><pre>${escapeHtml(JSON.stringify(data, null, 2))}</pre></details>`;
+    wireDynamicTables(target);
+  }
+
+  function wirePrefs() {
+    const pageSize = document.getElementById('pref-page-size');
+    const query = document.getElementById('pref-market-query');
+    const compact = document.getElementById('pref-compact-mode');
+    const advanced = document.getElementById('pref-show-advanced');
+    const reset = document.getElementById('reset-ui-prefs');
+    if (pageSize) pageSize.addEventListener('change', () => savePrefs({table_page_size: pageSize.value}));
+    if (query) query.addEventListener('change', () => savePrefs({default_market_query: query.value.slice(0, 80)}));
+    if (compact) compact.addEventListener('change', () => { savePrefs({compact_mode: compact.checked}); applyPrefs(); });
+    if (advanced) advanced.addEventListener('change', () => { savePrefs({show_advanced: advanced.checked}); applyPrefs(); });
+    if (reset) reset.addEventListener('click', () => { localStorage.removeItem(PREF_KEY); location.reload(); });
   }
   function escapeHtml(text) {
     return String(text).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
   }
-  async function requestJson(method, url, body, resultId) {
+  function compact(value) {
+    const text = String(value || '');
+    return text.length > 18 ? text.slice(0, 8) + '…' + text.slice(-6) : text;
+  }
+  function showResult(id, data, tone, renderKind) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('empty-state');
+    if (renderKind) {
+      const table = renderResultTable(data, renderKind, id);
+      if (table) { el.innerHTML = table; wireDynamicTables(el); return; }
+    }
+    el.innerHTML = '<details open><summary>' + escapeHtml(tone || 'Result') + '</summary><pre>' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre></details>';
+  }
+  function rowFromObject(obj, keys) {
+    return '<tr>' + keys.map(k => '<td>' + escapeHtml(compact(obj && obj[k])) + '</td>').join('') + '<td><details class="advanced-detail"><summary>Raw</summary><pre>' + escapeHtml(JSON.stringify(obj, null, 2)) + '</pre></details></td></tr>';
+  }
+  function renderResultTable(data, kind, resultId) {
+    const items = Array.isArray(data && data.items) ? data.items : [];
+    if (!items.length && kind !== 'orderbook') {
+      return '<div class="empty-state">No rows returned. Status: ' + escapeHtml(data && data.status || 'unknown') + '</div><details><summary>Raw response</summary><pre>' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre></details>';
+    }
+    let keys = ['id', 'question', 'slug', 'active'];
+    if (kind === 'orders') keys = ['id', 'status', 'market', 'side', 'price', 'size'];
+    if (kind === 'positions') keys = ['market', 'outcome', 'size', 'value', 'pnl'];
+    if (kind === 'reconciliation') keys = ['timestamp', 'action', 'status', 'order_id', 'state'];
+    if (kind === 'orderbook') {
+      const book = data && data.orderbook ? data.orderbook : data || {};
+      const bids = Array.isArray(book.bids) ? book.bids : [];
+      const asks = Array.isArray(book.asks) ? book.asks : [];
+      const bestBid = bids[0] && (bids[0].price || bids[0][0]);
+      const bestAsk = asks[0] && (asks[0].price || asks[0][0]);
+      return '<div class="grid"><article class="card"><h3>Best bid</h3><strong>' + escapeHtml(bestBid || 'unknown') + '</strong></article><article class="card"><h3>Best ask</h3><strong>' + escapeHtml(bestAsk || 'unknown') + '</strong></article><article class="card"><h3>Status</h3><strong>' + escapeHtml(data && data.status || 'unknown') + '</strong></article></div><details class="advanced-detail"><summary>Raw order book</summary><pre>' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre></details>';
+    }
+    const headers = keys.map(k => '<th data-sort="text">' + escapeHtml(k) + '</th>').join('') + '<th>Details</th>';
+    const limit = Number(prefs.table_page_size || 25);
+    const rows = items.slice(0, limit).map(obj => rowFromObject(obj, keys)).join('');
+    return '<div class="table-controls"><input class="js-table-filter" data-table="' + resultId + '-table" type="search" placeholder="Filter these rows"><span class="result-count" data-count-for="' + resultId + '-table">Showing ' + Math.min(items.length, limit) + ' of ' + items.length + '</span></div><div class="table-wrap"><table class="interactive-table" id="' + resultId + '-table"><thead><tr>' + headers + '</tr></thead><tbody>' + rows + '</tbody></table></div><details class="advanced-detail"><summary>Raw response</summary><pre>' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre></details>';
+  }
+  async function requestJson(method, url, body, resultId, renderKind, button) {
     const key = method + ':' + url + ':' + JSON.stringify(body || {});
     const cached = method === 'GET' ? cache.get(key) : null;
-    if (cached && Date.now() - cached.at < 15000) { showResult(resultId, cached.data, 'Cached result'); return cached.data; }
+    if (cached && Date.now() - cached.at < 15000) { showResult(resultId, cached.data, 'Cached result', renderKind); return cached.data; }
+    if (button) { button.disabled = true; button.dataset.originalText = button.textContent; button.textContent = 'Loading…'; }
     showResult(resultId, {status: 'loading', url}, 'Loading');
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 15000);
@@ -230,13 +594,13 @@
       const response = await fetch(url, {method, headers: {'Content-Type': 'application/json'}, body: method === 'GET' ? undefined : JSON.stringify(body || {}), signal: controller.signal});
       const data = await response.json();
       if (method === 'GET') cache.set(key, {at: Date.now(), data});
-      showResult(resultId, data, response.ok ? 'Result' : 'Error');
+      showResult(resultId, data, response.ok ? 'Result' : 'Error', renderKind);
       return data;
     } catch (err) {
       const data = {status: 'request_failed', error: String(err)};
       showResult(resultId, data, 'Error');
       return data;
-    } finally { clearTimeout(timer); }
+    } finally { clearTimeout(timer); if (button) { button.disabled = false; button.textContent = button.dataset.originalText || button.textContent; } }
   }
   function formPayload(form) {
     const data = {};
@@ -254,6 +618,7 @@
       let method = form.dataset.method || 'GET';
       let target = form.dataset.target;
       const result = form.dataset.result;
+      const renderKind = form.dataset.kind || form.dataset.render;
       let payload = formPayload(form);
       if (form.dataset.jsonField) {
         try { payload = JSON.parse(payload[form.dataset.jsonField] || '{}'); } catch (err) { showResult(result, {valid:false, errors:['Invalid JSON: ' + err]}, 'Validation error'); return; }
@@ -267,14 +632,14 @@
         target += target.includes('?') ? '&' + params : '?' + params;
         payload = null;
       }
-      requestJson(method, target, payload, result);
+      requestJson(method, target, payload, result, renderKind, form.querySelector('button[type="submit"]'));
     });
   });
-  document.querySelectorAll('.js-fetch').forEach(btn => btn.addEventListener('click', () => requestJson('GET', btn.dataset.target, null, btn.dataset.result)));
-  document.querySelectorAll('.js-post').forEach(btn => btn.addEventListener('click', () => requestJson('POST', btn.dataset.target, {}, btn.dataset.result)));
+  document.querySelectorAll('.js-fetch').forEach(btn => btn.addEventListener('click', () => requestJson('GET', btn.dataset.target, null, btn.dataset.result, btn.dataset.render || btn.dataset.kind, btn)));
+  document.querySelectorAll('.js-post').forEach(btn => btn.addEventListener('click', () => requestJson('POST', btn.dataset.target, {}, btn.dataset.result, btn.dataset.render || btn.dataset.kind, btn)));
   document.querySelectorAll('.js-emergency').forEach(btn => btn.addEventListener('click', () => {
     if (!confirm('Record emergency action: ' + btn.dataset.action + '?')) return;
-    requestJson('POST', '/api/v2/live/emergency', {action: btn.dataset.action, note: 'ui_v2_1_emergency_panel'}, 'emergency-results');
+    requestJson('POST', '/api/v2/live/emergency', {action: btn.dataset.action, note: 'ui_v2_3_emergency_panel'}, 'emergency-results', null, btn);
   }));
   const previewBtn = document.getElementById('preview-ticket');
   const submitBtn = document.getElementById('submit-ticket');
@@ -282,17 +647,75 @@
   let lastPreviewPassed = false;
   if (previewBtn) previewBtn.addEventListener('click', async () => {
     const payload = formPayload(document.getElementById('ticket-form'));
-    const data = await requestJson('POST', '/api/v2/live/ticket/preview', payload, 'ticket-results');
+    const data = await requestJson('POST', '/api/v2/live/ticket/preview', payload, 'ticket-results', null, previewBtn);
     lastPreviewPassed = !!(data && data.submit_ready);
     submitBtn.disabled = !lastPreviewPassed;
-    submitState.textContent = lastPreviewPassed ? 'Backend preview passed · submit still requires confirmation' : 'Submit locked';
+    submitState.textContent = lastPreviewPassed ? 'Backend preview passed · submit still requires typed confirmation and backend gates' : 'Submit locked: preview/risk did not pass';
     submitState.className = 'status-badge ' + (lastPreviewPassed ? 'tone-warning' : 'tone-neutral');
   });
   if (submitBtn) submitBtn.addEventListener('click', () => {
     if (!lastPreviewPassed) return;
     if (!confirm('This calls the live submit endpoint. Backend gates will still block unless everything is valid. Continue?')) return;
-    requestJson('POST', '/api/v2/live/order/submit', formPayload(document.getElementById('ticket-form')), 'ticket-results');
+    requestJson('POST', '/api/v2/live/order/submit', formPayload(document.getElementById('ticket-form')), 'ticket-results', null, submitBtn);
   });
+  const resetTicket = document.getElementById('reset-ticket');
+  if (resetTicket) resetTicket.addEventListener('click', () => { document.getElementById('ticket-form').reset(); lastPreviewPassed = false; submitBtn.disabled = true; submitState.textContent = 'Submit locked: ticket reset'; });
+  const copyTicket = document.getElementById('copy-ticket');
+  if (copyTicket) copyTicket.addEventListener('click', () => navigator.clipboard && navigator.clipboard.writeText(JSON.stringify(formPayload(document.getElementById('ticket-form')), null, 2)));
+  document.querySelector('.js-status-refresh')?.addEventListener('click', async (ev) => {
+    const data = await requestJson('GET', '/api/v2/live/status', null, 'status-refresh-hidden', null, ev.currentTarget);
+    const last = document.getElementById('status-last-refresh');
+    const crit = document.getElementById('status-critical-error');
+    if (last && data && data.generated_at) last.textContent = 'Refresh ' + data.generated_at;
+    if (crit && data && data.ui) crit.textContent = 'Critical: ' + (data.ui.last_critical_error || 'None');
+  });
+  document.body.insertAdjacentHTML('beforeend', '<div id="status-refresh-hidden" class="visually-hidden" aria-live="polite"></div>');
+  function wireDynamicTables(root) {
+    (root || document).querySelectorAll('.js-table-filter').forEach(input => input.addEventListener('input', () => filterTable(input.dataset.table, input.value)));
+    (root || document).querySelectorAll('th[data-sort]').forEach(th => th.addEventListener('click', () => sortTable(th.closest('table'), th.cellIndex, th.dataset.sort)));
+    (root || document).querySelectorAll('.js-copy-id').forEach(btn => btn.addEventListener('click', () => navigator.clipboard && navigator.clipboard.writeText(btn.dataset.copy || '')));
+    applyPrefs();
+    updateCounts();
+  }
+  function filterTable(tableId, value) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const query = String(value || '').toLowerCase();
+    table.querySelectorAll('tbody tr').forEach(row => { row.hidden = query && !row.textContent.toLowerCase().includes(query); });
+    updateCounts();
+  }
+  function sortTable(table, column, type) {
+    if (!table) return;
+    const rows = Array.from(table.tBodies[0].rows);
+    rows.sort((a, b) => {
+      const av = a.cells[column]?.textContent?.trim() || '';
+      const bv = b.cells[column]?.textContent?.trim() || '';
+      if (type === 'number') return (parseFloat(av) || 0) - (parseFloat(bv) || 0);
+      return av.localeCompare(bv);
+    });
+    rows.forEach(row => table.tBodies[0].appendChild(row));
+  }
+  function updateCounts() {
+    document.querySelectorAll('[data-count-for]').forEach(el => {
+      const table = document.getElementById(el.dataset.countFor);
+      if (!table) return;
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+      const visible = rows.filter(r => !r.hidden).length;
+      el.textContent = 'Showing ' + visible + ' of ' + rows.length;
+    });
+  }
+  document.querySelectorAll('select[data-filter-column]').forEach(select => select.addEventListener('change', () => {
+    const table = document.getElementById('audit-table');
+    if (!table) return;
+    const filters = Array.from(document.querySelectorAll('select[data-filter-column]')).map(sel => ({column: Number(sel.dataset.filterColumn), value: sel.value.toLowerCase()}));
+    table.querySelectorAll('tbody tr').forEach(row => {
+      row.hidden = filters.some(f => f.value && !(row.cells[f.column]?.textContent || '').toLowerCase().includes(f.value));
+    });
+    updateCounts();
+  }));
+  wirePrefs();
+  applyPrefs();
+  wireDynamicTables(document);
 })();
 </script>
 {% endblock %}

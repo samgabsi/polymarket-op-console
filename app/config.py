@@ -6,8 +6,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-APP_VERSION = "2.1.0-real"
-APP_VERSION_SHORT = "2.1.0"
+APP_VERSION = "3.3.0-real"
+APP_VERSION_SHORT = "3.3.0"
 APP_DIR = PROJECT_ROOT / "app"
 DATA_DIR = PROJECT_ROOT / "data"
 
@@ -74,7 +74,7 @@ class Settings:
     live_max_open_orders: int = int(os.getenv("LIVE_MAX_OPEN_ORDERS", "0"))
     live_allowed_market_ids: list[str] = [item.strip() for item in os.getenv("LIVE_ALLOWED_MARKET_IDS", "").split(",") if item.strip()]
 
-    # v2.1.0-real live trading control plane. Defaults are safe/fail-closed.
+    # v3.3.0-real live trading control plane. Defaults are safe/fail-closed.
     polymarket_v2_trading_mode: str = os.getenv("POLYMARKET_V2_TRADING_MODE", "research_only")
     polymarket_v2_require_approval: bool = os.getenv("POLYMARKET_V2_REQUIRE_APPROVAL", "true").lower() in {"1", "true", "yes", "on"}
     polymarket_v2_confirmation_phrase: str = os.getenv("POLYMARKET_V2_CONFIRMATION_PHRASE", "LIVE ORDER APPROVED")

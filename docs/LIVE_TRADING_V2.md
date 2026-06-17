@@ -1,6 +1,6 @@
-# Live Trading v2 — v2.1.0-real
+# Live Trading v2 — v2.3.0-real
 
-`v2.1.0-real` adds the first full live-trading control plane for the Polymarket Gamma Starter package. The implementation is intentionally operator-controlled and fail-closed: it can build and preview live tickets, run strict risk checks, require explicit human approval, require a typed confirmation phrase, route real submit/cancel attempts through the isolated CLOB adapter, record a local audit ledger, inspect read-only account state where supported, and reconcile local records against remote open-order state.
+`v2.3.0-real` carries forward the full live-trading control plane for the Polymarket Gamma Starter package. The implementation is intentionally operator-controlled and fail-closed: it can build and preview live tickets, run strict risk checks, require explicit human approval, require a typed confirmation phrase, route real submit/cancel attempts through the isolated CLOB adapter, record a local audit ledger, inspect read-only account state where supported, and reconcile local records against remote open-order state.
 
 ## Main routes
 
@@ -60,3 +60,15 @@ As of the v2.1.0-real build, Polymarket documentation points developers toward o
 ## v2.1.0 UI/UX redesign
 
 The v2.1 console keeps the v2.0 live control plane but reorganizes operator workflows around a persistent status bar, compact dashboard, step-based trade ticket, explicit refresh buttons, collapsed raw payloads, grouped settings, Markdown audit export, and task-based docs. Backend risk and execution gates remain unchanged and authoritative.
+
+## v2.2.0 Browser polish
+
+`v2.3.0-real` improves the Live v2 browser console without weakening the control plane. It adds saved safe UI preferences, interactive table filtering/sorting/result counts, manual status refresh, improved loading/error states, compact result tables for fetched read-only data, and a manual QA checklist. Backend risk and submit/cancel gates remain authoritative.
+
+## v2.4.0-real Strategy Linkage
+
+`v2.4.0-real` adds strategy-to-ticket linkage. A thesis can produce a safe ticket draft containing market context, rationale, linked evidence count, scorecard summary, and entry/exit/invalidation criteria. This linkage does not submit an order. All existing live submit gates remain mandatory.
+
+## v2.5.0-real Research Freshness Linkage
+
+`v2.5.0-real` adds research intake and evidence freshness tracking before the strategy-to-ticket path. Sources, notes, evidence candidates, and thesis comparison summaries can inform operator review, but they do not submit orders or bypass existing Live v2 gates.

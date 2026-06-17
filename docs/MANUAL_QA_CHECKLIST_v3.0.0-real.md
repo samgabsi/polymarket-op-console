@@ -1,0 +1,21 @@
+# Manual QA Checklist — v3.0.0-real
+
+- [ ] Install dependencies in a clean environment.
+- [ ] Launch the app locally.
+- [ ] Open `/v3`; expected: command center renders and shows v3.0.0-real.
+- [ ] Open `/v3/search`; expected: local search table renders and states local-only behavior.
+- [ ] Open `/v3/graph`; expected: node/edge counts and relationship explorer render.
+- [ ] Open `/v3/workflows`; expected: read-only workflows are listed.
+- [ ] Open `/v3/briefs`; expected: packet/brief links are visible.
+- [ ] Open `/v3/settings`; expected: AI assistance is disabled by default.
+- [ ] Open `/v3/docs`; expected: v3 docs links resolve.
+- [ ] Confirm `/v2-live` and all existing v2 modules still render.
+- [ ] Generate a pre-trade packet; expected: no order is submitted.
+- [ ] Generate a market brief; expected: no order is submitted.
+- [ ] Generate a thesis health report; expected: no order is submitted.
+- [ ] Generate a portfolio brief; expected: no order is submitted.
+- [ ] Run missing-prerequisite scan; expected: warnings only, no trading state mutation.
+- [ ] Run search rebuild and graph rebuild; expected: read-only local summaries only.
+- [ ] Confirm no secrets appear in UI, exports, logs, screenshots, or reports.
+- [ ] Confirm live trading is not armed by default.
+- [ ] Confirm kill-switch/read-only/backend gates remain unchanged.

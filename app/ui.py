@@ -234,7 +234,7 @@ def console_globals() -> dict[str, Any]:
         "app_version": APP_VERSION,
         "app_version_short": APP_VERSION_SHORT,
         "nav_sections": NAV_SECTIONS,
-        "app_safety_posture": "Mobile-friendly local-first operator console. v2.1.0 adds a decluttered, faster live-trading operator console with live data reads, trade-ticket preview, approval gates, risk checks, CLOB submit/cancel boundaries, positions, reconciliation, emergency controls, and audit exports while preserving fail-closed defaults and operator-only execution gates.",
+        "app_safety_posture": "Mobile-friendly local-first operator console. v2.3.0 adds browser-polished live-trading UI preferences, interactive tables, manual QA, and smooth operator workflows with live data reads, trade-ticket preview, approval gates, risk checks, CLOB submit/cancel boundaries, positions, reconciliation, emergency controls, and audit exports while preserving fail-closed defaults and operator-only execution gates.",
         "global_safety_badges": build_global_safety_badges(),
         "quick_actions": build_quick_actions(),
     }

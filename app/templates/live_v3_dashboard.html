@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Polymarket Gamma Starter v3.3.0-real</title>
+  <link rel="stylesheet" href="/static/v3_design.css">
+  <script src="/static/v3_interactions.js" defer></script>
+</head>
+<body>
+<a class="v3-sr-only" href="#main">Skip to main content</a>
+<div class="v3-app-shell">
+  <aside class="v3-sidebar" aria-label="Primary navigation">
+    <div class="v3-brand">
+      <div class="v3-brand-kicker">v3.3.0-real · UX redesign</div>
+      <h1>Operator Intelligence OS</h1>
+      <p>Crisp local-first command center for strategy, research, monitoring, portfolio, governance, data, analytics, and read-only workflows.</p>
+    </div>
+    {% set nav_groups = [
+      ('Operate', [('command_center','Command Center','/v3','⌁'),('live','Live Controls','/v2-live','safe'),('ticket','Trade Ticket','/v2-live','gate'),('audit','Audit','/v2-live/audit','log')]),
+      ('Analyze', [('analytics','Analytics','/v3/analytics','new'),('portfolio','Portfolio','/v2-live/portfolio','risk'),('monitoring','Monitoring','/v2-live/monitoring','alert'),('graph','Graph','/v3/graph','map'),('search','Search','/v3/search','⌘K')]),
+      ('Build Thesis', [('strategy','Strategy','/v2-live/strategy','thesis'),('research','Research','/v2-live/research','source'),('briefs','Packets & Briefs','/v3/briefs','report')]),
+      ('Govern', [('governance','Governance','/v2-live/governance','review'),('data','Data / Backup','/v2-live/data','health'),('settings','Settings','/v3/settings','cfg')]),
+      ('Output', [('workflows','Workflows','/v3/workflows','run'),('docs','Docs','/v3/docs','docs')])
+    ] %}
+    {% for group, links in nav_groups %}
+      <nav class="v3-nav-section" aria-labelledby="nav-{{ group|lower|replace(' ', '-') }}">
+        <div id="nav-{{ group|lower|replace(' ', '-') }}" class="v3-nav-heading">{{ group }}</div>
+        {% for key,label,url,chip in links %}
+          <a class="v3-nav-link {{ 'active' if section == key or (key == 'command_center' and section == 'command_center') else '' }}" href="{{ url }}"><span>{{ label }}</span><span class="v3-nav-chip">{{ chip }}</span></a>
+        {% endfor %}
+      </nav>
+    {% endfor %}
+  </aside>
+
+  <main id="main" class="v3-content">
+    <div class="v3-topbar" role="region" aria-label="Global status and search">
+      <form class="v3-global-search" action="/v3/search" method="get">
+        <label class="v3-sr-only" for="v3-global-search">Global local search</label>
+        <input id="v3-global-search" data-v3-global-search name="q" placeholder="Search local theses, evidence, alerts, exposure, governance, analytics…">
+      </form>
+      <div class="v3-status-strip" aria-label="Safety status">
+        <span class="v3-badge ok">Read-only workflows</span>
+        <span class="v3-badge {{ 'danger' if command_center.live_armed else 'ok' }}">Live armed: {{ command_center.live_armed }}</span>
+        <span class="v3-badge {{ 'ok' if command_center.read_only else 'warn' }}">Read-only: {{ command_center.read_only }}</span>
+        <span class="v3-badge {{ 'danger' if command_center.kill_switch else 'ok' }}">Kill switch: {{ command_center.kill_switch }}</span>
+        <span class="v3-badge warn">Demo: {{ demo_status.enabled }}</span>
+      </div>
+    </div>
+
+    <section class="v3-page-hero">
+      <div class="v3-label">Complete Operator UX Redesign</div>
+      <h2>{{ 'Command Center' if section == 'command_center' else section|replace('_', ' ')|title }}</h2>
+      <p>v3.3 redesigns the operator experience for speed, clarity, smoother navigation, better forms/tables, stronger safety visibility, responsive layouts, accessible focus states, and demo-ready visual QA.</p>
+      <div class="v3-hero-actions">
+        <a class="v3-button primary" href="/v3">Open Command Center</a>
+        <a class="v3-button" href="/v3/workflows">Run Read-Only Workflow</a>
+        <a class="v3-button" href="/v3/analytics">Open Analytics</a>
+        <a class="v3-button" href="/docs/V3_UI_UX_REDESIGN_GUIDE_v3.3.0-real.md">UX Redesign Guide</a>
+      </div>
+    </section>
+
+    {% if section == 'command_center' %}
+    <section class="v3-grid-wide">
+      <div>
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>System Safety</h2><span class="v3-badge ok">Backend gates preserved</span></div>
+          <div class="v3-grid">
+            <div class="v3-card compact"><div class="v3-label">Read-only</div><div class="v3-metric">{{ command_center.groups.safety.read_only }}</div><span class="v3-badge {{ 'ok' if command_center.groups.safety.read_only else 'warn' }}">workflow boundary</span></div>
+            <div class="v3-card compact"><div class="v3-label">Live armed</div><div class="v3-metric">{{ command_center.groups.safety.live_armed }}</div><span class="v3-badge {{ 'danger' if command_center.groups.safety.live_armed else 'ok' }}">must stay explicit</span></div>
+            <div class="v3-card compact"><div class="v3-label">Kill switch</div><div class="v3-metric">{{ command_center.groups.safety.kill_switch }}</div><span class="v3-badge {{ 'danger' if command_center.groups.safety.kill_switch else 'ok' }}">emergency state</span></div>
+            <div class="v3-card compact"><div class="v3-label">Readiness</div><div class="v3-metric">{{ command_center.groups.safety.readiness_status }}</div><span class="v3-badge unknown">verify before live use</span></div>
+          </div>
+          <div class="v3-danger-zone"><strong>Safety UX:</strong> redesigned pages do not place orders, cancel orders, arm live trading, or bypass backend gates. Dangerous actions remain visually distinct and gated.</div>
+        </section>
+
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Operator Attention Queue</h2><span class="v3-badge warn">review first</span></div>
+          <div class="v3-grid">
+            <div class="v3-card compact"><div class="v3-label">Critical alerts</div><div class="v3-metric">{{ command_center.groups.monitoring.critical_alerts }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Stale evidence</div><div class="v3-metric">{{ command_center.groups.research_strategy.stale_evidence_count }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Research queue</div><div class="v3-metric">{{ command_center.groups.research_strategy.research_queue_count }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Portfolio warnings</div><div class="v3-metric">{{ command_center.groups.portfolio.concentration_warnings }}</div></div>
+          </div>
+        </section>
+
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Missing Prerequisites / Conflicts</h2><input class="v3-field" data-v3-table-filter="#findings-table" placeholder="Filter findings"></div>
+          <div class="v3-table-wrap"><table id="findings-table" class="v3-table"><caption>Structured operator findings. These do not execute trades.</caption><thead><tr><th>Severity</th><th>Finding</th><th>Recommended action</th><th>Related</th></tr></thead><tbody>{% for finding in missing_prerequisites.findings[:30] %}<tr><td><span class="v3-badge {{ 'danger' if finding.severity in ['critical','blocker'] else 'warn' }}">{{ finding.severity }}</span></td><td><strong>{{ finding.title }}</strong><br><span class="v3-muted">{{ finding.explanation }}</span></td><td>{{ finding.recommended_operator_action }}</td><td>{{ finding.related_node }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No current v3 findings. Load fake demo data or create local records to exercise this view.</div></td></tr>{% endfor %}</tbody></table></div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="v3-card">
+          <h2>Workbench Shortcuts</h2>
+          <div class="v3-actions"><a href="/v2-live/strategy">Review Thesis</a><a href="/v2-live/research">Research Queue</a><a href="/v2-live/monitoring">Alerts</a><a href="/v2-live/portfolio">Portfolio Risk</a><a href="/v3/pre-trade-packet">Pre-Trade Packet</a><a href="/v3/analytics/learning-report">Learning Report</a><a href="/v2-live/data">Data Health</a></div>
+        </section>
+        <section class="v3-card">
+          <h2>Intelligence Summary</h2>
+          <p><strong>Decision quality:</strong> {{ analytics_summary.decision_quality_status }}</p>
+          <p><strong>Calibration:</strong> {{ analytics_summary.confidence_calibration_status }}</p>
+          <p><strong>Review follow-through:</strong> {{ analytics_summary.review_followthrough_status }}</p>
+          <p><strong>Next review:</strong> {{ analytics_summary.next_recommended_review_action }}</p>
+          <div class="v3-actions"><a href="/v3/analytics">Open analytics</a><a href="/api/v3/analytics/export.md">Export report</a></div>
+        </section>
+        <section class="v3-card">
+          <h2>Recent Activity</h2>
+          <p>Validation: <span class="v3-badge {{ 'ok' if validation_status.overall_status == 'pass' else 'warn' }}">{{ validation_status.overall_status }}</span></p>
+          <p>Active theses: {{ command_center.groups.research_strategy.active_theses }}</p>
+          <p>Recent decisions: {{ command_center.groups.governance.recent_decisions }}</p>
+        </section>
+        <section class="v3-card">
+          <h2>Safe Next Actions</h2>
+          <ul>{% for action in command_center.next_operator_actions %}<li>{{ action }}</li>{% else %}<li>No immediate v3 action items.</li>{% endfor %}</ul>
+        </section>
+      </aside>
+    </section>
+    {% endif %}
+
+    {% if section == 'search' %}
+    <section class="v3-card"><div class="v3-section-title"><h2>Global Local Search</h2><span class="v3-badge ok">local-only</span></div><p class="v3-muted">Search never sends local operator data to external services. Use filters to narrow by object type, status, tag, and recentness.</p><div class="v3-filterbar"><input class="v3-field" data-v3-table-filter="#search-table" placeholder="Filter visible results"><select aria-label="Object type"><option>All object types</option>{% for t in search_filters.object_types %}<option>{{ t }}</option>{% endfor %}</select><select aria-label="Status"><option>All statuses</option>{% for s in search_filters.statuses %}<option>{{ s }}</option>{% endfor %}</select><a class="v3-button" href="/api/v3/search/index">Index Health</a><a class="v3-button" href="/api/v3/search/filters">Filters JSON</a></div><p><strong>{{ search_index.count }}</strong> indexed objects · Analytics indexed: {{ search_index.analytics_indexed or 0 }}</p><div class="v3-table-wrap"><table id="search-table" class="v3-table"><caption>Local indexed operator records</caption><thead><tr><th>Type</th><th>Title</th><th>Status</th><th>Tags</th><th>Link</th></tr></thead><tbody>{% for item in search_index["items"][:100] %}<tr><td><span class="v3-badge unknown">{{ item.result_type }}</span></td><td><strong>{{ item.title }}</strong><br><span class="v3-muted">{{ item.summary }}</span></td><td>{{ item.status }}</td><td>{{ item.tags|join(', ') }}</td><td><a href="{{ item.quick_link }}">Open</a></td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No local search results yet. Create local records or load fake demo data.</div></td></tr>{% endfor %}</tbody></table></div></section>
+    {% endif %}
+
+    {% if section == 'graph' %}
+    <section class="v3-grid"><div class="v3-card"><div class="v3-label">Nodes</div><div class="v3-metric">{{ graph.node_count }}</div></div><div class="v3-card"><div class="v3-label">Edges</div><div class="v3-metric">{{ graph.edge_count }}</div></div><div class="v3-card"><div class="v3-label">Node filters</div><div class="v3-metric">{{ graph_filters.node_types|length }}</div></div><div class="v3-card"><div class="v3-label">Relationship filters</div><div class="v3-metric">{{ graph_filters.relationship_types|length }}</div></div></section>
+    <section class="v3-card"><div class="v3-section-title"><h2>Decision Graph Explorer</h2><div class="v3-actions"><a href="/api/v3/graph/export.md">Export Markdown</a><a href="/api/v3/graph/export.json">Export JSON</a></div></div><p class="v3-muted">A local object relationship explorer. Graph warnings are context, not trading instructions.</p><div class="v3-filterbar"><input class="v3-field" data-v3-table-filter="#graph-table" placeholder="Filter graph nodes"><select><option>All node types</option>{% for n in graph_filters.node_types %}<option>{{ n }}</option>{% endfor %}</select><select><option>All relationships</option>{% for r in graph_filters.relationship_types %}<option>{{ r }}</option>{% endfor %}</select></div><div class="v3-table-wrap"><table id="graph-table" class="v3-table"><caption>Graph nodes and neighborhoods</caption><thead><tr><th>Node</th><th>Type</th><th>Status</th><th>Summary</th></tr></thead><tbody>{% for node in graph["nodes"][:120] %}<tr><td><strong>{{ node.title }}</strong></td><td>{{ node.node_type }}</td><td>{{ node.status }}</td><td>{{ node.summary }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No graph nodes yet.</div></td></tr>{% endfor %}</tbody></table></div></section>
+    {% endif %}
+
+    {% if section == 'workflows' %}
+    <section class="v3-card"><div class="v3-section-title"><h2>Read-Only Workflow Orchestrator</h2><span class="v3-badge ok">no mutations</span></div><p class="v3-muted">Workflow cards now show purpose, inputs, read-only state, generated output, and export expectations before the operator runs anything.</p><div class="v3-grid">{% for workflow in workflow_templates.templates %}<article class="v3-card compact"><div class="v3-label">{{ workflow.workflow_id }}</div><h3>{{ workflow.name }}</h3><p>{{ workflow.description }}</p><p><span class="v3-badge ok">Read-only: {{ workflow.read_only }}</span><span class="v3-badge ok">Mutates: false</span></p><details><summary>Template sections</summary><ul>{% for part in workflow.sections %}<li>{{ part }}</li>{% endfor %}</ul></details></article>{% endfor %}</div></section>
+    <section class="v3-card"><h2>Recent Workflow Outputs</h2><div class="v3-table-wrap"><table class="v3-table"><caption>Draft workflow outputs</caption><thead><tr><th>Output</th><th>Workflow</th><th>Status</th><th>Generated</th></tr></thead><tbody>{% for item in workflow_outputs["items"] %}<tr><td>{{ item.title or item.id }}</td><td>{{ item.workflow_id }}</td><td>{{ item.status }}</td><td>{{ item.generated_at }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No workflow outputs yet.</div></td></tr>{% endfor %}</tbody></table></div></section>
+    {% endif %}
+
+    {% if section == 'briefs' %}
+    <section class="v3-grid">
+      {% set briefs = [('Pre-Trade Packet','/api/v3/pre-trade-packet','Flagship packet with blockers, warnings, stale evidence, exposure, governance, data health, readiness posture, and unknowns.'),('Market Brief','/api/v3/market-brief','Local research, linked sources, evidence candidates, theses, alerts, stale data, support and contradiction.'),('Thesis Health','/api/v3/thesis-health','Evidence coverage, counter-evidence, stale state, linked alerts, exposure, governance, and invalidation status.'),('Portfolio Risk','/api/v3/portfolio-brief','Exposure, concentration, scenario risk, stale-evidence exposure, alerts tied to exposure, and unknown data.'),('Operator Review','/api/v3/operator-review','Daily/weekly decisions, alerts, risk blocks, governance, data health, unresolved items, and next actions.'),('Learning Report','/api/v3/analytics/export.md','Decision quality, calibration, review follow-through, mistake patterns, and strengths.')] %}
+      {% for title,url,body in briefs %}<article class="v3-card"><div class="v3-label">Report template</div><h3>{{ title }}</h3><p>{{ body }}</p><div class="v3-actions"><a href="{{ url }}">Generate / Export</a></div></article>{% endfor %}
+    </section>
+    <section class="v3-report"><h2>Packet / Report Safety</h2><p>Generated outputs are structured drafts with summary, status, blockers, warnings, unknown/unavailable data, source sections, operator review actions, and safety statements. They are not orders, approvals, financial advice, or live-trading authorization.</p></section>
+    {% endif %}
+
+    {% if section == 'analytics' %}
+    <section class="v3-grid">
+      <div class="v3-card"><div class="v3-label">Decision quality</div><div class="v3-metric">{{ analytics_summary.decision_quality_status }}</div><p>Needs review: {{ analytics_snapshot.decisions.metrics.decisions_not_reviewed }} · Reviewed: {{ analytics_snapshot.decisions.metrics.decisions_reviewed }}</p></div>
+      <div class="v3-card"><div class="v3-label">Thesis quality</div><div class="v3-metric">{{ analytics_snapshot.theses.metrics.quality_status }}</div><p>Without evidence: {{ analytics_snapshot.theses.metrics.theses_without_evidence }} · Without counter-evidence: {{ analytics_snapshot.theses.metrics.theses_without_counter_evidence }}</p></div>
+      <div class="v3-card"><div class="v3-label">Evidence usefulness</div><div class="v3-metric">{{ analytics_snapshot.evidence.metrics.usefulness_status }}</div><p>Stale: {{ analytics_snapshot.evidence.metrics.stale_evidence_count }} · Needs refresh: {{ analytics_snapshot.evidence.metrics.sources_requiring_refresh }}</p></div>
+      <div class="v3-card"><div class="v3-label">Alert usefulness</div><div class="v3-metric">{{ analytics_snapshot.alerts.metrics.usefulness_status }}</div><p>Triggered: {{ analytics_snapshot.alerts.metrics.alerts_triggered }} · Unacknowledged: {{ analytics_snapshot.alerts.metrics.alerts_ignored_unacknowledged }}</p></div>
+      <div class="v3-card"><div class="v3-label">Governance</div><div class="v3-metric">{{ analytics_snapshot.governance.metrics.discipline_status }}</div><p>Incomplete checklists: {{ analytics_snapshot.governance.metrics.incomplete_checklist_count }}</p></div>
+      <div class="v3-card"><div class="v3-label">Calibration</div><div class="v3-metric">{{ analytics_summary.confidence_calibration_status }}</div><p>Sample: {{ analytics_snapshot.calibration.metrics.sample_size }} · Unknown: {{ analytics_snapshot.calibration.metrics.unknown_count }}</p></div>
+    </section>
+    <section class="v3-card"><div class="v3-section-title"><h2>Learning Report Generator</h2><span class="v3-badge ok">descriptive only</span></div><p class="v3-muted">Analytics are descriptive, local-first, and not predictive guarantees. Unknown outcomes remain unknown.</p><div class="v3-actions"><a href="/api/v3/analytics/export.json">Analytics JSON</a><a href="/api/v3/analytics/export.md">Learning Report Markdown</a><a href="/api/v3/analytics/export/decisions.csv">Decision CSV</a><a href="/api/v3/analytics/export/calibration.csv">Calibration CSV</a></div></section>
+    <section class="v3-grid-wide"><div class="v3-card"><h2>Decision Quality Metrics</h2><div class="v3-table-wrap"><table class="v3-table"><caption>Decision metrics</caption><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody>{% for key,value in analytics_snapshot.decisions.metrics.items() %}<tr><td>{{ key }}</td><td>{{ value }}</td></tr>{% endfor %}</tbody></table></div></div><div class="v3-card"><h2>Calibration Buckets</h2><div class="v3-table-wrap"><table class="v3-table"><caption>Confidence calibration</caption><thead><tr><th>Bucket</th><th>Sample</th><th>Reviewed</th><th>Unknown</th></tr></thead><tbody>{% for bucket,row in analytics_snapshot.calibration.metrics.confidence_buckets.items() %}<tr><td>{{ bucket }}</td><td>{{ row.sample_size }}</td><td>{{ row.reviewed_outcomes }}</td><td>{{ row.unknown_outcomes }}</td></tr>{% endfor %}</tbody></table></div></div></section>
+    <section class="v3-grid"><div class="v3-card"><h2>Mistake Patterns</h2><ul>{% for item in analytics_snapshot.mistakes["items"] %}<li>{{ item.title }} — {{ item.status }}</li>{% else %}<li>No mistake patterns recorded yet.</li>{% endfor %}</ul></div><div class="v3-card"><h2>Strength Patterns</h2><ul>{% for item in analytics_snapshot.strengths["items"] %}<li>{{ item.title }} — {{ item.status }}</li>{% else %}<li>No strength patterns recorded yet.</li>{% endfor %}</ul></div></section>
+    {% endif %}
+
+    {% if section == 'settings' %}
+    <section class="v3-grid-wide"><div class="v3-card"><h2>v3 Settings Boundary</h2><p>AI assistance is disabled by default. External provider scaffolding remains explicit, redacted, and advisory-only.</p><pre>{{ settings | tojson(indent=2) }}</pre></div><div class="v3-card"><h2>UX Release Status</h2><p><span class="v3-badge ok">Design system active</span></p><p><span class="v3-badge ok">Screenshots not bundled</span></p><p><span class="v3-badge ok">Backend gates preserved</span></p><pre>{{ validation_status | tojson(indent=2) }}</pre></div></section>
+    {% endif %}
+
+    {% if section == 'docs' %}
+    <section class="v3-card"><h2>v3.3 Documentation</h2><p class="v3-muted">Documentation was refreshed for the UI/UX redesign, visual QA workflow, and release-candidate validation.</p><div class="v3-actions"><a href="/docs/V3_UI_UX_REDESIGN_GUIDE_v3.3.0-real.md">UI/UX Redesign Guide</a><a href="/docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v3.3.0-real.md">V3 Operator Intelligence OS Guide</a><a href="/docs/V3_OPERATOR_ANALYTICS_GUIDE_v3.3.0-real.md">Operator Analytics Guide</a><a href="/docs/V2_TO_V3_MIGRATION_GUIDE_v3.3.0-real.md">V2 to V3 Migration Guide</a><a href="/docs/VISUAL_QA_CHECKLIST_v3.3.0-real.md">Visual QA Checklist</a><a href="/docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md">Manual QA Checklist</a><a href="/docs/RELEASE_CHECKLIST_v3.3.0-real.md">Release Checklist</a><a href="/docs/VALIDATION_v3.3.0-real.md">Validation Report</a></div></section>
+    {% endif %}
+
+    <section class="v3-warning"><strong>Safety boundary:</strong> v3.3 redesigned UI, search, graph, analytics, packets, reports, demo data, and workflows are operator-guidance features only. Live order submission still requires backend risk gates, human approval, warning acknowledgement, typed confirmation phrase, Live Armed mode, read-only disabled, and kill switch disabled.</section>
+  </main>
+</div>
+</body>
+</html>

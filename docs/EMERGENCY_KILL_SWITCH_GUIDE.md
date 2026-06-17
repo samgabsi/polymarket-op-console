@@ -1,4 +1,4 @@
-# Emergency and Kill Switch Guide — v2.1.0-real
+# Emergency and Kill Switch Guide — v2.3.0-real
 
 The emergency posture is conservative by default.
 
@@ -41,3 +41,7 @@ This posture blocks new orders while preserving a path for deliberate targeted c
 ## v2.1.0 Emergency UI
 
 `/v2-live/emergency` presents emergency actions as a dedicated control center. The buttons record audited emergency intent and explain what must be persisted in the environment. Hidden background mutation is intentionally avoided so live trading cannot be armed or disarmed accidentally.
+
+## v2.2.0 emergency UI notes
+
+The Emergency page keeps serious controls deliberate. Buttons record explicit audit receipts and do not silently mutate environment files. Operators must persist kill switch/read-only/submit-gate changes through the approved configuration path.

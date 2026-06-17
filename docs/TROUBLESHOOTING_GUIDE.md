@@ -1,4 +1,4 @@
-# Troubleshooting Guide — v2.1.0-real
+# Troubleshooting Guide — v2.3.0-real
 
 ## Readiness says credentials are missing
 
@@ -48,3 +48,7 @@ A local-only record can mean the order was blocked before submission, the exchan
 - If a button is disabled, read the nearby status badge and run `/v2-live/risk` to see backend blockers.
 - If raw API output is needed, expand the details panel in the result area or use the matching `/api/v2/live/*` route.
 - If settings look wrong, open `/v2-live/settings` for grouped review and `/settings/configuration` for the audited configuration editor.
+
+## v2.2.0 browser UI troubleshooting
+
+If tables look stale, click the page's manual refresh button. If filters hide expected rows, clear the search/filter fields or reset UI preferences from the Live v2 preferences panel. If raw details are hidden, enable the advanced/debug preference or open the row's details expander. If a browser profile behaves oddly, clear the `polymarketGamma.liveV2.uiPrefs.v2` localStorage key and reload.

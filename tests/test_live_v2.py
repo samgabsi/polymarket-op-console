@@ -103,3 +103,20 @@ def test_cancel_blocks_without_required_gates():
     assert result["status"] == "blocked"
     assert result["network_attempted"] is False
     assert any("Cancel gates" in item or "Kill switch" in item for item in result["blockers"])
+
+
+def test_ui_preferences_schema_excludes_sensitive_values():
+    schema = live_v2.build_live_v2_preferences_schema()
+    assert schema["version"] == "3.3.0-real"
+    assert schema["secret_values_allowed"] is False
+    assert schema["sensitive_data_allowed"] is False
+    keys = {item["key"] for item in schema["preferences"]}
+    assert {"table_page_size", "compact_mode", "default_market_query"}.issubset(keys)
+
+
+def test_audit_filtering_limits_and_filters_rows():
+    live_v2.record_audit("ticket_preview", "blocked", details={"market": "abc"})
+    live_v2.record_audit("emergency_control", "recorded", details={"note": "kill switch"})
+    rows = live_v2.filter_live_v2_audit_records(action="emergency", search="kill", limit=10)
+    assert len(rows) == 1
+    assert rows[0]["action"] == "emergency_control"

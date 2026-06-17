@@ -70,20 +70,207 @@ from .live_clob_adapter import build_clob_adapter_status, clob_adapter_status_to
 from .live_v2 import (
     audit_to_csv as live_v2_audit_to_csv,
     audit_to_markdown as live_v2_audit_to_markdown,
+    build_live_v2_demo_readiness,
+    build_live_v2_preferences_schema,
     build_live_v2_readiness,
     build_live_v2_settings_sections,
     build_live_v2_status,
     build_live_v2_ticket_preview,
+    build_live_v2_verification_report,
     cancel_live_v2_order,
     emergency_live_v2_action,
     get_live_v2_open_orders,
     get_live_v2_orderbook,
     get_live_v2_positions,
+    filter_live_v2_audit_records,
     list_audit_records as list_live_v2_audit_records,
     reconcile_live_v2_orders,
     search_live_v2_markets,
     submit_live_v2_order,
     validate_live_v2_settings_payload,
+    live_v2_verification_to_markdown,
+)
+from .live_research import (
+    archive_source as research_archive_source,
+    build_research_workspace,
+    build_thesis_comparison as research_build_thesis_comparison,
+    convert_candidate as research_convert_candidate,
+    create_evidence_candidate as research_create_evidence_candidate,
+    create_note as research_create_note,
+    create_queue_item as research_create_queue_item,
+    create_source as research_create_source,
+    freshness_summary as research_freshness_summary,
+    get_research_item,
+    list_candidates as research_list_candidates,
+    list_notes as research_list_notes,
+    list_queue as research_list_queue,
+    list_sources as research_list_sources,
+    mark_source_reviewed as research_mark_source_reviewed,
+    mark_source_stale as research_mark_source_stale,
+    research_csv,
+    research_export_json,
+    research_export_markdown,
+    update_queue_item as research_update_queue_item,
+    update_source as research_update_source,
+)
+from .live_portfolio import (
+    build_portfolio_workspace,
+    create_exposure_group as portfolio_create_exposure_group,
+    create_scenario as portfolio_create_scenario,
+    evaluate_scenario as portfolio_evaluate_scenario,
+    generate_portfolio_snapshot,
+    get_bankroll_settings as portfolio_get_bankroll_settings,
+    get_portfolio_item,
+    list_exposure as portfolio_list_exposure,
+    list_scenarios as portfolio_list_scenarios,
+    list_warnings as portfolio_list_warnings,
+    planned_trade_impact as portfolio_planned_trade_impact,
+    portfolio_csv,
+    portfolio_export_json,
+    portfolio_export_markdown,
+    update_bankroll as portfolio_update_bankroll,
+    update_exposure_group as portfolio_update_exposure_group,
+)
+from .live_governance import (
+    build_governance_workspace,
+    create_checklist as governance_create_checklist,
+    create_journal_entry as governance_create_journal_entry,
+    create_mistake_pattern as governance_create_mistake_pattern,
+    create_near_miss as governance_create_near_miss,
+    create_review as governance_create_review,
+    create_rule as governance_create_rule,
+    get_governance_item,
+    governance_csv,
+    governance_export_json,
+    governance_export_markdown,
+    list_checklists as governance_list_checklists,
+    list_journal as governance_list_journal,
+    list_mistake_patterns as governance_list_mistake_patterns,
+    list_near_misses as governance_list_near_misses,
+    list_reviews as governance_list_reviews,
+    list_rules as governance_list_rules,
+    update_checklist as governance_update_checklist,
+    update_journal_entry as governance_update_journal_entry,
+    update_mistake_pattern as governance_update_mistake_pattern,
+    update_review as governance_update_review,
+    update_rule as governance_update_rule,
+)
+from .live_data import (
+    build_data_workspace,
+    checks_csv as data_checks_csv,
+    create_backup_bundle as data_create_backup_bundle,
+    export_bundle as data_export_bundle,
+    health_report_json as data_health_report_json,
+    health_report_markdown as data_health_report_markdown,
+    import_apply as data_import_apply,
+    import_preview as data_import_preview,
+    list_backups as data_list_backups,
+    migration_apply as data_migration_apply,
+    migration_dry_run as data_migration_dry_run,
+    migration_registry as data_migration_registry,
+    recovery_report_json as data_recovery_report_json,
+    recovery_report_markdown as data_recovery_report_markdown,
+    restore_apply as data_restore_apply,
+    restore_preview as data_restore_preview,
+    run_health_check as data_run_health_check,
+    runtime_inventory as data_runtime_inventory,
+    scan_secrets as data_scan_secrets,
+    validate_backup_bundle as data_validate_backup_bundle,
+)
+from .live_v3_analytics import (
+    alert_usefulness_metrics as v3_analytics_alerts,
+    analytics_context as v3_analytics_context,
+    build_analytics_summary as v3_analytics_summary,
+    confidence_calibration_metrics as v3_analytics_calibration,
+    decision_quality_metrics as v3_analytics_decisions,
+    evidence_usefulness_metrics as v3_analytics_evidence,
+    export_analytics_json as v3_analytics_export_json,
+    export_csv as v3_analytics_export_csv,
+    export_learning_report_markdown as v3_analytics_export_markdown,
+    generate_analytics_snapshot as v3_analytics_snapshot,
+    generate_learning_report as v3_learning_report,
+    governance_discipline_metrics as v3_analytics_governance,
+    mistake_pattern_metrics as v3_analytics_mistakes,
+    portfolio_risk_process_metrics as v3_analytics_portfolio,
+    review_followthrough_metrics as v3_analytics_reviews,
+    strength_pattern_metrics as v3_analytics_strengths,
+    thesis_quality_metrics as v3_analytics_theses,
+)
+from .live_v3 import (
+    build_command_center as v3_build_command_center,
+    build_decision_graph as v3_build_decision_graph,
+    build_search_index as v3_build_search_index,
+    build_v3_settings as v3_build_settings,
+    clear_demo_data as v3_clear_demo_data,
+    create_demo_data as v3_create_demo_data,
+    data_health_backup_readiness_brief as v3_data_health_backup_readiness_brief,
+    demo_status as v3_demo_status,
+    export_operator_review_markdown as v3_export_operator_review_markdown,
+    export_pre_trade_packet_markdown as v3_export_pre_trade_packet_markdown,
+    export_report_json as v3_export_report_json,
+    export_report_markdown as v3_export_report_markdown,
+    filtered_decision_graph as v3_filtered_decision_graph,
+    get_workflow_run as v3_get_workflow_run,
+    graph_filters as v3_graph_filters,
+    graph_to_markdown as v3_graph_to_markdown,
+    list_workflow_runs as v3_list_workflow_runs,
+    market_intelligence_brief as v3_market_intelligence_brief,
+    missing_prerequisites_scan as v3_missing_prerequisites_scan,
+    operator_review_packet as v3_operator_review_packet,
+    portfolio_risk_brief as v3_portfolio_risk_brief,
+    pre_trade_packet as v3_pre_trade_packet,
+    rebuild_graph as v3_rebuild_graph,
+    rebuild_search_index as v3_rebuild_search_index,
+    run_workflow as v3_run_workflow,
+    search_filters as v3_search_filters,
+    search_local as v3_search_local,
+    thesis_health_report as v3_thesis_health_report,
+    update_v3_settings as v3_update_settings,
+    validation_status as v3_validation_status,
+    design_system_status as v3_design_system_status,
+    navigation_groups as v3_navigation_groups,
+    ux_release_status as v3_ux_release_status,
+    workflow_outputs as v3_workflow_outputs,
+    workflow_registry as v3_workflow_registry,
+    workflow_templates as v3_workflow_templates,
+)
+from .live_monitoring import (
+    acknowledge_alert as monitoring_acknowledge_alert,
+    archive_rule as monitoring_archive_rule,
+    build_monitoring_workspace,
+    create_rule as monitoring_create_rule,
+    disable_rule as monitoring_disable_rule,
+    evaluate_all as monitoring_evaluate_all,
+    evaluate_rule as monitoring_evaluate_rule,
+    get_monitoring_item,
+    list_alert_history as monitoring_list_history,
+    list_alerts as monitoring_list_alerts,
+    list_rules as monitoring_list_rules,
+    monitoring_csv,
+    monitoring_export_json,
+    monitoring_export_markdown,
+    snooze_alert as monitoring_snooze_alert,
+    update_rule as monitoring_update_rule,
+)
+from .live_strategy import (
+    archive_thesis as strategy_archive_thesis,
+    build_strategy_workspace,
+    build_ticket_from_thesis,
+    create_evidence as strategy_create_evidence,
+    create_review as strategy_create_review,
+    create_scorecard as strategy_create_scorecard,
+    create_thesis as strategy_create_thesis,
+    create_watchlist_item as strategy_create_watchlist_item,
+    get_strategy_item,
+    list_evidence as strategy_list_evidence,
+    list_reviews as strategy_list_reviews,
+    list_scorecards as strategy_list_scorecards,
+    list_theses as strategy_list_theses,
+    list_watchlist as strategy_list_watchlist,
+    strategy_csv,
+    strategy_export_json,
+    strategy_export_markdown,
+    update_thesis as strategy_update_thesis,
 )
 from .live_ops import build_live_adapter_verification, build_live_readiness_checklist, build_operator_runbook, live_adapter_verification_to_csv, live_readiness_checklist_to_csv
 from .market_data import build_execution_quality_board, build_execution_quality_simulation, build_market_data_board, execution_quality_to_csv, fetch_market_data_preview, get_execution_quality_simulation, get_market_snapshot, list_execution_quality_simulations, list_market_snapshots, market_data_alerts, market_snapshots_to_csv, parse_orderbook_metrics, record_execution_quality_simulation, record_market_snapshot, summarize_execution_quality, summarize_market_data
@@ -1159,6 +1346,12 @@ def _live_v2_template_context(request: Request, section: str, audit_limit: int =
         "ui": status.get("ui", {}),
         "audit_rows": list_live_v2_audit_records(limit=audit_limit),
         "settings_sections": build_live_v2_settings_sections(),
+        "strategy": build_strategy_workspace(limit=50),
+        "research": build_research_workspace(limit=50),
+        "monitoring": build_monitoring_workspace(limit=50),
+        "portfolio": build_portfolio_workspace(limit=50),
+        "governance": build_governance_workspace(limit=50),
+        "data_layer": build_data_workspace(limit=50),
         "user": current_user(request),
     }
 
@@ -1219,7 +1412,474 @@ async def live_v2_docs_page(request: Request):
     return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "docs", 25))
 
 
+@app.get("/v2-live/verify", response_class=HTMLResponse)
+async def live_v2_verify_page(request: Request):
+    return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "verify", 25))
 
+
+@app.get("/v2-live/strategy", response_class=HTMLResponse)
+async def live_v2_strategy_page(request: Request):
+    return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "strategy", 50))
+
+
+@app.get("/v2-live/research", response_class=HTMLResponse)
+async def live_v2_research_page(request: Request):
+    return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "research", 50))
+
+
+@app.get("/v2-live/monitoring", response_class=HTMLResponse)
+async def live_v2_monitoring_page(request: Request):
+    return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "monitoring", 50))
+
+
+@app.get("/v2-live/portfolio", response_class=HTMLResponse)
+async def live_v2_portfolio_page(request: Request):
+    return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "portfolio", 50))
+
+
+@app.get("/v2-live/governance", response_class=HTMLResponse)
+async def live_v2_governance_page(request: Request):
+    return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "governance", 50))
+
+
+@app.get("/v2-live/data", response_class=HTMLResponse)
+async def live_v2_data_page(request: Request):
+    return templates.TemplateResponse("live_v2_dashboard.html", _live_v2_template_context(request, "data", 50))
+
+
+
+
+def _v3_template_context(request: Request, section: str) -> dict[str, Any]:
+    # Keep v3 page loads fast by only building heavy graph/search/analytics objects
+    # when the active page needs them. Deep scans remain operator-triggered.
+    base: dict[str, Any] = {
+        "request": request,
+        "section": section,
+        "command_center": v3_build_command_center(),
+        "search_index": {"count": 0, "items": []},
+        "search_filters": {"object_types": [], "statuses": [], "tags": []},
+        "graph": {"node_count": 0, "edge_count": 0, "nodes": [], "edges": []},
+        "graph_filters": {"node_types": [], "relationship_types": [], "statuses": []},
+        "workflows": {"workflows": []},
+        "workflow_templates": {"templates": []},
+        "workflow_outputs": {"items": []},
+        "recent_runs": {"items": []},
+        "missing_prerequisites": {"findings": []},
+        "demo_status": v3_demo_status(),
+        "validation_status": {"overall_status": "not_loaded"},
+        "ux_status": v3_ux_release_status(),
+        "design_system": v3_design_system_status(),
+        "navigation_groups": v3_navigation_groups(),
+        "settings": {},
+        "analytics_summary": v3_analytics_summary() if section in {"command_center", "analytics"} else {},
+        "analytics_snapshot": v3_analytics_snapshot(write=False) if section == "analytics" else {},
+        "learning_report": v3_learning_report(write=False) if section == "analytics" else {},
+        "user": current_user(request),
+    }
+    if section == "command_center":
+        base["missing_prerequisites"] = v3_missing_prerequisites_scan(limit=50)
+        base["validation_status"] = v3_validation_status()
+    if section == "search":
+        base["search_index"] = v3_build_search_index(limit=75)
+        base["search_filters"] = v3_search_filters()
+    if section == "graph":
+        base["graph"] = v3_build_decision_graph(limit=75)
+        base["graph_filters"] = v3_graph_filters()
+    if section in {"workflows", "briefs"}:
+        base["workflows"] = v3_workflow_registry()
+        base["workflow_templates"] = v3_workflow_templates()
+        base["workflow_outputs"] = v3_workflow_outputs(limit=25)
+        base["recent_runs"] = v3_list_workflow_runs(limit=25)
+    if section == "settings":
+        base["settings"] = v3_build_settings()
+        base["validation_status"] = v3_validation_status()
+    return base
+
+
+
+@app.get("/v3", response_class=HTMLResponse)
+@app.get("/v3/command-center", response_class=HTMLResponse)
+async def v3_command_center_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "command_center"))
+
+
+@app.get("/v3/search", response_class=HTMLResponse)
+async def v3_search_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "search"))
+
+
+@app.get("/v3/graph", response_class=HTMLResponse)
+async def v3_graph_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "graph"))
+
+
+@app.get("/v3/workflows", response_class=HTMLResponse)
+async def v3_workflows_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "workflows"))
+
+
+@app.get("/v3/briefs", response_class=HTMLResponse)
+@app.get("/v3/pre-trade-packet", response_class=HTMLResponse)
+@app.get("/v3/market-brief", response_class=HTMLResponse)
+@app.get("/v3/thesis-health", response_class=HTMLResponse)
+@app.get("/v3/portfolio-brief", response_class=HTMLResponse)
+@app.get("/v3/operator-review", response_class=HTMLResponse)
+async def v3_briefs_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "briefs"))
+
+
+@app.get("/v3/settings", response_class=HTMLResponse)
+async def v3_settings_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "settings"))
+
+
+@app.get("/v3/docs", response_class=HTMLResponse)
+async def v3_docs_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "docs"))
+
+
+@app.get("/v3/analytics", response_class=HTMLResponse)
+@app.get("/v3/analytics/decisions", response_class=HTMLResponse)
+@app.get("/v3/analytics/theses", response_class=HTMLResponse)
+@app.get("/v3/analytics/evidence", response_class=HTMLResponse)
+@app.get("/v3/analytics/alerts", response_class=HTMLResponse)
+@app.get("/v3/analytics/governance", response_class=HTMLResponse)
+@app.get("/v3/analytics/portfolio", response_class=HTMLResponse)
+@app.get("/v3/analytics/calibration", response_class=HTMLResponse)
+@app.get("/v3/analytics/reviews", response_class=HTMLResponse)
+@app.get("/v3/analytics/learning-report", response_class=HTMLResponse)
+async def v3_analytics_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "analytics"))
+
+
+@app.get("/api/v3")
+async def api_v3_root():
+    return {"version": APP_VERSION, "name": "v3.2 Operator Intelligence OS", "routes": ["/api/v3/command-center", "/api/v3/search", "/api/v3/graph", "/api/v3/workflows", "/api/v3/demo/create", "/api/v3/validation/status", "/api/v3/analytics"], "secret_values_returned": False}
+
+
+@app.get("/api/v3/command-center")
+async def api_v3_command_center():
+    return v3_build_command_center()
+
+
+@app.get("/api/v3/ux/status")
+async def api_v3_ux_status():
+    return v3_ux_release_status()
+
+
+@app.get("/api/v3/ux/design-system")
+async def api_v3_ux_design_system():
+    return v3_design_system_status()
+
+
+@app.get("/api/v3/ux/navigation")
+async def api_v3_ux_navigation():
+    return v3_navigation_groups()
+
+
+@app.get("/api/v3/search/index")
+async def api_v3_search_index(limit: int = 250):
+    return v3_build_search_index(limit=limit)
+
+
+@app.post("/api/v3/search/rebuild")
+async def api_v3_search_rebuild():
+    return v3_rebuild_search_index()
+
+
+@app.get("/api/v3/search/filters")
+async def api_v3_search_filters():
+    return v3_search_filters()
+
+
+@app.get("/api/v3/search")
+async def api_v3_search_get(q: str = "", result_type: str = "", status: str = "", tag: str = "", recent: str = "", limit: int = 50):
+    return v3_search_local(query=q, result_type=result_type, status=status, tag=tag, recent=recent, limit=limit)
+
+
+@app.post("/api/v3/search")
+async def api_v3_search_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_search_local(query=str(payload.get("query", payload.get("q", ""))), result_type=str(payload.get("result_type", "")), status=str(payload.get("status", "")), tag=str(payload.get("tag", "")), recent=str(payload.get("recent", "")), limit=int(payload.get("limit", 50) or 50))
+
+
+@app.get("/api/v3/graph/filters")
+async def api_v3_graph_filters():
+    return v3_graph_filters()
+
+
+@app.get("/api/v3/graph")
+async def api_v3_graph(limit: int = 250, node_type: str = "", relationship_type: str = ""):
+    if node_type or relationship_type:
+        return v3_filtered_decision_graph(node_type=node_type, relationship_type=relationship_type, limit=limit)
+    return v3_build_decision_graph(limit=limit)
+
+
+@app.post("/api/v3/graph/rebuild")
+async def api_v3_graph_rebuild():
+    return v3_rebuild_graph()
+
+
+@app.get("/api/v3/graph/export.json", response_class=PlainTextResponse)
+async def api_v3_graph_export_json():
+    return PlainTextResponse(json.dumps(v3_build_decision_graph(limit=1000), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/graph/export.md", response_class=PlainTextResponse)
+async def api_v3_graph_export_markdown():
+    return PlainTextResponse(v3_graph_to_markdown(v3_build_decision_graph(limit=1000)), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/workflows")
+async def api_v3_workflows():
+    return v3_workflow_registry()
+
+
+@app.get("/api/v3/workflows/templates")
+async def api_v3_workflow_templates():
+    return v3_workflow_templates()
+
+
+@app.get("/api/v3/workflows/outputs")
+async def api_v3_workflow_outputs(limit: int = 100):
+    return v3_workflow_outputs(limit=limit)
+
+
+@app.post("/api/v3/workflows/run")
+async def api_v3_workflows_run(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_run_workflow(payload)
+
+
+@app.get("/api/v3/workflows/runs")
+async def api_v3_workflow_runs(limit: int = 100):
+    return v3_list_workflow_runs(limit=limit)
+
+
+@app.get("/api/v3/workflows/runs/{run_id}")
+async def api_v3_workflow_run_detail(run_id: str):
+    row = v3_get_workflow_run(run_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="Workflow run not found")
+    return row
+
+
+@app.get("/api/v3/pre-trade-packet")
+async def api_v3_pre_trade_packet_get(market_id: str = "", thesis_id: str = "", outcome: str = ""):
+    return v3_pre_trade_packet({"market_id": market_id, "thesis_id": thesis_id, "outcome": outcome})
+
+
+@app.post("/api/v3/pre-trade-packet")
+async def api_v3_pre_trade_packet_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_pre_trade_packet(payload)
+
+
+@app.get("/api/v3/market-brief")
+async def api_v3_market_brief_get(market_id: str = ""):
+    return v3_market_intelligence_brief({"market_id": market_id})
+
+
+@app.post("/api/v3/market-brief")
+async def api_v3_market_brief_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_market_intelligence_brief(payload)
+
+
+@app.get("/api/v3/thesis-health")
+async def api_v3_thesis_health_get(thesis_id: str = ""):
+    return v3_thesis_health_report({"thesis_id": thesis_id})
+
+
+@app.post("/api/v3/thesis-health")
+async def api_v3_thesis_health_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_thesis_health_report(payload)
+
+
+@app.get("/api/v3/portfolio-brief")
+async def api_v3_portfolio_brief_get():
+    return v3_portfolio_risk_brief({})
+
+
+@app.post("/api/v3/portfolio-brief")
+async def api_v3_portfolio_brief_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_portfolio_risk_brief(payload)
+
+
+@app.get("/api/v3/operator-review")
+async def api_v3_operator_review_get(period: str = "daily"):
+    return v3_operator_review_packet({"period": period})
+
+
+@app.post("/api/v3/operator-review")
+async def api_v3_operator_review_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_operator_review_packet(payload)
+
+
+@app.get("/api/v3/missing-prerequisites")
+async def api_v3_missing_prerequisites(limit: int = 250):
+    return v3_missing_prerequisites_scan(limit=limit)
+
+
+@app.post("/api/v3/missing-prerequisites/scan")
+async def api_v3_missing_prerequisites_scan(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_missing_prerequisites_scan(limit=int(payload.get("limit", 250) or 250))
+
+
+@app.get("/api/v3/export/report.json", response_class=PlainTextResponse)
+async def api_v3_export_report_json(kind: str = "command_center"):
+    return PlainTextResponse(json.dumps(v3_export_report_json(kind), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/export/report.md", response_class=PlainTextResponse)
+async def api_v3_export_report_markdown(kind: str = "command_center"):
+    return PlainTextResponse(v3_export_report_markdown(kind), media_type="text/markdown; charset=utf-8")
+
+
+@app.post("/api/v3/demo/create")
+async def api_v3_demo_create():
+    return v3_create_demo_data()
+
+
+@app.post("/api/v3/demo/clear")
+async def api_v3_demo_clear():
+    return v3_clear_demo_data()
+
+
+@app.get("/api/v3/demo/status")
+async def api_v3_demo_status():
+    return v3_demo_status()
+
+
+@app.get("/api/v3/validation/status")
+async def api_v3_validation_status():
+    return v3_validation_status()
+
+
+@app.get("/api/v3/exports/pre-trade-packet.md", response_class=PlainTextResponse)
+async def api_v3_export_pre_trade_packet_markdown():
+    return PlainTextResponse(v3_export_pre_trade_packet_markdown({}), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/exports/operator-review.md", response_class=PlainTextResponse)
+async def api_v3_export_operator_review_markdown(period: str = "daily"):
+    return PlainTextResponse(v3_export_operator_review_markdown({"period": period}), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/settings")
+async def api_v3_settings():
+    return v3_build_settings()
+
+
+@app.post("/api/v3/settings")
+async def api_v3_settings_update(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_update_settings(payload)
+
+
+@app.get("/api/v3/analytics")
+async def api_v3_analytics_root():
+    return v3_analytics_summary()
+
+
+@app.get("/api/v3/analytics/summary")
+async def api_v3_analytics_summary():
+    return v3_analytics_summary()
+
+
+@app.post("/api/v3/analytics/snapshot")
+async def api_v3_analytics_snapshot(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_analytics_snapshot(write=True)
+
+
+@app.get("/api/v3/analytics/decisions")
+async def api_v3_analytics_decisions():
+    return v3_analytics_decisions()
+
+
+@app.get("/api/v3/analytics/theses")
+async def api_v3_analytics_theses():
+    return v3_analytics_theses()
+
+
+@app.get("/api/v3/analytics/evidence")
+async def api_v3_analytics_evidence():
+    return v3_analytics_evidence()
+
+
+@app.get("/api/v3/analytics/alerts")
+async def api_v3_analytics_alerts():
+    return v3_analytics_alerts()
+
+
+@app.get("/api/v3/analytics/governance")
+async def api_v3_analytics_governance():
+    return v3_analytics_governance()
+
+
+@app.get("/api/v3/analytics/portfolio")
+async def api_v3_analytics_portfolio():
+    return v3_analytics_portfolio()
+
+
+@app.get("/api/v3/analytics/calibration")
+async def api_v3_analytics_calibration():
+    return v3_analytics_calibration()
+
+
+@app.get("/api/v3/analytics/mistakes")
+async def api_v3_analytics_mistakes():
+    return v3_analytics_mistakes()
+
+
+@app.get("/api/v3/analytics/strengths")
+async def api_v3_analytics_strengths():
+    return v3_analytics_strengths()
+
+
+@app.get("/api/v3/analytics/reviews")
+async def api_v3_analytics_reviews():
+    return v3_analytics_reviews()
+
+
+@app.post("/api/v3/analytics/learning-report")
+async def api_v3_analytics_learning_report(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_learning_report(period=str(payload.get("period", "weekly")), start_date=str(payload.get("start_date", "")), end_date=str(payload.get("end_date", "")), write=True)
+
+
+@app.get("/api/v3/analytics/export.json", response_class=PlainTextResponse)
+async def api_v3_analytics_export_json():
+    return PlainTextResponse(json.dumps(v3_analytics_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/analytics/export.md", response_class=PlainTextResponse)
+async def api_v3_analytics_export_markdown(period: str = "weekly"):
+    return PlainTextResponse(v3_analytics_export_markdown(period=period), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/analytics/export/decisions.csv", response_class=PlainTextResponse)
+async def api_v3_analytics_export_decisions_csv():
+    return PlainTextResponse(v3_analytics_export_csv("decisions"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/analytics/export/theses.csv", response_class=PlainTextResponse)
+async def api_v3_analytics_export_theses_csv():
+    return PlainTextResponse(v3_analytics_export_csv("theses"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/analytics/export/evidence.csv", response_class=PlainTextResponse)
+async def api_v3_analytics_export_evidence_csv():
+    return PlainTextResponse(v3_analytics_export_csv("evidence"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/analytics/export/alerts.csv", response_class=PlainTextResponse)
+async def api_v3_analytics_export_alerts_csv():
+    return PlainTextResponse(v3_analytics_export_csv("alerts"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/analytics/export/governance.csv", response_class=PlainTextResponse)
+async def api_v3_analytics_export_governance_csv():
+    return PlainTextResponse(v3_analytics_export_csv("governance"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/analytics/export/calibration.csv", response_class=PlainTextResponse)
+async def api_v3_analytics_export_calibration_csv():
+    return PlainTextResponse(v3_analytics_export_csv("calibration"), media_type="text/csv; charset=utf-8")
 
 @app.get("/docs/{doc_path:path}", response_class=PlainTextResponse)
 async def docs_file(doc_path: str):
@@ -1240,6 +1900,30 @@ async def api_live_v2_status():
 @app.get("/api/v2/live/readiness")
 async def api_live_v2_readiness():
     return build_live_v2_readiness()
+
+
+@app.get("/api/v2/live/demo-readiness")
+async def api_live_v2_demo_readiness():
+    return build_live_v2_demo_readiness()
+
+
+@app.get("/api/v2/live/verify")
+async def api_live_v2_verify(attempt_network: bool = False, q: str = "polymarket", token_id: str = ""):
+    return await build_live_v2_verification_report(attempt_network=attempt_network, market_query=q, token_id=token_id)
+
+
+@app.get("/api/v2/live/verify/report", response_class=PlainTextResponse)
+async def api_live_v2_verify_report(attempt_network: bool = False, q: str = "polymarket", token_id: str = "", format: str = "json"):
+    report = await build_live_v2_verification_report(attempt_network=attempt_network, market_query=q, token_id=token_id)
+    if format.lower() in {"md", "markdown"}:
+        return PlainTextResponse(live_v2_verification_to_markdown(report), media_type="text/markdown; charset=utf-8")
+    return PlainTextResponse(json.dumps(report, indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/verify/report.md", response_class=PlainTextResponse)
+async def api_live_v2_verify_report_markdown(attempt_network: bool = False, q: str = "polymarket", token_id: str = ""):
+    report = await build_live_v2_verification_report(attempt_network=attempt_network, market_query=q, token_id=token_id)
+    return PlainTextResponse(live_v2_verification_to_markdown(report), media_type="text/markdown; charset=utf-8")
 
 
 @app.get("/api/v2/live/markets")
@@ -1283,9 +1967,22 @@ async def api_live_v2_reconcile():
 
 
 @app.get("/api/v2/live/audit")
-async def api_live_v2_audit(limit: int = 200):
-    rows = list_live_v2_audit_records(limit=limit)
+async def api_live_v2_audit(
+    limit: int = 200,
+    action: str = "",
+    mode: str = "",
+    status: str = "",
+    market: str = "",
+    order_id: str = "",
+    search: str = "",
+):
+    rows = filter_live_v2_audit_records(limit=limit, action=action, mode=mode, status=status, market=market, order_id=order_id, search=search)
     return {"items": rows, "count": len(rows)}
+
+
+@app.get("/api/v2/live/ui/preferences/schema")
+async def api_live_v2_preferences_schema():
+    return build_live_v2_preferences_schema()
 
 
 @app.get("/api/v2/live/audit.csv", response_class=PlainTextResponse)
@@ -1296,6 +1993,659 @@ async def api_live_v2_audit_csv():
 @app.get("/api/v2/live/audit.md", response_class=PlainTextResponse)
 async def api_live_v2_audit_markdown():
     return live_v2_audit_to_markdown(list_live_v2_audit_records(limit=500))
+
+
+@app.get("/api/v2/live/strategy")
+async def api_live_v2_strategy():
+    return build_strategy_workspace(limit=250)
+
+
+@app.get("/api/v2/live/strategy/theses")
+async def api_live_v2_strategy_theses(status: str = "", limit: int = 200):
+    return strategy_list_theses(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/strategy/theses")
+async def api_live_v2_strategy_create_thesis(payload: dict[str, Any] = Body(default_factory=dict)):
+    return strategy_create_thesis(payload)
+
+
+@app.get("/api/v2/live/strategy/theses/{item_id}")
+async def api_live_v2_strategy_get_thesis(item_id: str):
+    item = get_strategy_item("theses", item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Strategy thesis not found")
+    return {"item": item, "secret_values_returned": False}
+
+
+@app.post("/api/v2/live/strategy/theses/{item_id}")
+async def api_live_v2_strategy_update_thesis(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = strategy_update_thesis(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Strategy thesis not found")
+    return result
+
+
+@app.post("/api/v2/live/strategy/theses/{item_id}/archive")
+async def api_live_v2_strategy_archive_thesis(item_id: str):
+    result = strategy_archive_thesis(item_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Strategy thesis not found")
+    return result
+
+
+@app.post("/api/v2/live/strategy/theses/{item_id}/ticket-draft")
+async def api_live_v2_strategy_ticket_from_thesis(item_id: str):
+    return build_ticket_from_thesis(item_id)
+
+
+@app.get("/api/v2/live/strategy/evidence")
+async def api_live_v2_strategy_evidence(thesis_id: str = "", limit: int = 200):
+    return strategy_list_evidence(thesis_id=thesis_id, limit=limit)
+
+
+@app.post("/api/v2/live/strategy/evidence")
+async def api_live_v2_strategy_create_evidence(payload: dict[str, Any] = Body(default_factory=dict)):
+    return strategy_create_evidence(payload)
+
+
+@app.get("/api/v2/live/strategy/watchlist")
+async def api_live_v2_strategy_watchlist(status: str = "", limit: int = 200):
+    return strategy_list_watchlist(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/strategy/watchlist")
+async def api_live_v2_strategy_create_watchlist(payload: dict[str, Any] = Body(default_factory=dict)):
+    return strategy_create_watchlist_item(payload)
+
+
+@app.get("/api/v2/live/strategy/scorecards")
+async def api_live_v2_strategy_scorecards(thesis_id: str = "", limit: int = 200):
+    return strategy_list_scorecards(thesis_id=thesis_id, limit=limit)
+
+
+@app.post("/api/v2/live/strategy/scorecards")
+async def api_live_v2_strategy_create_scorecard(payload: dict[str, Any] = Body(default_factory=dict)):
+    return strategy_create_scorecard(payload)
+
+
+@app.get("/api/v2/live/strategy/reviews")
+async def api_live_v2_strategy_reviews(thesis_id: str = "", limit: int = 200):
+    return strategy_list_reviews(thesis_id=thesis_id, limit=limit)
+
+
+@app.post("/api/v2/live/strategy/reviews")
+async def api_live_v2_strategy_create_review(payload: dict[str, Any] = Body(default_factory=dict)):
+    return strategy_create_review(payload)
+
+
+@app.get("/api/v2/live/strategy/export.json", response_class=PlainTextResponse)
+async def api_live_v2_strategy_export_json():
+    return PlainTextResponse(json.dumps(strategy_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/strategy/export.md", response_class=PlainTextResponse)
+async def api_live_v2_strategy_export_markdown():
+    return PlainTextResponse(strategy_export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v2/live/strategy/{collection}.csv", response_class=PlainTextResponse)
+async def api_live_v2_strategy_export_csv(collection: str):
+    if collection not in {"evidence", "watchlist", "scorecards", "theses"}:
+        raise HTTPException(status_code=404, detail="Unsupported strategy CSV collection")
+    return PlainTextResponse(strategy_csv(collection), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v2/live/research")
+async def api_live_v2_research():
+    return build_research_workspace(limit=250)
+
+
+@app.get("/api/v2/live/research/sources")
+async def api_live_v2_research_sources(status: str = "", limit: int = 200):
+    return research_list_sources(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/research/sources")
+async def api_live_v2_research_create_source(payload: dict[str, Any] = Body(default_factory=dict)):
+    return research_create_source(payload)
+
+
+@app.get("/api/v2/live/research/sources/{item_id}")
+async def api_live_v2_research_get_source(item_id: str):
+    item = get_research_item("sources", item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Research source not found")
+    return {"item": item, "secret_values_returned": False}
+
+
+@app.post("/api/v2/live/research/sources/{item_id}")
+async def api_live_v2_research_update_source(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = research_update_source(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Research source not found")
+    return result
+
+
+@app.post("/api/v2/live/research/sources/{item_id}/archive")
+async def api_live_v2_research_archive_source(item_id: str):
+    result = research_archive_source(item_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Research source not found")
+    return result
+
+
+@app.post("/api/v2/live/research/sources/{item_id}/mark-reviewed")
+async def api_live_v2_research_mark_source_reviewed(item_id: str):
+    result = research_mark_source_reviewed(item_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Research source not found")
+    return result
+
+
+@app.post("/api/v2/live/research/sources/{item_id}/mark-stale")
+async def api_live_v2_research_mark_source_stale(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = research_mark_source_stale(item_id, stale_reason=str(payload.get("stale_reason", "")))
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Research source not found")
+    return result
+
+
+@app.get("/api/v2/live/research/queue")
+async def api_live_v2_research_queue(status: str = "", limit: int = 200):
+    return research_list_queue(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/research/queue")
+async def api_live_v2_research_create_queue(payload: dict[str, Any] = Body(default_factory=dict)):
+    return research_create_queue_item(payload)
+
+
+@app.post("/api/v2/live/research/queue/{item_id}")
+async def api_live_v2_research_update_queue(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = research_update_queue_item(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Research queue item not found")
+    return result
+
+
+@app.get("/api/v2/live/research/notes")
+async def api_live_v2_research_notes(source_id: str = "", limit: int = 200):
+    return research_list_notes(source_id=source_id, limit=limit)
+
+
+@app.post("/api/v2/live/research/notes")
+async def api_live_v2_research_create_note(payload: dict[str, Any] = Body(default_factory=dict)):
+    return research_create_note(payload)
+
+
+@app.get("/api/v2/live/research/evidence-candidates")
+async def api_live_v2_research_candidates(thesis_id: str = "", limit: int = 200):
+    return research_list_candidates(thesis_id=thesis_id, limit=limit)
+
+
+@app.post("/api/v2/live/research/evidence-candidates")
+async def api_live_v2_research_create_candidate(payload: dict[str, Any] = Body(default_factory=dict)):
+    return research_create_evidence_candidate(payload)
+
+
+@app.post("/api/v2/live/research/evidence-candidates/{item_id}/convert")
+async def api_live_v2_research_convert_candidate(item_id: str):
+    result = research_convert_candidate(item_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Evidence candidate not found")
+    return result
+
+
+@app.get("/api/v2/live/research/freshness")
+async def api_live_v2_research_freshness():
+    return research_freshness_summary()
+
+
+@app.post("/api/v2/live/research/freshness")
+async def api_live_v2_research_update_freshness(payload: dict[str, Any] = Body(default_factory=dict)):
+    from .live_research import update_freshness as research_update_freshness
+    return research_update_freshness(payload)
+
+
+@app.get("/api/v2/live/research/thesis-comparison")
+async def api_live_v2_research_thesis_comparison(thesis_id: str = ""):
+    return research_build_thesis_comparison(thesis_id=thesis_id)
+
+
+@app.get("/api/v2/live/research/export.json", response_class=PlainTextResponse)
+async def api_live_v2_research_export_json():
+    return PlainTextResponse(json.dumps(research_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/research/export.md", response_class=PlainTextResponse)
+async def api_live_v2_research_export_markdown():
+    return PlainTextResponse(research_export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v2/live/research/{collection}.csv", response_class=PlainTextResponse)
+async def api_live_v2_research_export_csv(collection: str):
+    if collection not in {"sources", "queue", "evidence-candidates", "stale", "notes"}:
+        raise HTTPException(status_code=404, detail="Unsupported research CSV collection")
+    return PlainTextResponse(research_csv(collection), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v2/live/monitoring")
+async def api_live_v2_monitoring():
+    return build_monitoring_workspace(limit=250)
+
+
+@app.get("/api/v2/live/monitoring/rules")
+async def api_live_v2_monitoring_rules(status: str = "", limit: int = 200):
+    return monitoring_list_rules(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/monitoring/rules")
+async def api_live_v2_monitoring_create_rule(payload: dict[str, Any] = Body(default_factory=dict)):
+    return monitoring_create_rule(payload)
+
+
+@app.get("/api/v2/live/monitoring/rules/{item_id}")
+async def api_live_v2_monitoring_get_rule(item_id: str):
+    item = get_monitoring_item("rules", item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Monitoring rule not found")
+    return {"item": item, "secret_values_returned": False}
+
+
+@app.post("/api/v2/live/monitoring/rules/{item_id}")
+async def api_live_v2_monitoring_update_rule(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = monitoring_update_rule(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Monitoring rule not found")
+    return result
+
+
+@app.post("/api/v2/live/monitoring/rules/{item_id}/evaluate")
+async def api_live_v2_monitoring_evaluate_rule(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = monitoring_evaluate_rule(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Monitoring rule not found")
+    return result
+
+
+@app.post("/api/v2/live/monitoring/rules/{item_id}/disable")
+async def api_live_v2_monitoring_disable_rule(item_id: str):
+    result = monitoring_disable_rule(item_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Monitoring rule not found")
+    return result
+
+
+@app.post("/api/v2/live/monitoring/rules/{item_id}/archive")
+async def api_live_v2_monitoring_archive_rule(item_id: str):
+    result = monitoring_archive_rule(item_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Monitoring rule not found")
+    return result
+
+
+@app.get("/api/v2/live/monitoring/alerts")
+async def api_live_v2_monitoring_alerts(status: str = "", severity: str = "", limit: int = 200):
+    return monitoring_list_alerts(status=status, severity=severity, limit=limit)
+
+
+@app.post("/api/v2/live/monitoring/alerts/{alert_id}/acknowledge")
+async def api_live_v2_monitoring_acknowledge_alert(alert_id: str):
+    result = monitoring_acknowledge_alert(alert_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Monitoring alert not found")
+    return result
+
+
+@app.post("/api/v2/live/monitoring/alerts/{alert_id}/snooze")
+async def api_live_v2_monitoring_snooze_alert(alert_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = monitoring_snooze_alert(alert_id, minutes=int(payload.get("minutes", 60) or 60))
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Monitoring alert not found")
+    return result
+
+
+@app.get("/api/v2/live/monitoring/history")
+async def api_live_v2_monitoring_history(limit: int = 500):
+    return monitoring_list_history(limit=limit)
+
+
+@app.post("/api/v2/live/monitoring/evaluate")
+async def api_live_v2_monitoring_evaluate_all(payload: dict[str, Any] = Body(default_factory=dict)):
+    return monitoring_evaluate_all(payload)
+
+
+@app.get("/api/v2/live/monitoring/export.json", response_class=PlainTextResponse)
+async def api_live_v2_monitoring_export_json():
+    return PlainTextResponse(json.dumps(monitoring_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/monitoring/export.md", response_class=PlainTextResponse)
+async def api_live_v2_monitoring_export_markdown():
+    return PlainTextResponse(monitoring_export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v2/live/monitoring/export/{collection}.csv", response_class=PlainTextResponse)
+async def api_live_v2_monitoring_export_csv(collection: str):
+    if collection not in {"rules", "alerts", "active_alerts", "history"}:
+        raise HTTPException(status_code=404, detail="Unsupported monitoring CSV collection")
+    return PlainTextResponse(monitoring_csv(collection), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v2/live/portfolio")
+async def api_live_v2_portfolio():
+    return build_portfolio_workspace(limit=250)
+
+
+@app.get("/api/v2/live/portfolio/snapshot")
+async def api_live_v2_portfolio_snapshot():
+    return generate_portfolio_snapshot(record=False)
+
+
+@app.post("/api/v2/live/portfolio/snapshot")
+async def api_live_v2_portfolio_create_snapshot():
+    return generate_portfolio_snapshot(record=True)
+
+
+@app.get("/api/v2/live/portfolio/exposure")
+async def api_live_v2_portfolio_exposure(limit: int = 500):
+    return portfolio_list_exposure(limit=limit)
+
+
+@app.get("/api/v2/live/portfolio/bankroll")
+async def api_live_v2_portfolio_bankroll():
+    return {"item": portfolio_get_bankroll_settings(), "secret_values_returned": False}
+
+
+@app.post("/api/v2/live/portfolio/bankroll")
+async def api_live_v2_portfolio_update_bankroll(payload: dict[str, Any] = Body(default_factory=dict)):
+    return portfolio_update_bankroll(payload)
+
+
+@app.get("/api/v2/live/portfolio/warnings")
+async def api_live_v2_portfolio_warnings(limit: int = 500):
+    return portfolio_list_warnings(limit=limit)
+
+
+@app.post("/api/v2/live/portfolio/exposure-groups")
+async def api_live_v2_portfolio_create_exposure_group(payload: dict[str, Any] = Body(default_factory=dict)):
+    return portfolio_create_exposure_group(payload)
+
+
+@app.post("/api/v2/live/portfolio/exposure-groups/{item_id}")
+async def api_live_v2_portfolio_update_exposure_group(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = portfolio_update_exposure_group(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Portfolio exposure group not found")
+    return result
+
+
+@app.get("/api/v2/live/portfolio/scenarios")
+async def api_live_v2_portfolio_scenarios(limit: int = 200):
+    return portfolio_list_scenarios(limit=limit)
+
+
+@app.post("/api/v2/live/portfolio/scenarios")
+async def api_live_v2_portfolio_create_scenario(payload: dict[str, Any] = Body(default_factory=dict)):
+    return portfolio_create_scenario(payload)
+
+
+@app.post("/api/v2/live/portfolio/scenarios/{item_id}/evaluate")
+async def api_live_v2_portfolio_evaluate_scenario(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = portfolio_evaluate_scenario(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Portfolio scenario not found")
+    return result
+
+
+@app.post("/api/v2/live/portfolio/planned-impact")
+async def api_live_v2_portfolio_planned_impact(payload: dict[str, Any] = Body(default_factory=dict)):
+    return portfolio_planned_trade_impact(payload)
+
+
+@app.get("/api/v2/live/portfolio/export.json", response_class=PlainTextResponse)
+async def api_live_v2_portfolio_export_json():
+    return PlainTextResponse(json.dumps(portfolio_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/portfolio/export.md", response_class=PlainTextResponse)
+async def api_live_v2_portfolio_export_markdown():
+    return PlainTextResponse(portfolio_export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v2/live/portfolio/export/{collection}.csv", response_class=PlainTextResponse)
+async def api_live_v2_portfolio_export_csv(collection: str):
+    if collection not in {"exposure", "warnings", "scenarios"}:
+        raise HTTPException(status_code=404, detail="Unsupported portfolio CSV collection")
+    return PlainTextResponse(portfolio_csv(collection), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v2/live/governance")
+async def api_live_v2_governance():
+    return build_governance_workspace(limit=250)
+
+
+@app.get("/api/v2/live/governance/journal")
+async def api_live_v2_governance_journal(status: str = "", limit: int = 200):
+    return governance_list_journal(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/governance/journal")
+async def api_live_v2_governance_create_journal(payload: dict[str, Any] = Body(default_factory=dict)):
+    return governance_create_journal_entry(payload)
+
+
+@app.post("/api/v2/live/governance/journal/{item_id}")
+async def api_live_v2_governance_update_journal(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = governance_update_journal_entry(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Governance journal entry not found")
+    return result
+
+
+@app.get("/api/v2/live/governance/checklists")
+async def api_live_v2_governance_checklists(status: str = "", limit: int = 200):
+    return governance_list_checklists(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/governance/checklists")
+async def api_live_v2_governance_create_checklist(payload: dict[str, Any] = Body(default_factory=dict)):
+    return governance_create_checklist(payload)
+
+
+@app.post("/api/v2/live/governance/checklists/{item_id}")
+async def api_live_v2_governance_update_checklist(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = governance_update_checklist(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Governance checklist not found")
+    return result
+
+
+@app.get("/api/v2/live/governance/reviews")
+async def api_live_v2_governance_reviews(status: str = "", limit: int = 200):
+    return governance_list_reviews(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/governance/reviews")
+async def api_live_v2_governance_create_review(payload: dict[str, Any] = Body(default_factory=dict)):
+    return governance_create_review(payload)
+
+
+@app.post("/api/v2/live/governance/reviews/{item_id}")
+async def api_live_v2_governance_update_review(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = governance_update_review(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Governance review not found")
+    return result
+
+
+@app.get("/api/v2/live/governance/rules")
+async def api_live_v2_governance_rules(status: str = "", limit: int = 200):
+    return governance_list_rules(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/governance/rules")
+async def api_live_v2_governance_create_rule(payload: dict[str, Any] = Body(default_factory=dict)):
+    return governance_create_rule(payload)
+
+
+@app.post("/api/v2/live/governance/rules/{item_id}")
+async def api_live_v2_governance_update_rule(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = governance_update_rule(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Governance rule not found")
+    return result
+
+
+@app.get("/api/v2/live/governance/near-misses")
+async def api_live_v2_governance_near_misses(status: str = "", limit: int = 200):
+    return governance_list_near_misses(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/governance/near-misses")
+async def api_live_v2_governance_create_near_miss(payload: dict[str, Any] = Body(default_factory=dict)):
+    return governance_create_near_miss(payload)
+
+
+@app.get("/api/v2/live/governance/mistake-patterns")
+async def api_live_v2_governance_mistake_patterns(status: str = "", limit: int = 200):
+    return governance_list_mistake_patterns(status=status, limit=limit)
+
+
+@app.post("/api/v2/live/governance/mistake-patterns")
+async def api_live_v2_governance_create_mistake_pattern(payload: dict[str, Any] = Body(default_factory=dict)):
+    return governance_create_mistake_pattern(payload)
+
+
+@app.post("/api/v2/live/governance/mistake-patterns/{item_id}")
+async def api_live_v2_governance_update_mistake_pattern(item_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = governance_update_mistake_pattern(item_id, payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail="Governance mistake pattern not found")
+    return result
+
+
+@app.get("/api/v2/live/governance/export.json", response_class=PlainTextResponse)
+async def api_live_v2_governance_export_json():
+    return PlainTextResponse(json.dumps(governance_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/governance/export.md", response_class=PlainTextResponse)
+async def api_live_v2_governance_export_markdown():
+    return PlainTextResponse(governance_export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v2/live/governance/export/{collection}.csv", response_class=PlainTextResponse)
+async def api_live_v2_governance_export_csv(collection: str):
+    if collection not in {"journal", "checklists", "mistakes", "near-misses", "rules", "reviews"}:
+        raise HTTPException(status_code=404, detail="Unsupported governance CSV collection")
+    return PlainTextResponse(governance_csv(collection), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v2/live/data")
+async def api_live_v2_data():
+    return build_data_workspace(limit=250)
+
+
+@app.get("/api/v2/live/data/health")
+async def api_live_v2_data_health():
+    return data_health_report_json()
+
+
+@app.post("/api/v2/live/data/health/run")
+async def api_live_v2_data_health_run(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_run_health_check(deep=bool(payload.get("deep", False)))
+
+
+@app.get("/api/v2/live/data/inventory")
+async def api_live_v2_data_inventory():
+    return data_runtime_inventory()
+
+
+@app.get("/api/v2/live/data/secrets/scan")
+async def api_live_v2_data_secret_scan():
+    return data_scan_secrets()
+
+
+@app.post("/api/v2/live/data/backup")
+async def api_live_v2_data_backup(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_create_backup_bundle(payload)
+
+
+@app.get("/api/v2/live/data/backups")
+async def api_live_v2_data_backups():
+    return data_list_backups()
+
+
+@app.post("/api/v2/live/data/backup/validate")
+async def api_live_v2_data_backup_validate(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_validate_backup_bundle(payload)
+
+
+@app.post("/api/v2/live/data/restore/preview")
+async def api_live_v2_data_restore_preview(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_restore_preview(payload)
+
+
+@app.post("/api/v2/live/data/restore/apply")
+async def api_live_v2_data_restore_apply(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_restore_apply(payload)
+
+
+@app.post("/api/v2/live/data/export")
+async def api_live_v2_data_export(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_export_bundle(payload)
+
+
+@app.post("/api/v2/live/data/import/preview")
+async def api_live_v2_data_import_preview(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_import_preview(payload)
+
+
+@app.post("/api/v2/live/data/import/apply")
+async def api_live_v2_data_import_apply(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_import_apply(payload)
+
+
+@app.get("/api/v2/live/data/migrations")
+async def api_live_v2_data_migrations():
+    return data_migration_registry()
+
+
+@app.post("/api/v2/live/data/migrations/dry-run")
+async def api_live_v2_data_migrations_dry_run(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_migration_dry_run(payload)
+
+
+@app.post("/api/v2/live/data/migrations/apply")
+async def api_live_v2_data_migrations_apply(payload: dict[str, Any] = Body(default_factory=dict)):
+    return data_migration_apply(payload)
+
+
+@app.get("/api/v2/live/data/reports/health.json", response_class=PlainTextResponse)
+async def api_live_v2_data_report_health_json():
+    return PlainTextResponse(json.dumps(data_health_report_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/data/reports/health.md", response_class=PlainTextResponse)
+async def api_live_v2_data_report_health_md():
+    return PlainTextResponse(data_health_report_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v2/live/data/reports/recovery.json", response_class=PlainTextResponse)
+async def api_live_v2_data_report_recovery_json():
+    return PlainTextResponse(json.dumps(data_recovery_report_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v2/live/data/reports/recovery.md", response_class=PlainTextResponse)
+async def api_live_v2_data_report_recovery_md():
+    return PlainTextResponse(data_recovery_report_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v2/live/data/reports/checks.csv", response_class=PlainTextResponse)
+async def api_live_v2_data_report_checks_csv():
+    return PlainTextResponse(data_checks_csv(), media_type="text/csv; charset=utf-8")
 
 
 @app.get("/api/v2/live/settings/schema")

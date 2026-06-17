@@ -105,3 +105,25 @@ Live trading remains fail-closed: no default setting enables real submit/cancel,
 `v2.1.0-real` reorganizes the Live v2 area into a cleaner task-based console without weakening any live-trading gate. Use `/v2-live` for the overview, `/v2-live/markets` for public market/order-book data, `/v2-live/trade-ticket` for the step-by-step ticket workflow, `/v2-live/risk` for readiness and blockers, `/v2-live/audit` for ledger exports, `/v2-live/settings` for grouped configuration review/validation, and `/v2-live/emergency` for kill-switch and emergency action receipts.
 
 The persistent Live v2 status bar should be checked before any ticket work. It shows mode, live armed state, read-only state, kill switch, readiness, Gamma/CLOB posture, and recent issue state. If any status is unknown or blocked, treat live submission as unavailable until investigated.
+
+## v2.3.0-real Release/Demo Hardening and Verification
+
+`v2.3.0-real` adds the `/v2-live/verify` release/demo verification page, explicit `/api/v2/live/verify` and report export endpoints, demo-readiness checks, v2.3 manual QA and release checklists, startup/package helper scripts, and stronger no-order/no-cancel validation. Operators should run the verification harness before demos or GitHub releases, export the redacted report when useful, and complete `docs/MANUAL_QA_CHECKLIST_v2.3.0-real.md` before publishing screenshots or release assets.
+
+The verification harness is read-only and explicit: it does not place orders, sign orders for submission, arm live trading, mutate settings, or cancel orders.
+
+## v2.2.0-real Browser-Polished Operator Console
+
+`v2.2.0-real` adds browser polish on top of the v2.1 console. Operators should use the new safe UI preferences panel for non-sensitive convenience settings such as compact mode, default table size, default market query, and advanced/debug expansion behavior. These preferences are stored only in browser localStorage and must never be used for API keys, private keys, wallet secrets, passphrases, auth headers, or account data.
+
+During operations, prefer manual refresh buttons over noisy automatic refresh. Read-only status refresh is safe and visible. Trade-ticket preview remains separate from live submit; live submit still depends on backend risk checks, human approval, warning acknowledgement, typed confirmation, live armed mode, kill switch state, read-only state, and submit gate configuration.
+
+Before a demo or release, run the automated validation and then complete `docs/MANUAL_QA_CHECKLIST_v2.3.0-real.md` in a browser session with non-sensitive data.
+
+## v2.4.0-real Strategy / Playbook Intelligence Layer
+
+`v2.4.0-real` adds the `/v2-live/strategy` workspace for structured theses, evidence tracking, transparent scorecards, watchlists, entry/exit/invalidation criteria, strategy-to-ticket drafts, exports, and post-trade reviews. Strategy objects are research artifacts only: they do not submit orders, sign orders for submission, cancel orders, arm live trading, or bypass backend risk controls. Use `docs/STRATEGY_PLAYBOOK_GUIDE_v2.4.0-real.md` before drafting tickets from theses.
+
+## v2.5.0-real Research Intake and Source Workflow Layer
+
+`v2.5.0-real` adds `/v2-live/research` for source registry, research queue, source notes, evidence candidates, freshness/staleness tracking, thesis comparison, and research exports. Research objects are review artifacts only. They do not place, sign, approve, arm, or cancel orders. Use `docs/RESEARCH_INTAKE_GUIDE_v2.5.0-real.md` before converting research candidates into strategy evidence.
