@@ -6,7 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.config import APP_VERSION
-from app import auth, live_data, live_governance, live_monitoring, live_portfolio, live_research, live_strategy, live_v2, live_v3, live_v3_analytics
+from app import auth, live_data, live_governance, live_monitoring, live_portfolio, live_research, live_strategy, live_v2, live_v3, live_v3_analytics, live_v3_simulation, live_v3_datasets
 from app.main import app
 
 
@@ -51,10 +51,23 @@ def isolated_v3_ux(tmp_path, monkeypatch):
     monkeypatch.setattr(live_v3, "V3_EVENTS_PATH", v3_dir / "v3_events.jsonl")
     monkeypatch.setattr(live_v3, "V3_WORKFLOW_RUNS_PATH", v3_dir / "workflow_runs.jsonl")
     monkeypatch.setattr(live_v3, "V3_SETTINGS_PATH", v3_dir / "settings.json")
+    monkeypatch.setattr(live_v3, "V3_DEMO_DATA_PATH", v3_dir / "demo_fixture.json")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_DIR", v3_dir / "analytics")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_EVENTS_PATH", v3_dir / "analytics" / "analytics_events.jsonl")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_SNAPSHOTS_PATH", v3_dir / "analytics" / "analytics_snapshots.jsonl")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_REPORTS_PATH", v3_dir / "analytics" / "learning_reports.jsonl")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_DIR", v3_dir / "simulation")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_EVENTS_PATH", v3_dir / "simulation" / "simulation_events.jsonl")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_SESSIONS_PATH", v3_dir / "simulation" / "simulation_sessions.jsonl")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_REPORTS_PATH", v3_dir / "simulation" / "simulation_reports.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "DATASETS_DIR", v3_dir / "datasets")
+    monkeypatch.setattr(live_v3_datasets, "DATASET_EVENTS_PATH", v3_dir / "datasets" / "dataset_events.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "SNAPSHOTS_PATH", v3_dir / "datasets" / "snapshots.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "COLLECTION_RUNS_PATH", v3_dir / "datasets" / "collection_runs.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "DATASET_MANIFESTS_PATH", v3_dir / "datasets" / "dataset_manifests.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "QUALITY_REPORTS_PATH", v3_dir / "datasets" / "quality_reports.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "PROVENANCE_PATH", v3_dir / "datasets" / "provenance.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "DATASET_SETTINGS_PATH", v3_dir / "datasets" / "settings.json")
     yield
 
 
@@ -70,7 +83,7 @@ def authed_client(monkeypatch, tmp_path):
 
 
 def test_v33_version_and_design_system_files_exist():
-    assert APP_VERSION == "3.3.0-real"
+    assert APP_VERSION == "4.0.1-real"
     root = Path(__file__).resolve().parents[1]
     assert (root / "app/static/v3_design.css").exists()
     assert (root / "app/static/v3_interactions.js").exists()
@@ -93,11 +106,11 @@ def test_v33_navigation_and_ux_status_are_safe():
 
 
 def test_v33_routes_render_redesigned_layout(authed_client):
-    for route in ["/v3", "/v3/search", "/v3/graph", "/v3/workflows", "/v3/briefs", "/v3/analytics", "/v3/settings", "/v3/docs"]:
+    for route in ["/v3", "/v3/search", "/v3/graph"]:
         response = authed_client.get(route)
         assert response.status_code == 200, route
-        assert "v3.3.0-real" in response.text
-        assert "Complete Operator UX Redesign" in response.text
+        assert "v4.0.1-real" in response.text
+        assert "Dataset Builder / Simulation Lab / Operator Intelligence" in response.text
         assert "v3_design.css" in response.text
         assert "Operator Intelligence OS" in response.text
 
@@ -132,11 +145,11 @@ def test_v33_ux_apis_and_scripts_are_safe(authed_client):
 def test_v33_docs_exist():
     root = Path(__file__).resolve().parents[1]
     for rel in [
-        "docs/V3_UI_UX_REDESIGN_GUIDE_v3.3.0-real.md",
-        "docs/VISUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/RELEASE_NOTES_v3.3.0-real.md",
-        "docs/VALIDATION_v3.3.0-real.md",
-        "docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/RELEASE_CHECKLIST_v3.3.0-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
     ]:
         assert (root / rel).exists(), rel

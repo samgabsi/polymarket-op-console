@@ -4,7 +4,7 @@ The runbook remains read-only. On mobile, use the global safety banner and colla
 
 # Operator Runbook
 
-Polymarket Gamma Starter v1.1.0 adds a practical runbook for live operations. The runbook is available at `/operator-runbook`, `/api/operator-runbook`, and `--operator-runbook`.
+Polymarket OP Console v1.1.0 adds a practical runbook for live operations. The runbook is available at `/operator-runbook`, `/api/operator-runbook`, and `--operator-runbook`.
 
 The runbook is instructional only. It never changes environment variables, starts a scheduler, submits an order, cancels an order, signs a payload, or touches wallet material.
 

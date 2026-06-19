@@ -109,3 +109,11 @@ pre { white-space: pre-wrap; word-break: break-word; max-height: 420px; overflow
 .v3-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 @media (max-width: 1020px) { .v3-app-shell { grid-template-columns: 1fr; } .v3-sidebar { position: static; height: auto; } .v3-content { padding: 16px; } .v3-grid-wide { grid-template-columns: 1fr; } }
 @media (max-width: 720px) { .v3-topbar { display: block; } .v3-status-strip { margin-top: 10px; } .v3-page-hero { padding: 18px; border-radius: 20px; } .v3-table { min-width: 620px; font-size: 12px; } .v3-filterbar input, .v3-filterbar select, .v3-field { width: 100%; } }
+.v3-cockpit-grid { display: grid; grid-template-columns: repeat(2, minmax(320px, 1fr)); gap: 16px; align-items: start; }
+.v3-cockpit-panel { min-height: 220px; }
+.v3-list { display: grid; gap: 10px; }
+.v3-list-item { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: rgba(5, 11, 22, .42); }
+.v3-list-item p { margin: 6px 0; }
+.v3-dependency-tree { display: grid; gap: 10px; }
+.v3-dependency-node { display: grid; grid-template-columns: minmax(120px,1fr) auto minmax(120px,1fr) auto; gap: 8px; align-items: center; border: 1px solid var(--border); border-radius: 14px; padding: 10px; background: rgba(5, 11, 22, .42); }
+@media (max-width: 1080px) { .v3-cockpit-grid { grid-template-columns: 1fr; } .v3-dependency-node { grid-template-columns: 1fr; } }

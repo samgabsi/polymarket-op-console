@@ -2,7 +2,7 @@
 
 ## What this layer is
 
-The v2.9 data layer is a local-first durability and recovery workspace for the Polymarket Gamma Starter runtime data. It helps the operator inspect health, validate records, create redacted backups, preview restores, run controlled imports/exports, inspect migration status, and produce recovery reports.
+The v2.9 data layer is a local-first durability and recovery workspace for the Polymarket OP Console runtime data. It helps the operator inspect health, validate records, create redacted backups, preview restores, run controlled imports/exports, inspect migration status, and produce recovery reports.
 
 ## What this layer is not
 

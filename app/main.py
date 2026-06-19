@@ -196,6 +196,128 @@ from .live_v3_analytics import (
     strength_pattern_metrics as v3_analytics_strengths,
     thesis_quality_metrics as v3_analytics_theses,
 )
+
+from .live_v3_simulation import (
+    archive_session as v3_sim_archive_session,
+    compare_then_now as v3_sim_compare_then_now,
+    create_session as v3_sim_create_session,
+    export_csv as v3_sim_export_csv,
+    export_simulation_json as v3_sim_export_json,
+    list_reports as v3_sim_list_reports,
+    list_sessions as v3_sim_list_sessions,
+    process_quality_backtest as v3_sim_process_backtest,
+    reconstruct_historical_state as v3_sim_replay,
+    run_session as v3_sim_run_session,
+    simulate_alerts as v3_sim_alerts,
+    simulate_governance as v3_sim_governance,
+    simulate_no_trade as v3_sim_no_trade,
+    simulate_portfolio as v3_sim_portfolio,
+    simulate_pre_trade as v3_sim_pre_trade,
+    simulate_thesis as v3_sim_thesis,
+    simulation_report_markdown as v3_sim_export_markdown,
+    simulation_summary as v3_sim_summary,
+    update_session as v3_sim_update_session,
+)
+
+from .live_v3_datasets import (
+    build_dataset_manifest as v3_datasets_build_manifest,
+    build_dataset_settings as v3_datasets_build_settings,
+    collect_snapshots as v3_datasets_collect_snapshots,
+    create_demo_dataset_records as v3_datasets_create_demo_records,
+    dataset_analytics_context as v3_datasets_analytics_context,
+    dataset_quality_report as v3_datasets_quality_report,
+    dataset_simulation_context as v3_datasets_simulation_context,
+    datasets_summary as v3_datasets_summary,
+    export_csv as v3_datasets_export_csv,
+    export_dataset_json as v3_datasets_export_json,
+    export_dataset_markdown as v3_datasets_export_markdown,
+    get_collection_run as v3_datasets_get_run,
+    get_dataset_manifest as v3_datasets_get_manifest,
+    list_collection_runs as v3_datasets_list_runs,
+    list_dataset_manifests as v3_datasets_list_manifests,
+    list_provenance as v3_datasets_list_provenance,
+    list_snapshots as v3_datasets_list_snapshots,
+    replay_ready_datasets as v3_datasets_replay_ready,
+    update_dataset_settings as v3_datasets_update_settings,
+    validate_dataset_manifest as v3_datasets_validate_manifest,
+    validate_snapshot as v3_datasets_validate_snapshot,
+)
+
+
+from .live_v3_freshness import (
+    build_settings as v3_freshness_build_settings,
+    cancel_collection_job as v3_freshness_cancel_job,
+    create_collection_job as v3_freshness_create_job,
+    create_demo_freshness_records as v3_freshness_create_demo_records,
+    create_policy as v3_freshness_create_policy,
+    export_csv as v3_freshness_export_csv,
+    export_freshness_json as v3_freshness_export_json,
+    export_freshness_markdown as v3_freshness_export_markdown,
+    export_notifications_json as v3_freshness_export_notifications_json,
+    freshness_scan as v3_freshness_scan,
+    get_job as v3_freshness_get_job,
+    list_findings as v3_freshness_list_findings,
+    list_jobs as v3_freshness_list_jobs,
+    list_notifications as v3_freshness_list_notifications,
+    list_policies as v3_freshness_list_policies,
+    list_readiness_reports as v3_freshness_list_readiness_reports,
+    readiness_report as v3_freshness_readiness_report,
+    run_collection_job as v3_freshness_run_job,
+    summary as v3_freshness_summary,
+    update_notification as v3_freshness_update_notification,
+    update_policy as v3_freshness_update_policy,
+    update_settings as v3_freshness_update_settings,
+)
+
+from .live_v3_tasks import (
+    archive_inbox_item as v3_tasks_archive_inbox_item,
+    archive_task as v3_tasks_archive_task,
+    build_settings as v3_tasks_build_settings,
+    build_task_context as v3_tasks_context,
+    change_task_status as v3_tasks_change_status,
+    complete_task as v3_tasks_complete_task,
+    create_cadence_rule as v3_tasks_create_cadence_rule,
+    create_task as v3_tasks_create_task,
+    create_task_from_finding as v3_tasks_create_task_from_finding,
+    create_task_from_inbox as v3_tasks_create_task_from_inbox,
+    create_task_from_notification as v3_tasks_create_task_from_notification,
+    create_task_template as v3_tasks_create_template,
+    dismiss_inbox_item as v3_tasks_dismiss_inbox_item,
+    export_csv as v3_tasks_export_csv,
+    export_daily_ops_json as v3_tasks_export_daily_json,
+    export_daily_ops_markdown as v3_tasks_export_daily_md,
+    export_json as v3_tasks_export_json,
+    export_markdown as v3_tasks_export_md,
+    export_weekly_ops_json as v3_tasks_export_weekly_json,
+    export_weekly_ops_markdown as v3_tasks_export_weekly_md,
+    generate_daily_ops_packet as v3_tasks_daily_ops,
+    generate_weekly_plan as v3_tasks_weekly_plan,
+    get_task as v3_tasks_get_task,
+    list_cadence_rules as v3_tasks_list_cadence,
+    list_inbox as v3_tasks_list_inbox,
+    list_task_templates as v3_tasks_list_templates,
+    list_tasks as v3_tasks_list_tasks,
+    run_cadence as v3_tasks_run_cadence,
+    scan_inbox as v3_tasks_scan_inbox,
+    snooze_inbox_item as v3_tasks_snooze_inbox_item,
+    task_board as v3_tasks_board,
+    task_context_for_subsystem as v3_tasks_context_for_subsystem,
+    task_summary as v3_tasks_summary,
+    today_view as v3_tasks_today,
+    update_settings as v3_tasks_update_settings,
+    update_task as v3_tasks_update_task,
+    week_view as v3_tasks_week,
+)
+
+
+from . import live_v3_workspace as v3_workspace
+from . import live_v3_cockpit as v3_cockpit
+from . import platform_diagnostics as v4_platform
+from . import platform_plugins as v4_platform_plugins
+from . import platform_routes as v4_platform_routes
+from . import platform_storage as v4_platform_storage
+from . import platform_safety as v4_platform_safety
+
 from .live_v3 import (
     build_command_center as v3_build_command_center,
     build_decision_graph as v3_build_decision_graph,
@@ -394,7 +516,7 @@ from .training_lab import (
     validate_dataset_payload,
 )
 
-app = FastAPI(title="Polymarket Gamma Starter", version=APP_VERSION_SHORT)
+app = FastAPI(title="Polymarket OP Console", version=APP_VERSION_SHORT)
 app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")
 templates = Jinja2Templates(directory=str(APP_DIR / "templates"))
 templates.env.globals.update(console_globals())
@@ -1474,11 +1596,69 @@ def _v3_template_context(request: Request, section: str) -> dict[str, Any]:
         "analytics_summary": v3_analytics_summary() if section in {"command_center", "analytics"} else {},
         "analytics_snapshot": v3_analytics_snapshot(write=False) if section == "analytics" else {},
         "learning_report": v3_learning_report(write=False) if section == "analytics" else {},
+        "simulation_summary": v3_sim_summary() if section in {"command_center", "simulation"} else {},
+        "simulation_sessions": {"items": [], "count": 0},
+        "simulation_reports": {"items": [], "count": 0},
+        "simulation_process_backtest": {},
+        "simulation_replay": {},
+        "simulation_pre_trade": {},
+        "simulation_no_trade": {},
+        "datasets_summary": v3_datasets_summary() if section in {"command_center", "datasets", "simulation", "analytics", "freshness"} else {},
+        "freshness_summary": v3_freshness_summary() if section in {"command_center", "freshness", "datasets", "simulation", "analytics", "tasks"} else {},
+        "tasks_summary": v3_tasks_summary() if section in {"command_center", "tasks", "freshness", "datasets", "simulation", "analytics", "workflows"} else {},
+        "task_context": {},
+        "task_list": {"items": [], "count": 0},
+        "task_inbox": {"items": [], "count": 0},
+        "task_board": {"columns": [], "total_count": 0},
+        "task_today": {},
+        "task_week": {},
+        "task_cadence": {"items": [], "count": 0},
+        "task_templates": {"items": [], "count": 0},
+        "task_settings": {},
+        "workspace_summary": v3_workspace.workspace_summary() if section in {"command_center", "workspace", "tasks", "search", "graph", "workflows"} else {},
+        "workspace_context": {},
+        "workspace_flows": {"items": [], "count": 0},
+        "workspace_sessions": {"items": [], "count": 0},
+        "workspace_dependencies": {"items": [], "count": 0},
+        "workspace_blocked_review": {},
+        "workspace_source_previews": {"items": [], "count": 0},
+        "workspace_saved_views": {"items": [], "count": 0},
+        "workspace_review_packets": {"items": [], "count": 0},
+        "workspace_settings": {},
+        "cockpit_summary": v3_cockpit.cockpit_summary() if section in {"command_center", "cockpit", "tasks", "workspace", "search", "graph", "workflows"} else {},
+        "cockpit_context": {},
+        "cockpit_layouts": {"items": [], "count": 0},
+        "cockpit_selected_layout": {},
+        "cockpit_panels": {"items": [], "count": 0},
+        "cockpit_focus_modes": {"items": [], "count": 0},
+        "cockpit_shortcuts": {"items": [], "count": 0},
+        "cockpit_command_palette": {"items": [], "count": 0},
+        "cockpit_dependency_view": {},
+        "cockpit_source_context": {"items": [], "count": 0},
+        "cockpit_review_packets": {"items": [], "count": 0},
+        "cockpit_settings": {},
+        "platform_summary": v4_platform.platform_summary(app) if section in {"command_center", "platform", "search", "graph", "workflows"} else {},
+        "platform_context": {},
+        "platform_health": {},
+        "platform_routes": {"items": [], "count": 0, "families": {}},
+        "platform_plugins": {"items": [], "count": 0},
+        "platform_storage": {"items": [], "count": 0},
+        "platform_diagnostics": {},
+        "platform_safety": {},
+        "platform_settings": {},
+        "dataset_snapshots": {"items": [], "count": 0},
+        "dataset_runs": {"items": [], "count": 0},
+        "dataset_manifests": {"items": [], "count": 0},
+        "dataset_quality": {},
+        "dataset_provenance": {"items": [], "count": 0},
+        "dataset_replay_ready": {"items": [], "count": 0},
+        "dataset_settings": {},
         "user": current_user(request),
     }
     if section == "command_center":
         base["missing_prerequisites"] = v3_missing_prerequisites_scan(limit=50)
         base["validation_status"] = v3_validation_status()
+        base["platform_summary"] = v4_platform.platform_summary(app)
     if section == "search":
         base["search_index"] = v3_build_search_index(limit=75)
         base["search_filters"] = v3_search_filters()
@@ -1493,6 +1673,107 @@ def _v3_template_context(request: Request, section: str) -> dict[str, Any]:
     if section == "settings":
         base["settings"] = v3_build_settings()
         base["validation_status"] = v3_validation_status()
+    if section == "simulation":
+        # Page loads stay fast and do not run replay/simulation automatically.
+        # Simulation execution remains operator-triggered via API/workflow actions.
+        base["simulation_sessions"] = v3_sim_list_sessions(limit=50)
+        base["simulation_reports"] = v3_sim_list_reports(limit=50)
+        base["simulation_process_backtest"] = {"process_scorecard": {"score": 0, "max_score": 100, "status": "not_run"}, "metrics": {"decisions_logged": 0, "stale_evidence_count": 0}, "suggested_process_improvements": ["Run a process-quality backtest from the Simulation Lab API or workflow."], "simulation_only": True, "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False}
+        base["simulation_replay"] = {"replay_time": "not_run", "known_count": 0, "created_after_replay_time_count": 0, "historical_reconstruction_is_best_effort": True, "secret_values_returned": False}
+        base["simulation_pre_trade"] = {"blockers": [], "warnings": ["Simulation is not auto-run on page load."], "unknown_unavailable": ["Run a replay to generate a packet."], "assumption_set": {"local_only_replay": True}, "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False}
+        base["simulation_no_trade"] = {"no_trade_rationale": ["No-trade simulation has not been run yet."], "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False}
+    if section == "datasets":
+        # Page loads stay fast and do not collect snapshots or build datasets automatically.
+        # Collection/build/validation remain explicit operator-triggered read-only actions.
+        base["dataset_snapshots"] = v3_datasets_list_snapshots(limit=100)
+        base["dataset_runs"] = v3_datasets_list_runs(limit=50)
+        base["dataset_manifests"] = v3_datasets_list_manifests(limit=50)
+        base["dataset_quality"] = v3_datasets_quality_report()
+        base["dataset_provenance"] = v3_datasets_list_provenance(limit=50)
+        base["dataset_replay_ready"] = v3_datasets_replay_ready(limit=50)
+        base["dataset_settings"] = v3_datasets_build_settings()
+
+    if section == "tasks":
+        # Page loads stay fast and do not scan/generate tasks automatically.
+        # Inbox scans, cadence generation, and packet creation remain explicit operator-triggered actions.
+        base["task_context"] = v3_tasks_context()
+        base["tasks_summary"] = v3_tasks_summary()
+        base["task_list"] = v3_tasks_list_tasks(limit=250)
+        base["task_inbox"] = v3_tasks_list_inbox(limit=250)
+        base["task_board"] = v3_tasks_board()
+        base["task_today"] = v3_tasks_today()
+        base["task_week"] = v3_tasks_week()
+        base["task_cadence"] = v3_tasks_list_cadence(limit=250)
+        base["task_templates"] = v3_tasks_list_templates(limit=250)
+        base["task_settings"] = v3_tasks_build_settings()
+        base["workspace_summary"] = v3_workspace.workspace_summary()
+        base["workspace_dependencies"] = v3_workspace.list_dependencies(limit=250)
+        base["workspace_saved_views"] = v3_workspace.list_saved_views(limit=250)
+        base["workspace_source_previews"] = v3_workspace.list_source_previews(limit=250)
+        base["cockpit_summary"] = v3_cockpit.cockpit_summary()
+    if section == "workspace":
+        # Guided workspace is local-first and operator-triggered; no guided review runs on page load.
+        base["workspace_context"] = v3_workspace.build_workspace_context()
+        base["workspace_summary"] = base["workspace_context"]["summary"]
+        base["workspace_flows"] = base["workspace_context"]["flows"]
+        base["workspace_sessions"] = base["workspace_context"]["sessions"]
+        base["workspace_dependencies"] = base["workspace_context"]["dependencies"]
+        base["workspace_blocked_review"] = base["workspace_context"]["blocked_review"]
+        base["workspace_source_previews"] = base["workspace_context"]["source_previews"]
+        base["workspace_saved_views"] = base["workspace_context"]["saved_views"]
+        base["workspace_review_packets"] = base["workspace_context"]["review_packets"]
+        base["workspace_settings"] = base["workspace_context"]["settings"]
+        base["cockpit_summary"] = v3_cockpit.cockpit_summary()
+        base["cockpit_layouts"] = v3_cockpit.list_layouts(limit=250)
+        base["tasks_summary"] = v3_tasks_summary()
+        base["task_list"] = v3_tasks_list_tasks(limit=250)
+    if section == "cockpit":
+        # Cockpit pages are local-first and fast. They show safe summaries only; no scans, exports, or live mutations run on page load.
+        base["cockpit_context"] = v3_cockpit.build_cockpit_context()
+        base["cockpit_summary"] = base["cockpit_context"]["summary"]
+        base["cockpit_layouts"] = base["cockpit_context"]["layouts"]
+        base["cockpit_selected_layout"] = base["cockpit_context"]["selected_layout"]
+        base["cockpit_panels"] = base["cockpit_context"]["panels"]
+        base["cockpit_focus_modes"] = base["cockpit_context"]["focus_modes"]
+        base["cockpit_shortcuts"] = base["cockpit_context"]["shortcuts"]
+        base["cockpit_command_palette"] = base["cockpit_context"]["command_palette"]
+        base["cockpit_dependency_view"] = base["cockpit_context"]["dependency_view"]
+        base["cockpit_source_context"] = base["cockpit_context"]["source_context"]
+        base["cockpit_review_packets"] = base["cockpit_context"]["review_packets"]
+        base["cockpit_settings"] = base["cockpit_context"]["settings"]
+        base["workspace_summary"] = v3_workspace.workspace_summary()
+        base["tasks_summary"] = v3_tasks_summary()
+        base["task_list"] = v3_tasks_list_tasks(limit=50)
+    if section == "platform":
+        # Platform diagnostics are local-first and inexpensive; no network, no AI/model, and no live mutation work is run.
+        base["platform_context"] = v4_platform.diagnostics_summary(app)
+        base["platform_summary"] = v4_platform.platform_summary(app)
+        base["platform_health"] = v4_platform.health_summary(app)
+        base["platform_routes"] = v4_platform_routes.route_inventory(app)
+        base["platform_plugins"] = v4_platform_plugins.load_plugin_manifests()
+        base["platform_storage"] = v4_platform_storage.storage_summary()
+        base["platform_diagnostics"] = base["platform_context"]
+        base["platform_safety"] = v4_platform_safety.safety_statements()
+        base["platform_settings"] = v4_platform.build_settings()
+
+    if section == "freshness":
+        # Page loads stay fast and do not collect snapshots or run jobs automatically.
+        # Scans and collection jobs remain explicit operator-triggered read-only actions.
+        base["freshness_summary"] = v3_freshness_summary()
+        base["freshness_policies"] = v3_freshness_list_policies(limit=100)
+        base["freshness_jobs"] = v3_freshness_list_jobs(limit=100)
+        base["freshness_findings"] = v3_freshness_list_findings(limit=100)
+        base["freshness_notifications"] = v3_freshness_list_notifications(limit=100)
+        base["freshness_readiness"] = v3_freshness_readiness_report(write=False)
+        base["freshness_history"] = v3_freshness_list_readiness_reports(limit=50)
+        base["freshness_settings"] = v3_freshness_build_settings()
+        base["related_tasks"] = v3_tasks_context_for_subsystem("freshness", limit=20)
+    if section == "datasets":
+        base["related_tasks"] = v3_tasks_context_for_subsystem("datasets", limit=20)
+    if section == "simulation":
+        base["related_tasks"] = v3_tasks_context_for_subsystem("simulation", limit=20)
+    if section == "analytics":
+        base["related_tasks"] = v3_tasks_context_for_subsystem("analytics", limit=20)
     return base
 
 
@@ -1533,6 +1814,65 @@ async def v3_settings_page(request: Request):
     return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "settings"))
 
 
+
+
+@app.get("/v3/tasks", response_class=HTMLResponse)
+@app.get("/v3/tasks/board", response_class=HTMLResponse)
+@app.get("/v3/tasks/inbox", response_class=HTMLResponse)
+@app.get("/v3/tasks/today", response_class=HTMLResponse)
+@app.get("/v3/tasks/week", response_class=HTMLResponse)
+@app.get("/v3/tasks/cadence", response_class=HTMLResponse)
+@app.get("/v3/tasks/reviews", response_class=HTMLResponse)
+@app.get("/v3/tasks/templates", response_class=HTMLResponse)
+@app.get("/v3/tasks/exports", response_class=HTMLResponse)
+@app.get("/v3/tasks/settings", response_class=HTMLResponse)
+async def v3_tasks_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "tasks"))
+
+
+@app.get("/v3/workspace", response_class=HTMLResponse)
+@app.get("/v3/workspace/start", response_class=HTMLResponse)
+@app.get("/v3/workspace/daily-review", response_class=HTMLResponse)
+@app.get("/v3/workspace/weekly-review", response_class=HTMLResponse)
+@app.get("/v3/workspace/task-triage", response_class=HTMLResponse)
+@app.get("/v3/workspace/blocked", response_class=HTMLResponse)
+@app.get("/v3/workspace/dependencies", response_class=HTMLResponse)
+@app.get("/v3/workspace/source-preview", response_class=HTMLResponse)
+@app.get("/v3/workspace/review-flows", response_class=HTMLResponse)
+@app.get("/v3/workspace/review-packets", response_class=HTMLResponse)
+@app.get("/v3/workspace/saved-views", response_class=HTMLResponse)
+@app.get("/v3/workspace/settings", response_class=HTMLResponse)
+async def v3_workspace_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "workspace"))
+
+
+@app.get("/v3/cockpit", response_class=HTMLResponse)
+@app.get("/v3/cockpit/layouts", response_class=HTMLResponse)
+@app.get("/v3/cockpit/focus", response_class=HTMLResponse)
+@app.get("/v3/cockpit/review", response_class=HTMLResponse)
+@app.get("/v3/cockpit/tasks", response_class=HTMLResponse)
+@app.get("/v3/cockpit/dependencies", response_class=HTMLResponse)
+@app.get("/v3/cockpit/source", response_class=HTMLResponse)
+@app.get("/v3/cockpit/packets", response_class=HTMLResponse)
+@app.get("/v3/cockpit/command-palette", response_class=HTMLResponse)
+@app.get("/v3/cockpit/shortcuts", response_class=HTMLResponse)
+@app.get("/v3/cockpit/settings", response_class=HTMLResponse)
+async def v3_cockpit_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "cockpit"))
+
+
+@app.get("/v3/platform", response_class=HTMLResponse)
+@app.get("/v3/platform/health", response_class=HTMLResponse)
+@app.get("/v3/platform/routes", response_class=HTMLResponse)
+@app.get("/v3/platform/plugins", response_class=HTMLResponse)
+@app.get("/v3/platform/storage", response_class=HTMLResponse)
+@app.get("/v3/platform/diagnostics", response_class=HTMLResponse)
+@app.get("/v3/platform/exports", response_class=HTMLResponse)
+@app.get("/v3/platform/settings", response_class=HTMLResponse)
+async def v3_platform_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "platform"))
+
+
 @app.get("/v3/docs", response_class=HTMLResponse)
 async def v3_docs_page(request: Request):
     return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "docs"))
@@ -1552,9 +1892,48 @@ async def v3_analytics_page(request: Request):
     return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "analytics"))
 
 
+@app.get("/v3/simulation", response_class=HTMLResponse)
+@app.get("/v3/simulation/replay", response_class=HTMLResponse)
+@app.get("/v3/simulation/sessions", response_class=HTMLResponse)
+@app.get("/v3/simulation/scenarios", response_class=HTMLResponse)
+@app.get("/v3/simulation/pre-trade", response_class=HTMLResponse)
+@app.get("/v3/simulation/thesis", response_class=HTMLResponse)
+@app.get("/v3/simulation/alerts", response_class=HTMLResponse)
+@app.get("/v3/simulation/portfolio", response_class=HTMLResponse)
+@app.get("/v3/simulation/governance", response_class=HTMLResponse)
+@app.get("/v3/simulation/no-trade", response_class=HTMLResponse)
+@app.get("/v3/simulation/reports", response_class=HTMLResponse)
+async def v3_simulation_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "simulation"))
+
+
+@app.get("/v3/datasets", response_class=HTMLResponse)
+@app.get("/v3/datasets/snapshots", response_class=HTMLResponse)
+@app.get("/v3/datasets/collector", response_class=HTMLResponse)
+@app.get("/v3/datasets/builder", response_class=HTMLResponse)
+@app.get("/v3/datasets/quality", response_class=HTMLResponse)
+@app.get("/v3/datasets/provenance", response_class=HTMLResponse)
+@app.get("/v3/datasets/replay", response_class=HTMLResponse)
+@app.get("/v3/datasets/exports", response_class=HTMLResponse)
+@app.get("/v3/datasets/settings", response_class=HTMLResponse)
+async def v3_datasets_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "datasets"))
+
+
+@app.get("/v3/freshness", response_class=HTMLResponse)
+@app.get("/v3/freshness/planner", response_class=HTMLResponse)
+@app.get("/v3/freshness/schedules", response_class=HTMLResponse)
+@app.get("/v3/freshness/jobs", response_class=HTMLResponse)
+@app.get("/v3/freshness/notifications", response_class=HTMLResponse)
+@app.get("/v3/freshness/readiness", response_class=HTMLResponse)
+@app.get("/v3/freshness/history", response_class=HTMLResponse)
+@app.get("/v3/freshness/settings", response_class=HTMLResponse)
+async def v3_freshness_page(request: Request):
+    return templates.TemplateResponse("live_v3_dashboard.html", _v3_template_context(request, "freshness"))
+
 @app.get("/api/v3")
 async def api_v3_root():
-    return {"version": APP_VERSION, "name": "v3.2 Operator Intelligence OS", "routes": ["/api/v3/command-center", "/api/v3/search", "/api/v3/graph", "/api/v3/workflows", "/api/v3/demo/create", "/api/v3/validation/status", "/api/v3/analytics"], "secret_values_returned": False}
+    return {"version": APP_VERSION, "name": "v3.7 Operator Intelligence OS with Task Planner", "routes": ["/api/v3/command-center", "/api/v3/search", "/api/v3/graph", "/api/v3/workflows", "/api/v3/tasks", "/api/v3/tasks/summary", "/api/v3/tasks/inbox", "/api/v3/demo/create", "/api/v3/validation/status", "/api/v3/analytics", "/api/v3/simulation", "/api/v3/datasets", "/api/v3/freshness"], "secret_values_returned": False}
 
 
 @app.get("/api/v3/command-center")
@@ -1730,6 +2109,939 @@ async def api_v3_export_report_json(kind: str = "command_center"):
 @app.get("/api/v3/export/report.md", response_class=PlainTextResponse)
 async def api_v3_export_report_markdown(kind: str = "command_center"):
     return PlainTextResponse(v3_export_report_markdown(kind), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/simulation")
+async def api_v3_simulation_summary():
+    return v3_sim_summary()
+
+
+@app.get("/api/v3/simulation/sessions")
+async def api_v3_simulation_sessions(limit: int = 100):
+    return v3_sim_list_sessions(limit=limit)
+
+
+@app.post("/api/v3/simulation/sessions")
+async def api_v3_simulation_create_session(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_create_session(payload)
+
+
+@app.post("/api/v3/simulation/sessions/{session_id}")
+async def api_v3_simulation_update_session(session_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_update_session(session_id, payload)
+
+
+@app.post("/api/v3/simulation/sessions/{session_id}/run")
+async def api_v3_simulation_run_session(session_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_run_session(session_id, payload)
+
+
+@app.post("/api/v3/simulation/sessions/{session_id}/archive")
+async def api_v3_simulation_archive_session(session_id: str):
+    return v3_sim_archive_session(session_id)
+
+
+@app.get("/api/v3/simulation/replay")
+async def api_v3_simulation_replay_get(replay_time: str = ""):
+    return v3_sim_replay({"replay_time": replay_time})
+
+
+@app.post("/api/v3/simulation/replay")
+async def api_v3_simulation_replay_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_replay(payload)
+
+
+@app.post("/api/v3/simulation/pre-trade")
+async def api_v3_simulation_pre_trade(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_pre_trade(payload)
+
+
+@app.post("/api/v3/simulation/thesis")
+async def api_v3_simulation_thesis(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_thesis(payload)
+
+
+@app.post("/api/v3/simulation/alerts")
+async def api_v3_simulation_alerts(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_alerts(payload)
+
+
+@app.post("/api/v3/simulation/portfolio")
+async def api_v3_simulation_portfolio(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_portfolio(payload)
+
+
+@app.post("/api/v3/simulation/governance")
+async def api_v3_simulation_governance(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_governance(payload)
+
+
+@app.post("/api/v3/simulation/no-trade")
+async def api_v3_simulation_no_trade(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_no_trade(payload)
+
+
+@app.post("/api/v3/simulation/process-backtest")
+async def api_v3_simulation_process_backtest(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_sim_process_backtest(payload)
+
+
+@app.get("/api/v3/simulation/reports")
+async def api_v3_simulation_reports(limit: int = 100):
+    return v3_sim_list_reports(limit=limit)
+
+
+@app.get("/api/v3/simulation/export.json", response_class=PlainTextResponse)
+async def api_v3_simulation_export_json():
+    return PlainTextResponse(json.dumps(v3_sim_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/simulation/export.md", response_class=PlainTextResponse)
+async def api_v3_simulation_export_markdown():
+    return PlainTextResponse(v3_sim_export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/simulation/export/sessions.csv", response_class=PlainTextResponse)
+async def api_v3_simulation_export_sessions_csv():
+    return PlainTextResponse(v3_sim_export_csv("sessions"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/simulation/export/findings.csv", response_class=PlainTextResponse)
+async def api_v3_simulation_export_findings_csv():
+    return PlainTextResponse(v3_sim_export_csv("findings"), media_type="text/csv; charset=utf-8")
+
+
+
+@app.get("/api/v3/datasets")
+async def api_v3_datasets_root():
+    return v3_datasets_summary()
+
+
+@app.get("/api/v3/datasets/summary")
+async def api_v3_datasets_summary():
+    return v3_datasets_summary()
+
+
+@app.get("/api/v3/datasets/snapshots")
+async def api_v3_datasets_snapshots(limit: int = 250, snapshot_type: str = ""):
+    return v3_datasets_list_snapshots(limit=limit, snapshot_type=snapshot_type or None)
+
+
+@app.post("/api/v3/datasets/snapshots/collect")
+async def api_v3_datasets_collect(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_datasets_collect_snapshots(payload)
+
+
+@app.post("/api/v3/datasets/snapshots/validate")
+async def api_v3_datasets_validate_snapshot(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_datasets_validate_snapshot(snapshot=payload.get("snapshot") if isinstance(payload.get("snapshot"), dict) else None, snapshot_id=payload.get("snapshot_id"))
+
+
+@app.get("/api/v3/datasets/collector")
+async def api_v3_datasets_collector():
+    return {"version": APP_VERSION, "collector": v3_datasets_summary(), "settings": v3_datasets_build_settings(), "secret_values_returned": False}
+
+
+@app.get("/api/v3/datasets/runs")
+async def api_v3_datasets_runs(limit: int = 250):
+    return v3_datasets_list_runs(limit=limit)
+
+
+@app.get("/api/v3/datasets/runs/{run_id}")
+async def api_v3_datasets_run(run_id: str):
+    run = v3_datasets_get_run(run_id)
+    if not run:
+        raise HTTPException(status_code=404, detail="dataset collection run not found")
+    return run
+
+
+@app.post("/api/v3/datasets/build")
+async def api_v3_datasets_build(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_datasets_build_manifest(payload)
+
+
+@app.get("/api/v3/datasets/manifests")
+async def api_v3_datasets_manifests(limit: int = 250):
+    return v3_datasets_list_manifests(limit=limit)
+
+
+@app.get("/api/v3/datasets/manifests/{dataset_id}")
+async def api_v3_datasets_manifest(dataset_id: str):
+    manifest = v3_datasets_get_manifest(dataset_id)
+    if not manifest:
+        raise HTTPException(status_code=404, detail="dataset manifest not found")
+    return manifest
+
+
+@app.post("/api/v3/datasets/manifests/{dataset_id}/validate")
+async def api_v3_datasets_manifest_validate(dataset_id: str):
+    return v3_datasets_validate_manifest(dataset_id=dataset_id)
+
+
+@app.get("/api/v3/datasets/quality")
+async def api_v3_datasets_quality(dataset_id: str = ""):
+    return v3_datasets_quality_report(dataset_id or None)
+
+
+@app.get("/api/v3/datasets/provenance")
+async def api_v3_datasets_provenance(limit: int = 250):
+    return v3_datasets_list_provenance(limit=limit)
+
+
+@app.get("/api/v3/datasets/replay-ready")
+async def api_v3_datasets_replay_ready(limit: int = 250):
+    return v3_datasets_replay_ready(limit=limit)
+
+
+@app.get("/api/v3/datasets/export.json", response_class=PlainTextResponse)
+async def api_v3_datasets_export_json(dataset_id: str = ""):
+    return PlainTextResponse(json.dumps(v3_datasets_export_json(dataset_id or None), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/datasets/export.md", response_class=PlainTextResponse)
+async def api_v3_datasets_export_markdown(dataset_id: str = ""):
+    return PlainTextResponse(v3_datasets_export_markdown(dataset_id or None), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/datasets/export/snapshots.csv", response_class=PlainTextResponse)
+async def api_v3_datasets_export_snapshots_csv():
+    return PlainTextResponse(v3_datasets_export_csv("snapshots"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/datasets/export/quality.csv", response_class=PlainTextResponse)
+async def api_v3_datasets_export_quality_csv():
+    return PlainTextResponse(v3_datasets_export_csv("quality"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/datasets/export/provenance.csv", response_class=PlainTextResponse)
+async def api_v3_datasets_export_provenance_csv():
+    return PlainTextResponse(v3_datasets_export_csv("provenance"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/datasets/settings")
+async def api_v3_datasets_settings_get():
+    return v3_datasets_build_settings()
+
+
+@app.post("/api/v3/datasets/settings")
+async def api_v3_datasets_settings_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_datasets_update_settings(payload)
+
+
+
+@app.get("/api/v3/freshness")
+async def api_v3_freshness_root():
+    return v3_freshness_summary()
+
+@app.get("/api/v3/freshness/summary")
+async def api_v3_freshness_summary():
+    return v3_freshness_summary()
+
+@app.get("/api/v3/freshness/policies")
+async def api_v3_freshness_policies(limit: int = 250):
+    return v3_freshness_list_policies(limit=limit)
+
+@app.post("/api/v3/freshness/policies")
+async def api_v3_freshness_policy_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_create_policy(payload)
+
+@app.post("/api/v3/freshness/policies/{policy_id}")
+async def api_v3_freshness_policy_update(policy_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_update_policy(policy_id, payload)
+
+@app.get("/api/v3/freshness/jobs")
+async def api_v3_freshness_jobs(limit: int = 250, status: str = ""):
+    return v3_freshness_list_jobs(limit=limit, status=status or None)
+
+@app.post("/api/v3/freshness/jobs")
+async def api_v3_freshness_job_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_create_job(payload)
+
+@app.post("/api/v3/freshness/jobs/{job_id}/run")
+async def api_v3_freshness_job_run(job_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_run_job(job_id, payload)
+
+@app.post("/api/v3/freshness/jobs/{job_id}/cancel")
+async def api_v3_freshness_job_cancel(job_id: str):
+    return v3_freshness_cancel_job(job_id)
+
+@app.get("/api/v3/freshness/readiness")
+async def api_v3_freshness_readiness_get(dataset_id: str = ""):
+    return v3_freshness_readiness_report({"dataset_id": dataset_id}, write=False)
+
+@app.post("/api/v3/freshness/readiness")
+async def api_v3_freshness_readiness_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_readiness_report(payload)
+
+@app.get("/api/v3/freshness/findings")
+async def api_v3_freshness_findings(limit: int = 250):
+    return v3_freshness_list_findings(limit=limit)
+
+@app.post("/api/v3/freshness/scan")
+async def api_v3_freshness_scan(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_scan(write=bool(payload.get("write", True)))
+
+@app.get("/api/v3/freshness/notifications")
+async def api_v3_freshness_notifications(limit: int = 250, status: str = ""):
+    return v3_freshness_list_notifications(limit=limit, status=status or None)
+
+@app.post("/api/v3/freshness/notifications/{notification_id}/ack")
+async def api_v3_freshness_notification_ack(notification_id: str):
+    return v3_freshness_update_notification(notification_id, "ack")
+
+@app.post("/api/v3/freshness/notifications/{notification_id}/dismiss")
+async def api_v3_freshness_notification_dismiss(notification_id: str):
+    return v3_freshness_update_notification(notification_id, "dismiss")
+
+@app.post("/api/v3/freshness/notifications/{notification_id}/snooze")
+async def api_v3_freshness_notification_snooze(notification_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_update_notification(notification_id, "snooze", snooze_minutes=int(payload.get("snooze_minutes", 240) or 240))
+
+@app.post("/api/v3/freshness/notifications/{notification_id}/resolve")
+async def api_v3_freshness_notification_resolve(notification_id: str):
+    return v3_freshness_update_notification(notification_id, "resolve")
+
+@app.get("/api/v3/freshness/history")
+async def api_v3_freshness_history(limit: int = 250):
+    return v3_freshness_list_readiness_reports(limit=limit)
+
+@app.get("/api/v3/freshness/export.json", response_class=PlainTextResponse)
+async def api_v3_freshness_export_json():
+    return PlainTextResponse(json.dumps(v3_freshness_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+@app.get("/api/v3/freshness/export.md", response_class=PlainTextResponse)
+async def api_v3_freshness_export_markdown():
+    return PlainTextResponse(v3_freshness_export_markdown(), media_type="text/markdown; charset=utf-8")
+
+@app.get("/api/v3/freshness/export/jobs.csv", response_class=PlainTextResponse)
+async def api_v3_freshness_export_jobs_csv():
+    return PlainTextResponse(v3_freshness_export_csv("jobs"), media_type="text/csv; charset=utf-8")
+
+@app.get("/api/v3/freshness/export/findings.csv", response_class=PlainTextResponse)
+async def api_v3_freshness_export_findings_csv():
+    return PlainTextResponse(v3_freshness_export_csv("findings"), media_type="text/csv; charset=utf-8")
+
+@app.get("/api/v3/freshness/export/notifications.csv", response_class=PlainTextResponse)
+async def api_v3_freshness_export_notifications_csv():
+    return PlainTextResponse(v3_freshness_export_csv("notifications"), media_type="text/csv; charset=utf-8")
+
+@app.get("/api/v3/freshness/settings")
+async def api_v3_freshness_settings_get():
+    return v3_freshness_build_settings()
+
+@app.post("/api/v3/freshness/settings")
+async def api_v3_freshness_settings_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_freshness_update_settings(payload)
+
+@app.get("/api/v3/freshness/export/notifications.json", response_class=PlainTextResponse)
+async def api_v3_freshness_export_notifications_json():
+    return PlainTextResponse(json.dumps(v3_freshness_export_notifications_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+
+@app.get("/api/v3/tasks")
+async def api_v3_tasks(limit: int = 250, status: str = "", priority: str = "", source_subsystem: str = ""):
+    return v3_tasks_list_tasks(limit=limit, status=status or None, priority=priority or None, source_subsystem=source_subsystem or None)
+
+
+@app.get("/api/v3/tasks/summary")
+async def api_v3_tasks_summary():
+    return v3_tasks_summary()
+
+
+@app.get("/api/v3/tasks/inbox")
+async def api_v3_tasks_inbox(limit: int = 250, status: str = ""):
+    return v3_tasks_list_inbox(limit=limit, status=status or None)
+
+
+@app.post("/api/v3/tasks/inbox/scan")
+async def api_v3_tasks_inbox_scan(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_scan_inbox(write=bool(payload.get("write", True)))
+
+
+@app.post("/api/v3/tasks/inbox/{inbox_id}/create-task")
+async def api_v3_tasks_inbox_create_task(inbox_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_create_task_from_inbox(inbox_id, payload)
+
+
+@app.post("/api/v3/tasks/inbox/{inbox_id}/dismiss")
+async def api_v3_tasks_inbox_dismiss(inbox_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_dismiss_inbox_item(inbox_id, notes=str(payload.get("notes", "")))
+
+
+@app.post("/api/v3/tasks/inbox/{inbox_id}/archive")
+async def api_v3_tasks_inbox_archive(inbox_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_archive_inbox_item(inbox_id, notes=str(payload.get("notes", "")))
+
+
+@app.post("/api/v3/tasks/inbox/{inbox_id}/snooze")
+async def api_v3_tasks_inbox_snooze(inbox_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_snooze_inbox_item(inbox_id, snooze_minutes=int(payload.get("snooze_minutes", 240) or 240), notes=str(payload.get("notes", "")))
+
+
+@app.get("/api/v3/tasks/board")
+async def api_v3_tasks_board():
+    return v3_tasks_board()
+
+
+@app.post("/api/v3/tasks")
+async def api_v3_tasks_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_create_task(payload)
+
+
+@app.get("/api/v3/tasks/today")
+async def api_v3_tasks_today():
+    return v3_tasks_today()
+
+
+@app.post("/api/v3/tasks/daily-ops")
+async def api_v3_tasks_daily_ops(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_daily_ops(payload, write=True)
+
+
+@app.get("/api/v3/tasks/week")
+async def api_v3_tasks_week():
+    return v3_tasks_week()
+
+
+@app.post("/api/v3/tasks/weekly-plan")
+async def api_v3_tasks_weekly_plan(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_weekly_plan(payload, write=True)
+
+
+@app.get("/api/v3/tasks/cadence")
+async def api_v3_tasks_cadence(limit: int = 250):
+    return v3_tasks_list_cadence(limit=limit)
+
+
+@app.post("/api/v3/tasks/cadence")
+async def api_v3_tasks_cadence_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_create_cadence_rule(payload)
+
+
+@app.post("/api/v3/tasks/cadence/run")
+async def api_v3_tasks_cadence_run(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_run_cadence(payload)
+
+
+@app.get("/api/v3/tasks/templates")
+async def api_v3_tasks_templates(limit: int = 250):
+    return v3_tasks_list_templates(limit=limit)
+
+
+@app.post("/api/v3/tasks/templates")
+async def api_v3_tasks_template_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_create_template(payload)
+
+
+@app.post("/api/v3/tasks/from-notification/{notification_id}")
+async def api_v3_tasks_from_notification(notification_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_create_task_from_notification(notification_id, payload)
+
+
+@app.post("/api/v3/tasks/from-finding")
+async def api_v3_tasks_from_finding(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_create_task_from_finding(payload)
+
+
+@app.get("/api/v3/tasks/export.json", response_class=PlainTextResponse)
+async def api_v3_tasks_export_json():
+    return PlainTextResponse(json.dumps(v3_tasks_export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/export.md", response_class=PlainTextResponse)
+async def api_v3_tasks_export_md():
+    return PlainTextResponse(v3_tasks_export_md(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/export.csv", response_class=PlainTextResponse)
+async def api_v3_tasks_export_csv():
+    return PlainTextResponse(v3_tasks_export_csv("tasks"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/export/inbox.csv", response_class=PlainTextResponse)
+async def api_v3_tasks_export_inbox_csv():
+    return PlainTextResponse(v3_tasks_export_csv("inbox"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/export/cadence.csv", response_class=PlainTextResponse)
+async def api_v3_tasks_export_cadence_csv():
+    return PlainTextResponse(v3_tasks_export_csv("cadence"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/daily-ops/export.json", response_class=PlainTextResponse)
+async def api_v3_tasks_daily_export_json():
+    return PlainTextResponse(json.dumps(v3_tasks_export_daily_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/daily-ops/export.md", response_class=PlainTextResponse)
+async def api_v3_tasks_daily_export_md():
+    return PlainTextResponse(v3_tasks_export_daily_md(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/weekly-plan/export.json", response_class=PlainTextResponse)
+async def api_v3_tasks_weekly_export_json():
+    return PlainTextResponse(json.dumps(v3_tasks_export_weekly_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/weekly-plan/export.md", response_class=PlainTextResponse)
+async def api_v3_tasks_weekly_export_md():
+    return PlainTextResponse(v3_tasks_export_weekly_md(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/tasks/settings")
+async def api_v3_tasks_settings_get():
+    return v3_tasks_build_settings()
+
+
+@app.post("/api/v3/tasks/settings")
+async def api_v3_tasks_settings_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_update_settings(payload)
+
+
+@app.get("/api/v3/tasks/{task_id}")
+async def api_v3_tasks_get(task_id: str):
+    task = v3_tasks_get_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="operator task not found")
+    return task
+
+
+@app.post("/api/v3/tasks/{task_id}")
+async def api_v3_tasks_update(task_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = v3_tasks_update_task(task_id, payload)
+    if result.get("ok") is False:
+        raise HTTPException(status_code=404, detail=result.get("error", "task not found"))
+    return result
+
+
+@app.post("/api/v3/tasks/{task_id}/status")
+async def api_v3_tasks_status(task_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_change_status(task_id, str(payload.get("status", "planned")), notes=str(payload.get("notes", "")))
+
+
+@app.post("/api/v3/tasks/{task_id}/complete")
+async def api_v3_tasks_complete(task_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_complete_task(task_id, notes=str(payload.get("notes", "")))
+
+
+@app.post("/api/v3/tasks/{task_id}/archive")
+async def api_v3_tasks_archive(task_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_tasks_archive_task(task_id, notes=str(payload.get("notes", "")))
+
+
+@app.get("/api/v3/workspace/summary")
+async def api_v3_workspace_summary():
+    return v3_workspace.workspace_summary()
+
+
+@app.get("/api/v3/workspace/flows")
+async def api_v3_workspace_flows(limit: int = 250):
+    return v3_workspace.list_guided_flows(limit=limit)
+
+
+@app.post("/api/v3/workspace/flows")
+async def api_v3_workspace_flow_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.create_guided_flow(payload)
+
+
+@app.get("/api/v3/workspace/flows/{flow_id}")
+async def api_v3_workspace_flow_get(flow_id: str):
+    flow = v3_workspace.get_guided_flow(flow_id)
+    if not flow:
+        raise HTTPException(status_code=404, detail="guided flow not found")
+    return flow
+
+
+@app.post("/api/v3/workspace/flows/{flow_id}")
+async def api_v3_workspace_flow_update(flow_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = v3_workspace.update_guided_flow(flow_id, payload)
+    if result.get("ok") is False:
+        raise HTTPException(status_code=404, detail=result.get("error", "guided flow not found"))
+    return result
+
+
+@app.post("/api/v3/workspace/flows/{flow_id}/start")
+async def api_v3_workspace_flow_start(flow_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.start_flow(flow_id, payload)
+
+
+@app.get("/api/v3/workspace/sessions")
+async def api_v3_workspace_sessions(limit: int = 250, status: str = ""):
+    return v3_workspace.list_sessions(limit=limit, status=status or None)
+
+
+@app.get("/api/v3/workspace/sessions/{session_id}")
+async def api_v3_workspace_session_get(session_id: str):
+    session = v3_workspace.get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="guided session not found")
+    return session
+
+
+@app.post("/api/v3/workspace/sessions/{session_id}/step")
+async def api_v3_workspace_session_step(session_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.update_session_step(session_id, payload)
+
+
+@app.post("/api/v3/workspace/sessions/{session_id}/complete")
+async def api_v3_workspace_session_complete(session_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.complete_session(session_id, payload)
+
+
+@app.post("/api/v3/workspace/sessions/{session_id}/abandon")
+async def api_v3_workspace_session_abandon(session_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.abandon_session(session_id, payload)
+
+
+@app.get("/api/v3/workspace/daily-review")
+async def api_v3_workspace_daily_review():
+    return {"flow": v3_workspace.get_guided_flow("flow_daily_review"), "summary": v3_workspace.workspace_summary()}
+
+
+@app.post("/api/v3/workspace/daily-review/start")
+async def api_v3_workspace_daily_review_start(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.start_daily_review(payload)
+
+
+@app.get("/api/v3/workspace/weekly-review")
+async def api_v3_workspace_weekly_review():
+    return {"flow": v3_workspace.get_guided_flow("flow_weekly_review"), "summary": v3_workspace.workspace_summary()}
+
+
+@app.post("/api/v3/workspace/weekly-review/start")
+async def api_v3_workspace_weekly_review_start(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.start_weekly_review(payload)
+
+
+@app.get("/api/v3/workspace/task-triage")
+async def api_v3_workspace_task_triage():
+    return {"flow": v3_workspace.get_guided_flow("flow_task_triage"), "summary": v3_workspace.workspace_summary()}
+
+
+@app.post("/api/v3/workspace/task-triage/start")
+async def api_v3_workspace_task_triage_start(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.start_task_triage(payload)
+
+
+@app.get("/api/v3/workspace/dependencies")
+async def api_v3_workspace_dependencies(limit: int = 250):
+    return v3_workspace.list_dependencies(limit=limit)
+
+
+@app.post("/api/v3/workspace/dependencies")
+async def api_v3_workspace_dependency_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.create_dependency(payload)
+
+
+@app.post("/api/v3/workspace/dependencies/{dependency_id}/delete")
+async def api_v3_workspace_dependency_delete(dependency_id: str):
+    return v3_workspace.delete_dependency(dependency_id)
+
+
+@app.get("/api/v3/workspace/blocked")
+async def api_v3_workspace_blocked():
+    return v3_workspace.blocked_review(write=False)
+
+
+@app.post("/api/v3/workspace/blocked/review")
+async def api_v3_workspace_blocked_review(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.blocked_review(payload, write=True)
+
+
+@app.get("/api/v3/workspace/source-preview")
+async def api_v3_workspace_source_preview_list(limit: int = 250):
+    return v3_workspace.list_source_previews(limit=limit)
+
+
+@app.post("/api/v3/workspace/source-preview")
+async def api_v3_workspace_source_preview(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.create_source_preview(payload, write=True)
+
+
+@app.get("/api/v3/workspace/saved-views")
+async def api_v3_workspace_saved_views(limit: int = 250):
+    return v3_workspace.list_saved_views(limit=limit)
+
+
+@app.post("/api/v3/workspace/saved-views")
+async def api_v3_workspace_saved_view_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.create_saved_view(payload)
+
+
+@app.get("/api/v3/workspace/review-packets")
+async def api_v3_workspace_review_packets(limit: int = 250):
+    return v3_workspace.list_review_packets(limit=limit)
+
+
+@app.post("/api/v3/workspace/review-packets")
+async def api_v3_workspace_review_packet_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.generate_review_packet(payload, write=True)
+
+
+@app.get("/api/v3/workspace/export.json", response_class=PlainTextResponse)
+async def api_v3_workspace_export_json():
+    return PlainTextResponse(json.dumps(v3_workspace.export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/export.md", response_class=PlainTextResponse)
+async def api_v3_workspace_export_md():
+    return PlainTextResponse(v3_workspace.export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/export/dependencies.json", response_class=PlainTextResponse)
+async def api_v3_workspace_export_dependencies_json():
+    return PlainTextResponse(json.dumps(v3_workspace.export_dependency_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/export/dependencies.md", response_class=PlainTextResponse)
+async def api_v3_workspace_export_dependencies_md():
+    return PlainTextResponse(v3_workspace.export_dependency_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/export/saved-views.json", response_class=PlainTextResponse)
+async def api_v3_workspace_export_saved_views_json():
+    return PlainTextResponse(json.dumps(v3_workspace.export_saved_views_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/export/saved-views.md", response_class=PlainTextResponse)
+async def api_v3_workspace_export_saved_views_md():
+    return PlainTextResponse(v3_workspace.export_saved_views_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/export/dependencies.csv", response_class=PlainTextResponse)
+async def api_v3_workspace_export_dependencies_csv():
+    return PlainTextResponse(v3_workspace.export_csv("dependencies"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/export/saved-views.csv", response_class=PlainTextResponse)
+async def api_v3_workspace_export_saved_views_csv():
+    return PlainTextResponse(v3_workspace.export_csv("saved_views"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/workspace/settings")
+async def api_v3_workspace_settings_get():
+    return v3_workspace.build_settings()
+
+
+@app.post("/api/v3/workspace/settings")
+async def api_v3_workspace_settings_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_workspace.update_settings(payload)
+
+
+@app.get("/api/v3/cockpit/summary")
+async def api_v3_cockpit_summary():
+    return v3_cockpit.cockpit_summary()
+
+
+@app.get("/api/v3/cockpit/layouts")
+async def api_v3_cockpit_layouts(limit: int = 250):
+    return v3_cockpit.list_layouts(limit=limit)
+
+
+@app.post("/api/v3/cockpit/layouts")
+async def api_v3_cockpit_layout_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_cockpit.create_layout(payload)
+
+
+@app.post("/api/v3/cockpit/layouts/reset-defaults")
+async def api_v3_cockpit_layouts_reset():
+    return v3_cockpit.reset_default_layouts()
+
+
+@app.get("/api/v3/cockpit/layouts/{layout_id}")
+async def api_v3_cockpit_layout_get(layout_id: str):
+    layout = v3_cockpit.get_layout(layout_id)
+    if not layout:
+        raise HTTPException(status_code=404, detail="cockpit layout not found")
+    return layout
+
+
+@app.post("/api/v3/cockpit/layouts/{layout_id}")
+async def api_v3_cockpit_layout_update(layout_id: str, payload: dict[str, Any] = Body(default_factory=dict)):
+    result = v3_cockpit.update_layout(layout_id, payload)
+    if result.get("ok") is False:
+        raise HTTPException(status_code=404, detail=result.get("error", "cockpit layout not found"))
+    return result
+
+
+@app.post("/api/v3/cockpit/layouts/{layout_id}/select")
+async def api_v3_cockpit_layout_select(layout_id: str):
+    result = v3_cockpit.select_layout(layout_id)
+    if result.get("ok") is False:
+        raise HTTPException(status_code=404, detail=result.get("error", "cockpit layout not found"))
+    return result
+
+
+@app.get("/api/v3/cockpit/focus-modes")
+async def api_v3_cockpit_focus_modes():
+    return v3_cockpit.focus_modes()
+
+
+@app.get("/api/v3/cockpit/focus-modes/{focus_mode_id}")
+async def api_v3_cockpit_focus_mode_get(focus_mode_id: str):
+    focus = v3_cockpit.get_focus_mode(focus_mode_id)
+    if not focus:
+        raise HTTPException(status_code=404, detail="cockpit focus mode not found")
+    return focus
+
+
+@app.post("/api/v3/cockpit/focus-modes/{focus_mode_id}/start")
+async def api_v3_cockpit_focus_mode_start(focus_mode_id: str):
+    result = v3_cockpit.start_focus_mode(focus_mode_id)
+    if result.get("ok") is False:
+        raise HTTPException(status_code=404, detail=result.get("error", "cockpit focus mode not found"))
+    return result
+
+
+@app.get("/api/v3/cockpit/panels")
+async def api_v3_cockpit_panels(limit: int = 250):
+    return v3_cockpit.list_panels(limit=limit)
+
+
+@app.post("/api/v3/cockpit/panels")
+async def api_v3_cockpit_panel_create(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_cockpit.create_panel(payload)
+
+
+@app.get("/api/v3/cockpit/shortcuts")
+async def api_v3_cockpit_shortcuts():
+    return v3_cockpit.keyboard_shortcuts()
+
+
+@app.get("/api/v3/cockpit/command-palette")
+async def api_v3_cockpit_command_palette():
+    return v3_cockpit.command_palette_actions()
+
+
+@app.post("/api/v3/cockpit/command-palette/run")
+async def api_v3_cockpit_command_palette_run(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_cockpit.run_command_palette_action(payload)
+
+
+@app.get("/api/v3/cockpit/dependencies")
+async def api_v3_cockpit_dependencies(task_id: str = ""):
+    return v3_cockpit.dependency_view(task_id=task_id)
+
+
+@app.get("/api/v3/cockpit/source-context")
+async def api_v3_cockpit_source_context():
+    return v3_cockpit.source_context()
+
+
+@app.get("/api/v3/cockpit/export.json", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_json():
+    return PlainTextResponse(json.dumps(v3_cockpit.export_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export.md", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_md():
+    return PlainTextResponse(v3_cockpit.export_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/focus-modes.json", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_focus_json():
+    return PlainTextResponse(json.dumps(v3_cockpit.export_focus_mode_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/focus-modes.md", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_focus_md():
+    return PlainTextResponse(v3_cockpit.export_focus_mode_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/command-palette.json", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_command_json():
+    return PlainTextResponse(json.dumps(v3_cockpit.export_command_palette_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/command-palette.md", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_command_md():
+    return PlainTextResponse(v3_cockpit.export_command_palette_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/shortcuts.json", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_shortcuts_json():
+    return PlainTextResponse(json.dumps(v3_cockpit.export_shortcuts_json(), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/shortcuts.md", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_shortcuts_md():
+    return PlainTextResponse(v3_cockpit.export_shortcuts_markdown(), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/layouts.csv", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_layouts_csv():
+    return PlainTextResponse(v3_cockpit.export_csv("layouts"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/command-palette.csv", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_command_csv():
+    return PlainTextResponse(v3_cockpit.export_csv("command_palette"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/export/shortcuts.csv", response_class=PlainTextResponse)
+async def api_v3_cockpit_export_shortcuts_csv():
+    return PlainTextResponse(v3_cockpit.export_csv("shortcuts"), media_type="text/csv; charset=utf-8")
+
+
+@app.get("/api/v3/cockpit/settings")
+async def api_v3_cockpit_settings_get():
+    return v3_cockpit.build_settings()
+
+
+@app.post("/api/v3/cockpit/settings")
+async def api_v3_cockpit_settings_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v3_cockpit.update_settings(payload)
+
+
+@app.get("/api/v3/platform/summary")
+async def api_v3_platform_summary():
+    return v4_platform.platform_summary(app)
+
+
+@app.get("/api/v3/platform/health")
+async def api_v3_platform_health():
+    return v4_platform.health_summary(app)
+
+
+@app.get("/api/v3/platform/routes")
+async def api_v3_platform_routes():
+    return v4_platform_routes.route_inventory(app)
+
+
+@app.get("/api/v3/platform/plugins")
+async def api_v3_platform_plugins():
+    return v4_platform_plugins.load_plugin_manifests()
+
+
+@app.get("/api/v3/platform/storage")
+async def api_v3_platform_storage():
+    return v4_platform_storage.storage_summary()
+
+
+@app.get("/api/v3/platform/diagnostics")
+async def api_v3_platform_diagnostics():
+    return v4_platform.diagnostics_summary(app)
+
+
+@app.get("/api/v3/platform/export.json", response_class=PlainTextResponse)
+async def api_v3_platform_export_json():
+    return PlainTextResponse(json.dumps(v4_platform.export_json(app), indent=2, sort_keys=True, default=str), media_type="application/json; charset=utf-8")
+
+
+@app.get("/api/v3/platform/export.md", response_class=PlainTextResponse)
+async def api_v3_platform_export_md():
+    return PlainTextResponse(v4_platform.export_markdown(app), media_type="text/markdown; charset=utf-8")
+
+
+@app.get("/api/v3/platform/settings")
+async def api_v3_platform_settings_get():
+    return v4_platform.build_settings()
+
+
+@app.post("/api/v3/platform/settings")
+async def api_v3_platform_settings_post(payload: dict[str, Any] = Body(default_factory=dict)):
+    return v4_platform.update_settings(payload)
 
 
 @app.post("/api/v3/demo/create")

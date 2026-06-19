@@ -13,10 +13,10 @@
 - [ ] Confirm no real cancellation occurred.
 - [ ] Confirm no live trading was armed.
 - [ ] Confirm governance exports redact secrets.
-- [ ] Build ZIP: `polymarket-gamma-starter-v2.8.0-real.zip`.
+- [ ] Build ZIP: `polymarket-op-console-v2.8.0-real.zip`.
 - [ ] Create Git tag: `git tag v2.8.0-real`.
-- [ ] Create GitHub release title: `Polymarket Gamma Starter v2.8.0-real`.
-- [ ] Upload `polymarket-gamma-starter-v2.8.0-real.zip`.
+- [ ] Create GitHub release title: `Polymarket OP Console v2.8.0-real`.
+- [ ] Upload `polymarket-op-console-v2.8.0-real.zip`.
 
 ## Draft release body
 

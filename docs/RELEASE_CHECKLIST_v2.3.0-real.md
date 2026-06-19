@@ -3,7 +3,7 @@
 ## Required checks
 
 - [ ] Version file says `2.3.0-real`.
-- [ ] README title says `Polymarket Gamma Starter v2.3.0-real`.
+- [ ] README title says `Polymarket OP Console v2.3.0-real`.
 - [ ] `python -m compileall -q app tests` passes.
 - [ ] `PYTHONPATH=. python -m pytest -q` passes.
 - [ ] `python scripts/check_versions.py` passes.
@@ -25,7 +25,7 @@ git push origin v2.3.0-real
 
 ## GitHub release draft
 
-Title: `Polymarket Gamma Starter v2.3.0-real`
+Title: `Polymarket OP Console v2.3.0-real`
 
 Body:
 
@@ -35,7 +35,7 @@ v2.3.0-real hardens the v2 Live operator console for release/demo use. It adds e
 
 Assets:
 
-- `polymarket-gamma-starter-v2.3.0-real.zip`
+- `polymarket-op-console-v2.3.0-real.zip`
 - Optional redacted verification report
 - Optional screenshots with no secrets
 

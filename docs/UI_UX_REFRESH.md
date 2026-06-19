@@ -2,7 +2,7 @@
 
 Version: v0.9.0-real
 
-Polymarket Gamma Starter v0.8.0-real reorganizes the existing local research, paper workflow, live-readiness, manual boundary, and audit surfaces into a more coherent operator console. This is a presentation and workflow-clarity release. It does not add autonomous trading, live signing, live order submission, live cancellation, wallet access, or network execution behavior.
+Polymarket OP Console v0.8.0-real reorganizes the existing local research, paper workflow, live-readiness, manual boundary, and audit surfaces into a more coherent operator console. This is a presentation and workflow-clarity release. It does not add autonomous trading, live signing, live order submission, live cancellation, wallet access, or network execution behavior.
 
 ## Goals
 

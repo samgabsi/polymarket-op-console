@@ -2,7 +2,7 @@
 
 Version: v0.9.0-real
 
-Polymarket Gamma Starter is a local-first, human-in-the-loop console for Polymarket research, paper operations, risk review, audit, and staged live-readiness. The console is organized around visible workflow stages so the operator can see what is paper-only, what needs review, what is blocked, what can be exported, and what has not been submitted.
+Polymarket OP Console is a local-first, human-in-the-loop console for Polymarket research, paper operations, risk review, audit, and staged live-readiness. The console is organized around visible workflow stages so the operator can see what is paper-only, what needs review, what is blocked, what can be exported, and what has not been submitted.
 
 ## Start Here
 

@@ -198,7 +198,7 @@ async def check_source_status(source: dict[str, Any], timeout: float = 4.0) -> d
         item["error"] = "missing base URL"
         return item
     try:
-        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True, headers={"User-Agent": f"polymarket-gamma-starter/{APP_VERSION}"}) as client:
+        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True, headers={"User-Agent": f"polymarket-op-console/{APP_VERSION}"}) as client:
             response = await client.get(base_url)
         elapsed = datetime.now(timezone.utc) - started_at
         item["status_code"] = response.status_code

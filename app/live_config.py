@@ -552,7 +552,7 @@ def live_config_readiness_to_csv(report: dict[str, Any] | None = None) -> str:
 
 def live_config_template() -> str:
     lines = [
-        f"# Polymarket Gamma Starter {APP_VERSION} live configuration template",
+        f"# Polymarket OP Console {APP_VERSION} live configuration template",
         "# Copy the fields you need into .env. Do not commit or share populated secrets.",
         "# This version only reads/redacts these values for readiness; it does not trade.",
         "",

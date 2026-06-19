@@ -442,7 +442,7 @@ def _build_readonly_validation(*, operator: str = "local", note: str = "", valid
             try:
                 network_attempted = True
                 timeout = max(1.0, min(_safe_float(config.get("readonly_timeout_seconds"), 4.0), 15.0))
-                response = httpx.get(f"{config.get('host')}/", timeout=timeout, headers={"User-Agent": "polymarket-gamma-starter/0.6.0-readonly-validation"})
+                response = httpx.get(f"{config.get('host')}/", timeout=timeout, headers={"User-Agent": "polymarket-op-console/0.6.0-readonly-validation"})
                 if response.status_code < 500:
                     status = "readonly_ready"
                     warnings.append(f"Read-only host reachability returned HTTP {response.status_code}; no order endpoint was called.")

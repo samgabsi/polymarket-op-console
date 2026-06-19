@@ -55,14 +55,14 @@ def authed_client(monkeypatch, tmp_path):
     users_path = tmp_path / "users.json"
     monkeypatch.setattr(auth, "USERS_PATH", users_path)
     auth.create_user("admin", "test-password-123", "admin")
-    client = TestClient(app)
-    response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v2-live/data"}, follow_redirects=False)
-    assert response.status_code in {303, 307}
-    return client
+    with TestClient(app) as client:
+        response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v2-live/data"}, follow_redirects=False)
+        assert response.status_code in {303, 307}
+        yield client
 
 
 def test_version_is_v2_9():
-    assert APP_VERSION == "3.3.0-real"
+    assert APP_VERSION == "4.0.1-real"
 
 
 def test_inventory_health_invalid_json_secret_scan_and_audit(monkeypatch):
@@ -94,7 +94,7 @@ def test_backup_restore_import_export_migration_reports_and_safety():
     path = backup["bundle_path"]
     with zipfile.ZipFile(path) as archive:
         manifest = json.loads(archive.read("manifest.json").decode("utf-8"))
-    assert manifest["app_version"] == "3.3.0-real"
+    assert manifest["app_version"] == "4.0.1-real"
     assert manifest["redaction_policy"] == "default_redacted_excludes_secrets"
     validation = live_data.validate_backup_bundle({"bundle_path": path})
     assert validation["ok"] is True
@@ -125,7 +125,7 @@ def test_data_routes_and_api_endpoints(authed_client):
     page = authed_client.get("/v2-live/data")
     assert page.status_code == 200
     assert "Data Integrity / Backup / Recovery" in page.text
-    assert "v3.3.0-real" in page.text
+    assert "v4.0.1-real" in page.text
     for endpoint in [
         "/api/v2/live/data",
         "/api/v2/live/data/health",

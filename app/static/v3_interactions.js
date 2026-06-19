@@ -25,3 +25,20 @@
     initKeyboardSearch();
   });
 })();
+
+document.addEventListener('input', function (event) {
+  var input = event.target;
+  if (!input || !input.matches || !input.matches('[data-v3-command-filter]')) return;
+  var root = input.closest('[data-v3-command-palette-root]') || document;
+  var query = (input.value || '').toLowerCase();
+  root.querySelectorAll('[data-v3-command-list] .v3-list-item').forEach(function (row) {
+    row.hidden = row.textContent.toLowerCase().indexOf(query) === -1;
+  });
+});
+
+document.addEventListener('keydown', function (event) {
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+    var field = document.querySelector('[data-v3-command-filter]') || document.querySelector('[data-v3-global-search]');
+    if (field) { event.preventDefault(); field.focus(); }
+  }
+});

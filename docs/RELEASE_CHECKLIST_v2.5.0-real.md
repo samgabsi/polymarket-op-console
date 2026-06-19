@@ -1,7 +1,7 @@
 # Release Checklist — v2.5.0-real
 
 - [ ] VERSION file says `2.5.0-real`.
-- [ ] README title says `Polymarket Gamma Starter v2.5.0-real`.
+- [ ] README title says `Polymarket OP Console v2.5.0-real`.
 - [ ] `python -m compileall -q app tests` passes.
 - [ ] `PYTHONPATH=. python -m pytest -q` passes.
 - [ ] `PYTHONPATH=. python scripts/check_versions.py` passes.
@@ -26,13 +26,13 @@ git push origin v2.5.0-real
 ## Suggested release title
 
 ```text
-Polymarket Gamma Starter v2.5.0-real
+Polymarket OP Console v2.5.0-real
 ```
 
 ## Suggested asset
 
 ```text
-polymarket-gamma-starter-v2.5.0-real.zip
+polymarket-op-console-v2.5.0-real.zip
 ```
 
 ## Rollback note

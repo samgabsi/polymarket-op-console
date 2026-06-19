@@ -35,7 +35,7 @@ def local_lan_ips() -> list[str]:
 def print_startup_urls() -> None:
     host = settings.host
     port = settings.port
-    print("\nPolymarket Gamma Starter v1.4.0-real")
+    print("\nPolymarket OP Console v1.4.0-real")
     print(f"Binding host: {host}")
     print("Security:     Auth required; security headers enabled; configurable ALLOWED_HOSTS")
     print(f"Local URL:    http://127.0.0.1:{port}")

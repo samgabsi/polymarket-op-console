@@ -927,7 +927,7 @@ async def get_live_v2_positions() -> dict[str, Any]:
         return {"status": "readonly_network_disabled", "items": [], "network_attempted": False, "credentials": creds}
     try:
         url = cfg.data_api_base_url.rstrip("/") + "/positions"
-        async with httpx.AsyncClient(timeout=settings.request_timeout_seconds, headers={"User-Agent": f"polymarket-gamma-starter/{APP_VERSION}"}) as client:
+        async with httpx.AsyncClient(timeout=settings.request_timeout_seconds, headers={"User-Agent": f"polymarket-op-console/{APP_VERSION}"}) as client:
             response = await client.get(url, params={"user": wallet})
             response.raise_for_status()
             data = response.json()
@@ -992,7 +992,7 @@ async def build_live_v2_verification_report(*, attempt_network: bool = True, mar
     readiness = build_live_v2_readiness()
     checks: list[dict[str, Any]] = []
     checks.append(_verification_check("environment_loaded", "pass", "Environment/configuration layer loaded."))
-    checks.append(_verification_check("version_loaded", "pass" if APP_VERSION == "3.3.0-real" else "fail", f"Application reports {APP_VERSION}."))
+    checks.append(_verification_check("version_loaded", "pass" if APP_VERSION == "4.0.1-real" else "fail", f"Application reports {APP_VERSION}."))
     checks.append(_verification_check("gamma_host_configured", "pass" if _present(cfg.gamma_base_url) else "fail", f"Gamma host configured: {cfg.gamma_base_url}"))
     checks.append(_verification_check("clob_host_configured", "pass" if _present(cfg.clob_base_url) else "fail", f"CLOB host configured: {cfg.clob_base_url}"))
     checks.append(_verification_check("data_api_host_configured", "pass" if _present(cfg.data_api_base_url) else "fail", f"Data API host configured: {cfg.data_api_base_url}"))
@@ -1090,7 +1090,7 @@ def build_live_v2_demo_readiness() -> dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     checks = [
         _verification_check("app_import", "pass", "FastAPI app imports during this request path."),
-        _verification_check("version", "pass" if APP_VERSION == "3.3.0-real" else "fail", f"Version is {APP_VERSION}."),
+        _verification_check("version", "pass" if APP_VERSION == "4.0.1-real" else "fail", f"Version is {APP_VERSION}."),
         _verification_check("ui_routes_documented", "pass", "v2-live UI routes are included in the demo/readiness workflow."),
         _verification_check("docs_available", "pass" if docs_root.exists() else "fail", "docs/ directory is present."),
         _verification_check("audit_export_available", "pass", "Audit JSONL, CSV, and Markdown export routes remain available."),

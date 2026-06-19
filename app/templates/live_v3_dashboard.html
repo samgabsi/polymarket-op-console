@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Polymarket Gamma Starter v3.3.0-real</title>
+  <title>Polymarket OP Console v4.0.1-real</title>
   <link rel="stylesheet" href="/static/v3_design.css">
   <script src="/static/v3_interactions.js" defer></script>
 </head>
@@ -12,13 +12,13 @@
 <div class="v3-app-shell">
   <aside class="v3-sidebar" aria-label="Primary navigation">
     <div class="v3-brand">
-      <div class="v3-brand-kicker">v3.3.0-real · UX redesign</div>
+      <div class="v3-brand-kicker">v4.0.1-real · platform stabilization / operator cockpit / guided workspace</div>
       <h1>Operator Intelligence OS</h1>
-      <p>Crisp local-first command center for strategy, research, monitoring, portfolio, governance, data, analytics, and read-only workflows.</p>
+      <p>Crisp local-first command center for strategy, research, monitoring, portfolio, governance, data, analytics, simulation, datasets, freshness planning, operator task planning, cockpit views, guided reviews, task dependencies, and read-only workflows.</p>
     </div>
     {% set nav_groups = [
-      ('Operate', [('command_center','Command Center','/v3','⌁'),('live','Live Controls','/v2-live','safe'),('ticket','Trade Ticket','/v2-live','gate'),('audit','Audit','/v2-live/audit','log')]),
-      ('Analyze', [('analytics','Analytics','/v3/analytics','new'),('portfolio','Portfolio','/v2-live/portfolio','risk'),('monitoring','Monitoring','/v2-live/monitoring','alert'),('graph','Graph','/v3/graph','map'),('search','Search','/v3/search','⌘K')]),
+      ('Operate', [('command_center','Command Center','/v3','⌁'),('platform','Platform','/v3/platform','health'),('cockpit','Operator Cockpit','/v3/cockpit','panels'),('workspace','Guided Workspace','/v3/workspace','guide'),('tasks','Tasks & Daily Ops','/v3/tasks','todo'),('live','Live Controls','/v2-live','safe'),('ticket','Trade Ticket','/v2-live','gate'),('audit','Audit','/v2-live/audit','log')]),
+      ('Analyze', [('analytics','Analytics','/v3/analytics','learn'),('simulation','Simulation Lab','/v3/simulation','replay'),('datasets','Datasets','/v3/datasets','snap'),('freshness','Freshness','/v3/freshness','fresh'),('portfolio','Portfolio','/v2-live/portfolio','risk'),('monitoring','Monitoring','/v2-live/monitoring','alert'),('graph','Graph','/v3/graph','map'),('search','Search','/v3/search','⌘K')]),
       ('Build Thesis', [('strategy','Strategy','/v2-live/strategy','thesis'),('research','Research','/v2-live/research','source'),('briefs','Packets & Briefs','/v3/briefs','report')]),
       ('Govern', [('governance','Governance','/v2-live/governance','review'),('data','Data / Backup','/v2-live/data','health'),('settings','Settings','/v3/settings','cfg')]),
       ('Output', [('workflows','Workflows','/v3/workflows','run'),('docs','Docs','/v3/docs','docs')])
@@ -37,7 +37,7 @@
     <div class="v3-topbar" role="region" aria-label="Global status and search">
       <form class="v3-global-search" action="/v3/search" method="get">
         <label class="v3-sr-only" for="v3-global-search">Global local search</label>
-        <input id="v3-global-search" data-v3-global-search name="q" placeholder="Search local theses, evidence, alerts, exposure, governance, analytics…">
+        <input id="v3-global-search" data-v3-global-search name="q" placeholder="Search local theses, evidence, alerts, exposure, governance, analytics, simulation, datasets, freshness, notifications, tasks, cadence, guided reviews, platform diagnostics…">
       </form>
       <div class="v3-status-strip" aria-label="Safety status">
         <span class="v3-badge ok">Read-only workflows</span>
@@ -49,14 +49,14 @@
     </div>
 
     <section class="v3-page-hero">
-      <div class="v3-label">Complete Operator UX Redesign</div>
+      <div class="v3-label">Platform Diagnostics / Operator Cockpit / Guided Workspace / Task Intelligence / Dataset Builder / Simulation Lab / Operator Intelligence</div>
       <h2>{{ 'Command Center' if section == 'command_center' else section|replace('_', ' ')|title }}</h2>
-      <p>v3.3 redesigns the operator experience for speed, clarity, smoother navigation, better forms/tables, stronger safety visibility, responsive layouts, accessible focus states, and demo-ready visual QA.</p>
+      <p>v4.0 stabilizes the Operator Intelligence platform with diagnostics, plugin manifest boundaries, route inventory, storage compatibility, and release-candidate safety hardening without autonomous trading.</p>
       <div class="v3-hero-actions">
         <a class="v3-button primary" href="/v3">Open Command Center</a>
         <a class="v3-button" href="/v3/workflows">Run Read-Only Workflow</a>
-        <a class="v3-button" href="/v3/analytics">Open Analytics</a>
-        <a class="v3-button" href="/docs/V3_UI_UX_REDESIGN_GUIDE_v3.3.0-real.md">UX Redesign Guide</a>
+        <a class="v3-button" href="/v3/analytics">Open Analytics</a><a class="v3-button" href="/v3/simulation">Open Simulation Lab</a><a class="v3-button" href="/v3/datasets">Open Datasets</a><a class="v3-button" href="/v3/freshness">Open Freshness</a><a class="v3-button" href="/v3/platform">Platform Health</a><a class="v3-button" href="/v3/cockpit">Operator Cockpit</a><a class="v3-button" href="/v3/tasks">Open Tasks</a><a class="v3-button" href="/v3/workspace">Guided Workspace</a>
+        <a class="v3-button" href="/docs/V4_PLATFORM_ARCHITECTURE_GUIDE_v4.0.1-real.md">Platform Guide</a><a class="v3-button" href="/docs/V3_OPERATOR_COCKPIT_GUIDE_v4.0.1-real.md">Cockpit Guide</a><a class="v3-button" href="/docs/V3_GUIDED_OPERATOR_WORKSPACE_GUIDE_v4.0.1-real.md">Guided Workspace Guide</a>
       </div>
     </section>
 
@@ -85,6 +85,32 @@
         </section>
 
         <section class="v3-card">
+          <div class="v3-section-title"><h2>Task Planner / Daily Ops</h2><span class="v3-badge ok">local-first</span></div>
+          <div class="v3-grid">
+            <div class="v3-card compact"><div class="v3-label">Open tasks</div><div class="v3-metric">{{ tasks_summary.open_tasks }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Urgent</div><div class="v3-metric">{{ tasks_summary.urgent_tasks }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Blocked</div><div class="v3-metric">{{ tasks_summary.blocked_tasks }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Inbox</div><div class="v3-metric">{{ tasks_summary.inbox_items }}</div></div>
+          </div>
+          <p class="v3-muted">Next task: {{ tasks_summary.next_operator_task.title if tasks_summary.next_operator_task else 'No local task selected yet.' }}</p>
+          <div class="v3-actions"><a href="/v3/tasks">Open task cockpit</a><a href="/v3/tasks/today">Daily ops</a><a href="/v3/tasks/week">Weekly plan</a><a href="/api/v3/tasks/export.md">Export tasks</a></div>
+          <div class="v3-warning"><strong>Task safety:</strong> tasks are workflow records only. Completing a task does not approve, submit, cancel, or arm live trading.</div>
+        </section>
+
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Guided Workspace</h2><span class="v3-badge ok">operator-guided</span></div>
+          <div class="v3-grid">
+            <div class="v3-card compact"><div class="v3-label">Active sessions</div><div class="v3-metric">{{ workspace_summary.active_session_count or 0 }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Dependency warnings</div><div class="v3-metric">{{ workspace_summary.dependency_warning_count or 0 }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Saved views</div><div class="v3-metric">{{ workspace_summary.saved_views_count or 0 }}</div></div>
+            <div class="v3-card compact"><div class="v3-label">Source previews</div><div class="v3-metric">{{ workspace_summary.source_previews_awaiting_review or 0 }}</div></div>
+          </div>
+          <p class="v3-muted">Next guided step: {{ workspace_summary.next_guided_step or 'Start a guided review when ready.' }}</p>
+          <div class="v3-actions"><a href="/v3/workspace">Open guided workspace</a><a href="/v3/workspace/daily-review">Daily review</a><a href="/v3/workspace/weekly-review">Weekly review</a><a href="/api/v3/workspace/export.md">Export workspace</a></div>
+          <div class="v3-warning"><strong>Guided review safety:</strong> guided reviews are workflow aids only. Review completion is not trade approval and no workspace button places or cancels orders.</div>
+        </section>
+
+        <section class="v3-card">
           <div class="v3-section-title"><h2>Missing Prerequisites / Conflicts</h2><input class="v3-field" data-v3-table-filter="#findings-table" placeholder="Filter findings"></div>
           <div class="v3-table-wrap"><table id="findings-table" class="v3-table"><caption>Structured operator findings. These do not execute trades.</caption><thead><tr><th>Severity</th><th>Finding</th><th>Recommended action</th><th>Related</th></tr></thead><tbody>{% for finding in missing_prerequisites.findings[:30] %}<tr><td><span class="v3-badge {{ 'danger' if finding.severity in ['critical','blocker'] else 'warn' }}">{{ finding.severity }}</span></td><td><strong>{{ finding.title }}</strong><br><span class="v3-muted">{{ finding.explanation }}</span></td><td>{{ finding.recommended_operator_action }}</td><td>{{ finding.related_node }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No current v3 findings. Load fake demo data or create local records to exercise this view.</div></td></tr>{% endfor %}</tbody></table></div>
         </section>
@@ -104,6 +130,22 @@
           <div class="v3-actions"><a href="/v3/analytics">Open analytics</a><a href="/api/v3/analytics/export.md">Export report</a></div>
         </section>
         <section class="v3-card">
+          <h2>Simulation Lab</h2>
+          <p><strong>Replay sessions:</strong> {{ simulation_summary.session_count }}</p>
+          <p><strong>Reports:</strong> {{ simulation_summary.report_count }}</p>
+          <p><strong>Next simulation review:</strong> {{ simulation_summary.next_simulation_review_action }}</p>
+          <div class="v3-actions"><a href="/v3/simulation">Open Simulation Lab</a><a href="/api/v3/simulation/export.md">Export simulation report</a></div>
+        </section>
+
+        <section class="v3-card">
+          <h2>Freshness / Notifications</h2>
+          <p><strong>Freshness status:</strong> {{ freshness_summary.dataset_freshness_status }}</p>
+          <p><strong>Queued jobs:</strong> {{ freshness_summary.queued_collection_jobs }}</p>
+          <p><strong>Unread notifications:</strong> {{ freshness_summary.unread_local_notifications }}</p>
+          <p><strong>Next data action:</strong> {{ freshness_summary.next_dataset_collection_action }}</p>
+          <div class="v3-actions"><a href="/v3/freshness">Open Freshness</a><a href="/api/v3/freshness/export.md">Export freshness report</a></div>
+        </section>
+        <section class="v3-card">
           <h2>Recent Activity</h2>
           <p>Validation: <span class="v3-badge {{ 'ok' if validation_status.overall_status == 'pass' else 'warn' }}">{{ validation_status.overall_status }}</span></p>
           <p>Active theses: {{ command_center.groups.research_strategy.active_theses }}</p>
@@ -114,6 +156,27 @@
           <ul>{% for action in command_center.next_operator_actions %}<li>{{ action }}</li>{% else %}<li>No immediate v3 action items.</li>{% endfor %}</ul>
         </section>
       </aside>
+    </section>
+    {% endif %}
+
+    {% if section == 'platform' %}
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>v4 Platform Diagnostics</h2><span class="v3-badge ok">release-candidate hardening</span></div>
+      <p class="v3-muted">Platform diagnostics, route inventory, plugin manifests, storage compatibility, and exports are local-first operator aids. They do not execute plugin code, call network-heavy workflows, or mutate live trading state.</p>
+      <div class="v3-grid small">
+        <div class="v3-card compact"><div class="v3-label">Status</div><div class="v3-metric">{{ platform_health.overall_status }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Routes</div><div class="v3-metric">{{ platform_routes.count }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Plugins</div><div class="v3-metric">{{ platform_plugins.count }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Storage namespaces</div><div class="v3-metric">{{ platform_storage.count }}</div></div>
+      </div>
+      <div class="v3-danger-zone"><strong>Platform safety:</strong> plugin manifests are metadata only and do not execute arbitrary code. Diagnostics, route inventory, health checks, storage summaries, and platform exports do not place orders, cancel orders, approve trades, arm live trading, or bypass backend gates.</div>
+      <div class="v3-actions"><a href="/api/v3/platform/summary">Summary JSON</a><a href="/api/v3/platform/diagnostics">Diagnostics JSON</a><a href="/api/v3/platform/export.md">Export Markdown</a><a href="/docs/V4_PLUGIN_BOUNDARY_GUIDE_v4.0.1-real.md">Plugin Boundary Guide</a></div>
+    </section>
+    <section class="v3-grid">
+      <article class="v3-card"><h3>Route Inventory</h3><div class="v3-table-wrap"><table class="v3-table"><caption>UI and API route families.</caption><thead><tr><th>Path</th><th>Family</th><th>Methods</th><th>Safety</th></tr></thead><tbody>{% for route in platform_routes["items"][:80] %}<tr><td><strong>{{ route.path }}</strong><br><span class="v3-muted">{{ route.name }}</span></td><td>{{ route.family }}</td><td>{{ route.methods|join(', ') }}</td><td>{{ route.safety_notes }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No route inventory available.</div></td></tr>{% endfor %}</tbody></table></div></article>
+      <article class="v3-card"><h3>Plugin Manifest Boundary</h3><div class="v3-list">{% for plugin in platform_plugins["items"] %}<div class="v3-list-item"><strong>{{ plugin.title }}</strong> <span class="v3-badge {{ 'ok' if plugin.validation.ok else 'danger' }}">{{ plugin.validation.status }}</span><p>{{ plugin.description }}</p><span class="v3-muted">{{ plugin.plugin_type }} · metadata only · no live mutation: {{ plugin.no_live_mutation }}</span></div>{% else %}<div class="v3-empty">No plugin manifests loaded.</div>{% endfor %}</div></article>
+      <article class="v3-card"><h3>Storage Compatibility</h3><div class="v3-table-wrap"><table class="v3-table"><caption>Runtime stores excluded from release ZIPs.</caption><thead><tr><th>Namespace</th><th>Path</th><th>Lazy</th><th>Excluded</th></tr></thead><tbody>{% for item in platform_storage["items"] %}<tr><td>{{ item.namespace }}</td><td>{{ item.path }}</td><td>{{ item.created_lazily }}</td><td>{{ item.package_excluded }}</td></tr>{% endfor %}</tbody></table></div></article>
+      <article class="v3-card"><h3>Safety Boundary</h3><p>{{ platform_safety["standard_safety_statement"] }}</p><ul>{% for action in platform_safety["forbidden_live_mutation_actions"][:12] %}<li>{{ action }}</li>{% endfor %}</ul></article>
     </section>
     {% endif %}
 
@@ -153,15 +216,278 @@
     <section class="v3-grid"><div class="v3-card"><h2>Mistake Patterns</h2><ul>{% for item in analytics_snapshot.mistakes["items"] %}<li>{{ item.title }} — {{ item.status }}</li>{% else %}<li>No mistake patterns recorded yet.</li>{% endfor %}</ul></div><div class="v3-card"><h2>Strength Patterns</h2><ul>{% for item in analytics_snapshot.strengths["items"] %}<li>{{ item.title }} — {{ item.status }}</li>{% else %}<li>No strength patterns recorded yet.</li>{% endfor %}</ul></div></section>
     {% endif %}
 
+    {% if section == 'simulation' %}
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>Simulation Lab</h2><span class="v3-badge warn">Simulation Only</span></div>
+      <p class="v3-muted">Replay, backtesting, and simulation are local-first, descriptive, and separate from live/paper execution. No simulation button places or cancels orders.</p>
+      <div class="v3-grid">
+        <div class="v3-card compact"><div class="v3-label">Sessions</div><div class="v3-metric">{{ simulation_summary.session_count }}</div><span class="v3-badge unknown">local replay</span></div>
+        <div class="v3-card compact"><div class="v3-label">Reports</div><div class="v3-metric">{{ simulation_summary.report_count }}</div><span class="v3-badge ok">descriptive</span></div>
+        <div class="v3-card compact"><div class="v3-label">Process backtests</div><div class="v3-metric">{{ simulation_summary.process_backtest_count }}</div><span class="v3-badge warn">not P&L</span></div>
+        <div class="v3-card compact"><div class="v3-label">No-trade simulations</div><div class="v3-metric">{{ simulation_summary.no_trade_simulation_count }}</div><span class="v3-badge ok">discipline</span></div>
+      </div>
+      <div class="v3-actions"><a href="/api/v3/simulation/export.json">Export JSON</a><a href="/api/v3/simulation/export.md">Export Markdown</a><a href="/api/v3/simulation/export/sessions.csv">Sessions CSV</a><a href="/api/v3/simulation/export/findings.csv">Findings CSV</a></div>
+    </section>
+
+    <section class="v3-grid-wide">
+      <div class="v3-card">
+        <div class="v3-section-title"><h2>Replay Sessions</h2><span class="v3-badge ok">No Live Orders</span></div>
+        <div class="v3-table-wrap"><table class="v3-table"><caption>Local simulation and replay sessions</caption><thead><tr><th>Session</th><th>Type</th><th>Status</th><th>Replay time</th></tr></thead><tbody>{% for session in simulation_sessions["items"] %}<tr><td><strong>{{ session.session_title }}</strong><br><span class="v3-muted">{{ session.session_id }}</span></td><td>{{ session.simulation_type }}</td><td>{{ session.status }}</td><td>{{ session.target_time or 'current local state' }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No replay sessions yet. Create one through the simulation API or load fake demo data.</div></td></tr>{% endfor %}</tbody></table></div>
+      </div>
+      <div class="v3-card">
+        <div class="v3-section-title"><h2>Reports</h2><span class="v3-badge ok">Local reports</span></div>
+        <div class="v3-table-wrap"><table class="v3-table"><caption>Simulation reports</caption><thead><tr><th>Report</th><th>Type</th><th>Status</th><th>Created</th></tr></thead><tbody>{% for report in simulation_reports["items"] %}<tr><td>{{ report.report_id }}</td><td>{{ report.simulation_type }}</td><td>{{ report.status }}</td><td>{{ report.created_at }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No simulation reports yet. Run a replay or process backtest.</div></td></tr>{% endfor %}</tbody></table></div>
+      </div>
+    </section>
+
+    <section class="v3-grid-wide">
+      <div class="v3-card"><h2>Pre-Trade Replay Preview</h2><p><strong>Blockers:</strong> {{ simulation_pre_trade.blockers|length }}</p><p><strong>Warnings:</strong> {{ simulation_pre_trade.warnings|length }}</p><p><strong>Unknown/unavailable:</strong> {{ simulation_pre_trade.unknown_unavailable|length }}</p><details><summary>Assumptions</summary><pre>{{ simulation_pre_trade.assumption_set | tojson(indent=2) }}</pre></details></div>
+      <div class="v3-card"><h2>No-Trade Simulation Preview</h2><p>Designed to make “do nothing” a documented, reviewable operator outcome.</p><ul>{% for item in simulation_no_trade.no_trade_rationale %}<li>{{ item }}</li>{% endfor %}</ul></div>
+    </section>
+
+    <section class="v3-card">
+      <h2>Process-Quality Backtest</h2>
+      <p class="v3-muted">This is process-quality backtesting, not financial backtesting unless explicit safe historical outcome data exists.</p>
+      <div class="v3-grid">
+        <div class="v3-card compact"><div class="v3-label">Score</div><div class="v3-metric">{{ simulation_process_backtest.process_scorecard.score }}/{{ simulation_process_backtest.process_scorecard.max_score }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Status</div><div class="v3-metric">{{ simulation_process_backtest.process_scorecard.status }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Decisions</div><div class="v3-metric">{{ simulation_process_backtest.metrics.decisions_logged }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Stale evidence</div><div class="v3-metric">{{ simulation_process_backtest.metrics.stale_evidence_count }}</div></div>
+      </div>
+      <h3>Suggested process improvements</h3><ul>{% for item in simulation_process_backtest.suggested_process_improvements %}<li>{{ item }}</li>{% endfor %}</ul>
+    </section>
+
+    <section class="v3-warning"><strong>Simulation boundary:</strong> simulation, replay, process backtests, and no-trade simulations are not live trading, not financial advice, not approval, and not order instructions. Live submission still requires all backend gates.</section>
+    {% endif %}
+
+
+    {% if section == 'datasets' %}
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>Read-Only Dataset Builder</h2><span class="v3-badge ok">Snapshot Collection Is Read-Only</span></div>
+      <p class="v3-muted">Datasets capture local/read-only snapshots for replay, analytics, graph, workflows, and Simulation Lab inputs. No dataset button places or cancels orders.</p>
+      <div class="v3-grid">
+        <div class="v3-card compact"><div class="v3-label">Snapshots</div><div class="v3-metric">{{ datasets_summary.snapshot_count }}</div><span class="v3-badge ok">local archive</span></div>
+        <div class="v3-card compact"><div class="v3-label">Datasets</div><div class="v3-metric">{{ datasets_summary.dataset_count }}</div><span class="v3-badge ok">manifests</span></div>
+        <div class="v3-card compact"><div class="v3-label">Replay-ready</div><div class="v3-metric">{{ datasets_summary.replay_ready_dataset_count }}</div><span class="v3-badge warn">review quality</span></div>
+        <div class="v3-card compact"><div class="v3-label">Quality</div><div class="v3-metric">{{ datasets_summary.quality_status }}</div><span class="v3-badge unknown">{{ datasets_summary.quality_score }}/100</span></div>
+      </div>
+      <div class="v3-actions"><a href="/api/v3/datasets/export.json">Export JSON</a><a href="/api/v3/datasets/export.md">Export Markdown</a><a href="/api/v3/datasets/export/snapshots.csv">Snapshots CSV</a><a href="/api/v3/datasets/export/quality.csv">Quality CSV</a><a href="/api/v3/datasets/export/provenance.csv">Provenance CSV</a></div>
+    </section>
+
+    <section class="v3-grid-wide">
+      <div class="v3-card">
+        <div class="v3-section-title"><h2>Snapshot Collector</h2><span class="v3-badge ok">manual by default</span></div>
+        <p class="v3-muted">Collection does not run on startup or page load. Use the API or workflow to explicitly create read-only market/local subsystem snapshots.</p>
+        <div class="v3-table-wrap"><table class="v3-table"><caption>Snapshot collection runs</caption><thead><tr><th>Run</th><th>Status</th><th>Snapshots</th><th>Warnings</th></tr></thead><tbody>{% for run in dataset_runs["items"] %}<tr><td><strong>{{ run.run_id }}</strong><br><span class="v3-muted">{{ run.started_at }}</span></td><td>{{ run.status }}</td><td>{{ run.snapshots_created|length }}</td><td>{{ run.warnings|length }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No snapshot collection runs yet. Create demo data or run a read-only collection through the API.</div></td></tr>{% endfor %}</tbody></table></div>
+      </div>
+      <div class="v3-card">
+        <div class="v3-section-title"><h2>Replay Dataset Manifests</h2><span class="v3-badge warn">not trading</span></div>
+        <div class="v3-table-wrap"><table class="v3-table"><caption>Replay dataset manifests</caption><thead><tr><th>Dataset</th><th>Quality</th><th>Snapshots</th><th>Created</th></tr></thead><tbody>{% for dataset in dataset_manifests["items"] %}<tr><td><strong>{{ dataset.title }}</strong><br><span class="v3-muted">{{ dataset.dataset_id }}</span></td><td>{{ dataset.quality_status }} · {{ dataset.quality_score }}/100</td><td>{{ dataset.included_snapshot_ids|length }}</td><td>{{ dataset.created_at }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No replay datasets yet. Build a manifest from collected snapshots.</div></td></tr>{% endfor %}</tbody></table></div>
+      </div>
+    </section>
+
+    <section class="v3-grid-wide">
+      <div class="v3-card">
+        <div class="v3-section-title"><h2>Snapshot Index</h2><input class="v3-field" data-v3-table-filter="#dataset-snapshot-table" placeholder="Filter snapshots"></div>
+        <div class="v3-table-wrap"><table id="dataset-snapshot-table" class="v3-table"><caption>Read-only snapshots</caption><thead><tr><th>Snapshot</th><th>Type</th><th>Quality</th><th>Source</th></tr></thead><tbody>{% for snap in dataset_snapshots["items"] %}<tr><td><strong>{{ snap.snapshot_id }}</strong><br><span class="v3-muted">{{ snap.created_at }}</span></td><td>{{ snap.snapshot_type }}</td><td>{{ snap.validation_status }} · {{ snap.quality_status }}</td><td>{{ snap.source_subsystem }}<details><summary>Payload summary</summary><pre>{{ snap.payload_summary | tojson(indent=2) }}</pre></details></td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No snapshots yet. Snapshot payloads stay local and redacted.</div></td></tr>{% endfor %}</tbody></table></div>
+      </div>
+      <div class="v3-card">
+        <h2>Dataset Quality Report</h2>
+        <p><strong>Status:</strong> {{ dataset_quality.quality_status }} · <strong>Score:</strong> {{ dataset_quality.quality_score }}/100</p>
+        <p><strong>Replay readiness:</strong> {{ dataset_quality.replay_readiness }} · <strong>Simulation readiness:</strong> {{ dataset_quality.simulation_readiness }}</p>
+        <h3>Findings</h3><ul>{% for finding in dataset_quality.findings %}<li><strong>{{ finding.severity }}:</strong> {{ finding.title }} — {{ finding.recommended_operator_action }}</li>{% else %}<li>No quality report findings available yet.</li>{% endfor %}</ul>
+      </div>
+    </section>
+
+    <section class="v3-grid-wide">
+      <div class="v3-card"><h2>Provenance</h2><p class="v3-muted">Every snapshot/dataset records source subsystem, collection mode, timestamps, redaction status, and payload hash.</p><div class="v3-table-wrap"><table class="v3-table"><caption>Dataset provenance records</caption><thead><tr><th>Provenance</th><th>Source</th><th>Mode</th><th>Hash</th></tr></thead><tbody>{% for row in dataset_provenance["items"] %}<tr><td>{{ row.provenance_id }}</td><td>{{ row.source_subsystem }}</td><td>{{ row.collection_mode }}</td><td>{{ row.payload_hash[:16] if row.payload_hash else 'unknown' }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No provenance records yet.</div></td></tr>{% endfor %}</tbody></table></div></div>
+      <div class="v3-card"><h2>Replay Readiness</h2><p>Replay-ready datasets: {{ dataset_replay_ready.count }}</p><p class="v3-muted">Simulation Lab can reference replay datasets, but simulations remain descriptive and non-autonomous.</p><details><summary>Dataset settings</summary><pre>{{ dataset_settings | tojson(indent=2) }}</pre></details></div>
+    </section>
+
+    <section class="v3-warning"><strong>Dataset boundary:</strong> snapshot collection and dataset building are read-only workflow data operations. They do not place orders, cancel orders, arm live trading, or provide financial advice. Missing data must be reviewed manually.</section>
+    {% endif %}
+
+
+
+
+    {% if section == 'cockpit' %}
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>Multi-Panel Operator Cockpit</h2><span class="v3-badge ok">local-first / non-autonomous</span></div>
+      <p class="v3-muted">The cockpit brings tasks, source context, guided review steps, dependencies, packets, saved views, and safe next actions into side-by-side panels. Layouts, shortcuts, and command-palette actions are workflow aids only.</p>
+      <div class="v3-grid">
+        <div class="v3-card compact"><div class="v3-label">Active layout</div><div class="v3-metric">{{ cockpit_summary.active_cockpit_layout }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Focus mode</div><div class="v3-metric">{{ cockpit_summary.active_focus_mode }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Saved layouts</div><div class="v3-metric">{{ cockpit_layouts.count }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Safe commands</div><div class="v3-metric">{{ cockpit_command_palette.count }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Shortcuts</div><div class="v3-metric">{{ cockpit_shortcuts.count }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Dependency warnings</div><div class="v3-metric">{{ cockpit_dependency_view.dependency_warnings }}</div></div>
+      </div>
+      <div class="v3-danger-zone"><strong>Cockpit safety:</strong> cockpit controls do not place orders, cancel orders, approve trades, or bypass backend gates. No cockpit, shortcut, command-palette, layout, focus-mode, dependency, guided-review, task, cadence, saved-view, or packet action places or cancels orders. Live submission still requires the existing backend gates.</div>
+    </section>
+
+    <section class="v3-cockpit-grid" data-v3-command-palette-root>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Layout Selector</h2><span class="v3-badge ok">saved layouts</span></div>
+        <div class="v3-list">{% for layout in cockpit_layouts["items"] %}<div class="v3-list-item"><strong>{{ layout.title }}</strong> {% if layout.selected %}<span class="v3-badge ok">selected</span>{% endif %}<p>{{ layout.description }}</p><span class="v3-muted">{{ layout.layout_type }} · panels: {{ layout.panel_ids|length }}</span></div>{% else %}<div class="v3-empty">No cockpit layouts available.</div>{% endfor %}</div>
+      </article>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Focused Review Modes</h2><span class="v3-badge warn">navigation only</span></div>
+        <div class="v3-list">{% for focus in cockpit_focus_modes["items"][:8] %}<div class="v3-list-item"><strong>{{ focus.title }}</strong><p>{{ focus.suggested_next_safe_action }}</p><span class="v3-muted">{{ focus.layout_id }} · {{ focus.entry_route }}</span></div>{% else %}<div class="v3-empty">No focus modes loaded.</div>{% endfor %}</div>
+      </article>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Side-by-Side Task / Source / Review Context</h2><span class="v3-badge ok">safe summaries</span></div>
+        <div class="v3-table-wrap"><table class="v3-table"><caption>Selected cockpit panels.</caption><thead><tr><th>Panel</th><th>Type</th><th>Source</th><th>Refresh</th><th>Safety</th></tr></thead><tbody>{% for panel in cockpit_selected_layout.panel_definitions %}<tr><td><strong>{{ panel.title }}</strong><br><span class="v3-muted">{{ panel.panel_id }}</span></td><td>{{ panel.panel_type }}</td><td>{{ panel.source_subsystem }}</td><td>{{ panel.refresh_mode }}</td><td>{{ panel.safety_class }}</td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No panels selected.</div></td></tr>{% endfor %}</tbody></table></div>
+      </article>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Dependency Chain</h2><span class="v3-badge unknown">workflow only</span></div>
+        <div class="v3-dependency-tree">{% for dep in cockpit_dependency_view.dependencies[:12] %}<div class="v3-dependency-node"><strong>{{ dep.task_id }}</strong><span>depends on</span><strong>{{ dep.depends_on_task_id }}</strong><span class="v3-badge {{ 'danger' if dep.blocker else 'unknown' }}">{{ dep.status }}</span></div>{% else %}<div class="v3-empty">No dependency edges yet.</div>{% endfor %}</div>
+      </article>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Source Context Preview</h2><span class="v3-badge ok">review first</span></div>
+        <div class="v3-list">{% for preview in cockpit_source_context["items"][:8] %}<div class="v3-list-item"><strong>{{ preview.finding_title }}</strong><p>{{ preview.safe_summary }}</p><span class="v3-muted">{{ preview.source_subsystem }} · {{ preview.source_object_type }} · {{ preview.severity }}</span></div>{% else %}<div class="v3-empty">No source previews yet. Missing source context is shown as unavailable, not invented.</div>{% endfor %}</div>
+      </article>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Review Packets</h2><span class="v3-badge ok">local reports</span></div>
+        <div class="v3-list">{% for packet in cockpit_review_packets["items"][:8] %}<div class="v3-list-item"><strong>{{ packet.title }}</strong><p>{{ packet.status_summary }}</p><span class="v3-muted">{{ packet.packet_type }} · {{ packet.created_at }}</span></div>{% else %}<div class="v3-empty">No review packets generated yet.</div>{% endfor %}</div>
+      </article>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Safe Command Palette</h2><span class="v3-badge ok">⌘K</span></div>
+        <input class="v3-field" data-v3-command-filter placeholder="Filter safe local commands">
+        <div class="v3-list" data-v3-command-list>{% for action in cockpit_command_palette["items"] %}<div class="v3-list-item"><strong>{{ action.title }}</strong><p>{{ action.action_type }} · {{ action.target }}</p><span class="v3-muted">{{ action.safety_class }} · live mutation={{ action.mutates_live_trading_state }}</span></div>{% else %}<div class="v3-empty">No command-palette actions loaded.</div>{% endfor %}</div>
+      </article>
+      <article class="v3-card v3-cockpit-panel">
+        <div class="v3-section-title"><h2>Keyboard Shortcuts</h2><span class="v3-badge ok">navigation only</span></div>
+        <div class="v3-list">{% for shortcut in cockpit_shortcuts["items"] %}<div class="v3-list-item"><strong>{{ shortcut.keys }}</strong><p>{{ shortcut.description }}</p><span class="v3-muted">{{ shortcut.action }}</span></div>{% else %}<div class="v3-empty">No shortcuts loaded.</div>{% endfor %}</div>
+      </article>
+    </section>
+
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>Cockpit Exports</h2><span class="v3-badge ok">secret-safe</span></div>
+      <p class="v3-muted">Exports include layouts, focus modes, command-palette manifests, keyboard shortcuts, blockers, warnings, limitations, unknown/unavailable data, and safety statements.</p>
+      <div class="v3-actions"><a href="/api/v3/cockpit/export.json">JSON</a><a href="/api/v3/cockpit/export.md">Markdown</a><a href="/api/v3/cockpit/export/focus-modes.md">Focus modes</a><a href="/api/v3/cockpit/export/command-palette.md">Command palette</a><a href="/api/v3/cockpit/export/shortcuts.md">Shortcuts</a><a href="/api/v3/cockpit/export/layouts.csv">Layouts CSV</a></div>
+    </section>
+    {% endif %}
+
+    {% if section == 'workspace' %}
+    <section class="v3-grid">
+      <div class="v3-card"><div class="v3-label">Active guided sessions</div><div class="v3-metric">{{ workspace_summary.active_session_count }}</div><p>No review runs automatically on page load.</p></div>
+      <div class="v3-card"><div class="v3-label">Dependencies</div><div class="v3-metric">{{ workspace_dependencies.count }}</div><p>Workflow-only task relationships.</p></div>
+      <div class="v3-card"><div class="v3-label">Saved views</div><div class="v3-metric">{{ workspace_saved_views.count }}</div><p>Filters, not recommendations.</p></div>
+      <div class="v3-card"><div class="v3-label">Source previews</div><div class="v3-metric">{{ workspace_source_previews.count }}</div><p>Review before task creation.</p></div>
+    </section>
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>Guided Review Launcher</h2><span class="v3-badge ok">local-first</span></div>
+      <p class="v3-muted">Start daily, weekly, task-triage, blocked-task, dataset, freshness, simulation, analytics, governance, monitoring, portfolio, or research review flows. Starting a flow creates a local session only.</p>
+      <div class="v3-actions"><a href="/api/v3/workspace/daily-review/start">Daily review API</a><a href="/api/v3/workspace/weekly-review/start">Weekly review API</a><a href="/api/v3/workspace/task-triage/start">Task triage API</a><a href="/api/v3/workspace/export.md">Export Markdown</a><a href="/docs/V3_GUIDED_OPERATOR_WORKSPACE_GUIDE_v4.0.1-real.md">Guide</a></div>
+      <div class="v3-danger-zone"><strong>Workspace safety:</strong> guided reviews, dependencies, saved views, source previews, and packets do not place orders, cancel orders, approve trades, sign transactions, arm live trading, or bypass backend gates.</div>
+    </section>
+    <section class="v3-grid-wide">
+      <div>
+        <section class="v3-card"><div class="v3-section-title"><h2>Review Flows</h2><input class="v3-field" data-v3-table-filter="#workspace-flows" placeholder="Filter flows"></div><div class="v3-table-wrap"><table id="workspace-flows" class="v3-table"><caption>Guided review flows</caption><thead><tr><th>Flow</th><th>Type</th><th>Subsystem</th><th>Steps</th><th>Safety</th></tr></thead><tbody>{% for flow in workspace_flows["items"] %}<tr><td><strong>{{ flow.title }}</strong><br><span class="v3-muted">{{ flow.description }}</span></td><td>{{ flow.flow_type }}</td><td>{{ flow.target_subsystem }}</td><td>{{ flow.steps|length }}</td><td><span class="v3-badge ok">{{ flow.safety_class }}</span></td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No guided flows available.</div></td></tr>{% endfor %}</tbody></table></div></section>
+        <section class="v3-card"><div class="v3-section-title"><h2>Active / Recent Sessions</h2><input class="v3-field" data-v3-table-filter="#workspace-sessions" placeholder="Filter sessions"></div><div class="v3-table-wrap"><table id="workspace-sessions" class="v3-table"><caption>Guided review sessions</caption><thead><tr><th>Session</th><th>Flow</th><th>Status</th><th>Current step</th><th>Unknowns</th></tr></thead><tbody>{% for session in workspace_sessions["items"] %}<tr><td><strong>{{ session.title }}</strong><br><span class="v3-muted">{{ session.session_id }}</span></td><td>{{ session.flow_type }}</td><td><span class="v3-badge unknown">{{ session.status }}</span></td><td>{{ session.current_step }}</td><td>{{ session.unknown_unavailable_data|join('; ') }}</td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No guided sessions yet. Start a daily or weekly review when ready.</div></td></tr>{% endfor %}</tbody></table></div></section>
+        <section class="v3-card"><div class="v3-section-title"><h2>Task Dependencies</h2><input class="v3-field" data-v3-table-filter="#workspace-deps" placeholder="Filter dependencies"></div><div class="v3-table-wrap"><table id="workspace-deps" class="v3-table"><caption>Task dependency edges</caption><thead><tr><th>Task</th><th>Depends on</th><th>Status</th><th>Blocker</th><th>Notes</th></tr></thead><tbody>{% for dep in workspace_dependencies["items"] %}<tr><td>{{ dep.task_id }}</td><td>{{ dep.depends_on_task_id }}</td><td>{{ dep.status }}</td><td>{{ dep.blocker }}</td><td>{{ dep.notes }}</td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No dependencies yet.</div></td></tr>{% endfor %}</tbody></table></div></section>
+      </div>
+      <aside>
+        <section class="v3-card"><h2>Saved Task Views</h2><ul>{% for view in workspace_saved_views["items"][:15] %}<li><strong>{{ view.title }}</strong><br><span class="v3-muted">{{ view.description }}</span></li>{% else %}<li>No saved views yet.</li>{% endfor %}</ul><div class="v3-actions"><a href="/api/v3/workspace/export/saved-views.md">Export views</a></div></section>
+        <section class="v3-card"><h2>Source Context Previews</h2><ul>{% for preview in workspace_source_previews["items"][:15] %}<li><strong>{{ preview.finding_title }}</strong><br><span class="v3-muted">{{ preview.source_subsystem }} · {{ preview.severity }}</span></li>{% else %}<li>No source previews awaiting review.</li>{% endfor %}</ul><div class="v3-actions"><a href="/api/v3/workspace/source-preview">Preview JSON</a></div></section>
+        <section class="v3-card"><h2>Review Packets</h2><ul>{% for packet in workspace_review_packets["items"][:10] %}<li>{{ packet.title }} · {{ packet.packet_type }}</li>{% else %}<li>No guided review packets generated.</li>{% endfor %}</ul><div class="v3-actions"><a href="/api/v3/workspace/review-packets">Packets JSON</a><a href="/api/v3/workspace/export.md">Workspace report</a></div></section>
+      </aside>
+    </section>
+    {% endif %}
+
+    {% if section == 'tasks' %}
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>Operator Task Planner</h2><span class="v3-badge ok">human-in-the-loop</span></div>
+      <p class="v3-muted">The task planner turns local notifications, findings, freshness issues, dataset warnings, simulation follow-ups, analytics warnings, governance items, research tasks, and manual notes into auditable workflow tasks. It never places orders, cancels orders, arms live trading, or makes financial recommendations.</p>
+      <div class="v3-grid">
+        <div class="v3-card compact"><div class="v3-label">Open tasks</div><div class="v3-metric">{{ tasks_summary.open_tasks }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Urgent</div><div class="v3-metric">{{ tasks_summary.urgent_tasks }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Blocked</div><div class="v3-metric">{{ tasks_summary.blocked_tasks }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Overdue</div><div class="v3-metric">{{ tasks_summary.overdue_tasks }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Due today</div><div class="v3-metric">{{ tasks_summary.tasks_due_today }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Inbox</div><div class="v3-metric">{{ tasks_summary.inbox_items }}</div></div>
+      </div>
+      <div class="v3-danger-zone"><strong>Safety UX:</strong> task priority is workflow priority only, task completion is not trade approval, and cadence rules are not trading automation.</div>
+    </section>
+
+    <section class="v3-grid-wide">
+      <div>
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Task Inbox</h2><input class="v3-field" data-v3-table-filter="#task-inbox-table" placeholder="Filter inbox"></div>
+          <p class="v3-muted">Inbox items are reviewable suggestions. Use the API/UI actions to convert them into planned tasks only after human review.</p>
+          <div class="v3-table-wrap"><table id="task-inbox-table" class="v3-table"><caption>Task inbox items</caption><thead><tr><th>Status</th><th>Priority</th><th>Item</th><th>Source</th><th>Safety</th></tr></thead><tbody>{% for item in task_inbox["items"] %}<tr><td><span class="v3-badge {{ 'ok' if item.status == 'converted' else 'warn' if item.status in ['new','snoozed'] else 'unknown' }}">{{ item.status }}</span></td><td><span class="v3-badge {{ 'danger' if item.priority in ['urgent','critical'] else 'warn' if item.priority == 'high' else 'unknown' }}">{{ item.priority }}</span></td><td><strong>{{ item.title }}</strong><br><span class="v3-muted">{{ item.description }}</span><br><span class="v3-muted">Action: {{ item.recommended_operator_action }}</span></td><td>{{ item.source_subsystem }} / {{ item.source_object_type }}<br><span class="v3-muted">{{ item.source_object_id }}</span></td><td>{{ item.safety_class }}</td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No inbox items yet. Run an explicit inbox scan from the API or create a manual task.</div></td></tr>{% endfor %}</tbody></table></div>
+        </section>
+
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Task Board</h2><input class="v3-field" data-v3-table-filter="#task-table" placeholder="Filter tasks"></div>
+          <div class="v3-grid">{% for column in task_board.columns %}<div class="v3-card compact"><div class="v3-label">{{ column.title }}</div><div class="v3-metric">{{ column.count }}</div></div>{% endfor %}</div>
+          <div class="v3-table-wrap"><table id="task-table" class="v3-table"><caption>Local operator tasks.</caption><thead><tr><th>Status</th><th>Priority</th><th>Task</th><th>Due</th><th>Source</th><th>Safety</th></tr></thead><tbody>{% for task in task_list["items"] %}<tr><td><span class="v3-badge {{ 'ok' if task.status == 'done' else 'danger' if task.status == 'blocked' else 'warn' if task.status in ['planned','active','waiting','inbox'] else 'unknown' }}">{{ task.status }}</span></td><td><span class="v3-badge {{ 'danger' if task.priority in ['urgent','critical'] else 'warn' if task.priority == 'high' else 'unknown' }}">{{ task.priority }}</span></td><td><strong>{{ task.title }}</strong><br><span class="v3-muted">{{ task.description }}</span>{% if task.blockers %}<br><span class="v3-badge danger">Blocked: {{ task.blockers|join(', ') }}</span>{% endif %}</td><td>{{ task.due_date or '—' }}</td><td>{{ task.source_subsystem }} / {{ task.source_object_type }}<br><span class="v3-muted">{{ task.source_object_id }}</span></td><td>{{ task.safety_class }}</td></tr>{% else %}<tr><td colspan="6"><div class="v3-empty">No tasks yet. Create one manually, scan inbox, or run cadence generation explicitly.</div></td></tr>{% endfor %}</tbody></table></div>
+        </section>
+
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Review Cadence Rules</h2><input class="v3-field" data-v3-table-filter="#cadence-table" placeholder="Filter cadence"></div>
+          <div class="v3-table-wrap"><table id="cadence-table" class="v3-table"><caption>Operator-triggered review cadence rules.</caption><thead><tr><th>Type</th><th>Rule</th><th>Target</th><th>Template</th><th>Status</th></tr></thead><tbody>{% for rule in task_cadence["items"] %}<tr><td>{{ rule.cadence_type }}</td><td><strong>{{ rule.title }}</strong><br><span class="v3-muted">{{ rule.description }}</span></td><td>{{ rule.target_subsystem }} / {{ rule.target_object_type }}</td><td>{{ rule.task_template_id }}</td><td><span class="v3-badge {{ 'ok' if rule.enabled else 'unknown' }}">{{ 'enabled' if rule.enabled else 'disabled' }}</span></td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No cadence rules yet. Default rules are available through the API.</div></td></tr>{% endfor %}</tbody></table></div>
+        </section>
+      </div>
+      <aside>
+        <section class="v3-card"><h2>Daily Ops Checklist</h2><p><strong>Status:</strong> {{ tasks_summary.daily_checklist_status }}</p><p><strong>Due today:</strong> {{ task_today.due_today|length if task_today.due_today else 0 }}</p><p><strong>Overdue:</strong> {{ task_today.overdue|length if task_today.overdue else 0 }}</p><ul>{% for check in task_today.checklist %}<li>{{ check }}</li>{% else %}<li>Checklist not loaded.</li>{% endfor %}</ul><div class="v3-actions"><a href="/api/v3/tasks/daily-ops/export.md">Export daily ops</a></div></section>
+        <section class="v3-card"><h2>Weekly Planning</h2><p><strong>Status:</strong> {{ tasks_summary.weekly_planning_status }}</p><p><strong>Due this week:</strong> {{ task_week.due_this_week|length if task_week.due_this_week else 0 }}</p><ul>{% for check in task_week.checklist %}<li>{{ check }}</li>{% else %}<li>Weekly planning checklist not loaded.</li>{% endfor %}</ul><div class="v3-actions"><a href="/api/v3/tasks/weekly-plan/export.md">Export weekly plan</a></div></section>
+        <section class="v3-card"><h2>Task Templates</h2><div class="v3-list">{% for tpl in task_templates["items"][:8] %}<div class="v3-list-item"><strong>{{ tpl.title }}</strong><p>{{ tpl.description }}</p><span class="v3-muted">{{ tpl.source_subsystem }} · {{ tpl.safety_class }}</span></div>{% else %}<div class="v3-empty">No templates loaded.</div>{% endfor %}</div></section>
+        <section class="v3-card"><h2>Task Exports</h2><p class="v3-muted">Exports are secret-safe local reports with warnings, limitations, task IDs, related object IDs, blockers, and safety statements.</p><div class="v3-actions"><a href="/api/v3/tasks/export.json">JSON</a><a href="/api/v3/tasks/export.md">Markdown</a><a href="/api/v3/tasks/export.csv">CSV</a><a href="/api/v3/tasks/export/inbox.csv">Inbox CSV</a><a href="/api/v3/tasks/export/cadence.csv">Cadence CSV</a></div></section>
+        <section class="v3-card"><h2>Task Settings</h2><p><strong>Auto-create from notifications:</strong> {{ task_settings.auto_create_tasks_from_notifications }}</p><p><strong>Task generation on startup:</strong> {{ task_settings.task_generation_on_startup }}</p><p><strong>Cadence generation on startup:</strong> {{ task_settings.cadence_generation_on_startup }}</p></section>
+      </aside>
+    </section>
+    {% endif %}
+
+
     {% if section == 'settings' %}
     <section class="v3-grid-wide"><div class="v3-card"><h2>v3 Settings Boundary</h2><p>AI assistance is disabled by default. External provider scaffolding remains explicit, redacted, and advisory-only.</p><pre>{{ settings | tojson(indent=2) }}</pre></div><div class="v3-card"><h2>UX Release Status</h2><p><span class="v3-badge ok">Design system active</span></p><p><span class="v3-badge ok">Screenshots not bundled</span></p><p><span class="v3-badge ok">Backend gates preserved</span></p><pre>{{ validation_status | tojson(indent=2) }}</pre></div></section>
     {% endif %}
 
+
+    {% if section == 'freshness' %}
+    <section class="v3-card">
+      <div class="v3-section-title"><h2>Freshness Scheduler</h2><span class="v3-badge ok">read-only / opt-in</span></div>
+      <p class="v3-muted">Freshness planning is local-first and operator-controlled. It queues and reviews read-only collection jobs, surfaces stale dataset warnings, and manages local notifications. It does not place orders, cancel orders, arm live trading, or run background collection on startup.</p>
+      <div class="v3-grid">
+        <div class="v3-card compact"><div class="v3-label">Freshness status</div><div class="v3-metric">{{ freshness_summary.dataset_freshness_status }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Stale snapshots</div><div class="v3-metric">{{ freshness_summary.stale_snapshot_count }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Queued jobs</div><div class="v3-metric">{{ freshness_summary.queued_collection_jobs }}</div></div>
+        <div class="v3-card compact"><div class="v3-label">Unread notifications</div><div class="v3-metric">{{ freshness_summary.unread_local_notifications }}</div></div>
+      </div>
+      <div class="v3-danger-zone"><strong>Safety UX:</strong> scheduler support is disabled by default unless explicitly enabled. No freshness, notification, or collection control places or cancels orders.</div>
+    </section>
+
+    <section class="v3-grid-wide">
+      <div>
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Freshness Policies</h2><input class="v3-field" data-v3-table-filter="#freshness-policies" placeholder="Filter policies"></div>
+          <div class="v3-table-wrap"><table id="freshness-policies" class="v3-table"><caption>Read-only freshness policies.</caption><thead><tr><th>Policy</th><th>Targets</th><th>Threshold</th><th>Mode</th><th>Status</th></tr></thead><tbody>{% for policy in freshness_policies["items"] %}<tr><td><strong>{{ policy.title }}</strong><br><span class="v3-muted">{{ policy.description }}</span></td><td>{{ policy.target_snapshot_types|join(', ') }}</td><td>{{ policy.freshness_threshold_minutes }} min</td><td>{{ policy.collection_mode }}</td><td><span class="v3-badge {{ 'ok' if policy.enabled else 'unknown' }}">{{ 'enabled' if policy.enabled else 'disabled' }}</span></td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No custom policies yet. Default policies are available through the API.</div></td></tr>{% endfor %}</tbody></table></div>
+        </section>
+
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Collection Job Queue</h2><input class="v3-field" data-v3-table-filter="#freshness-jobs" placeholder="Filter jobs"></div>
+          <div class="v3-table-wrap"><table id="freshness-jobs" class="v3-table"><caption>Operator-controlled read-only collection jobs.</caption><thead><tr><th>Status</th><th>Job</th><th>Snapshot Types</th><th>Run Mode</th><th>Safety</th></tr></thead><tbody>{% for job in freshness_jobs["items"] %}<tr><td><span class="v3-badge {{ 'ok' if job.status == 'completed' else 'warn' if job.status in ['queued','ready','draft'] else 'danger' if job.status == 'failed' else 'unknown' }}">{{ job.status }}</span></td><td>{{ job.job_id }}</td><td>{{ job.requested_snapshot_types|join(', ') }}</td><td>{{ job.run_mode }}</td><td>read-only={{ job.read_only_assertion }} / mutation-blocked={{ job.mutation_endpoints_blocked_assertion }}</td></tr>{% else %}<tr><td colspan="5"><div class="v3-empty">No collection jobs yet. Create jobs from the API, freshness scan, or dataset readiness planner.</div></td></tr>{% endfor %}</tbody></table></div>
+        </section>
+
+        <section class="v3-card">
+          <div class="v3-section-title"><h2>Freshness Findings</h2><input class="v3-field" data-v3-table-filter="#freshness-findings" placeholder="Filter findings"></div>
+          <div class="v3-table-wrap"><table id="freshness-findings" class="v3-table"><caption>Stale/missing dataset findings.</caption><thead><tr><th>Severity</th><th>Finding</th><th>Affected</th><th>Action</th></tr></thead><tbody>{% for finding in freshness_findings["items"] %}<tr><td><span class="v3-badge {{ 'danger' if finding.severity in ['critical','blocker'] else 'warn' if finding.severity == 'warning' else 'unknown' }}">{{ finding.severity }}</span></td><td><strong>{{ finding.title }}</strong><br><span class="v3-muted">{{ finding.explanation }}</span></td><td>{{ finding.affected_object }}</td><td>{{ finding.recommended_operator_action }}</td></tr>{% else %}<tr><td colspan="4"><div class="v3-empty">No written findings yet. Run a freshness scan when ready.</div></td></tr>{% endfor %}</tbody></table></div>
+        </section>
+      </div>
+      <aside>
+        <section class="v3-card"><h2>Dataset Readiness</h2><p><strong>Status:</strong> {{ freshness_readiness.readiness_status }}</p><p><strong>Freshness score:</strong> {{ freshness_readiness.freshness_score }}</p><p><strong>Quality score:</strong> {{ freshness_readiness.quality_score_summary.score }}</p><p><strong>Warnings:</strong> {{ freshness_readiness.warnings|length }}</p><div class="v3-actions"><a href="/api/v3/freshness/readiness">View readiness JSON</a><a href="/api/v3/freshness/export.md">Export report</a></div></section>
+        <section class="v3-card"><h2>Local Notification Center</h2><div class="v3-list">{% for note in freshness_notifications["items"][:8] %}<div class="v3-list-item"><span class="v3-badge {{ 'danger' if note.severity in ['critical','blocker'] else 'warn' if note.severity == 'warning' else 'unknown' }}">{{ note.severity }}</span><strong>{{ note.title }}</strong><p>{{ note.message }}</p><span class="v3-muted">{{ note.status }}</span></div>{% else %}<div class="v3-empty">No local notifications yet.</div>{% endfor %}</div></section>
+        <section class="v3-card"><h2>Scheduler Settings</h2><p><strong>Scheduler enabled:</strong> {{ freshness_settings.scheduler_enabled }}</p><p><strong>Scheduled collection enabled:</strong> {{ freshness_settings.scheduled_collection_enabled }}</p><p><strong>Startup polling:</strong> {{ freshness_settings.network_heavy_polling_on_startup }}</p><p class="v3-muted">Manual queued collection is preferred. Scheduled read-only scaffolding is opt-in and disabled by default.</p></section>
+        <section class="v3-card"><h2>Related Tasks</h2><div class="v3-list">{% for task in related_tasks["items"][:6] %}<div class="v3-list-item"><strong>{{ task.title }}</strong><p>{{ task.status }} · {{ task.priority }}</p></div>{% else %}<div class="v3-empty">No related freshness tasks yet.</div>{% endfor %}</div><div class="v3-actions"><a href="/v3/tasks">Open task planner</a></div></section>
+      </aside>
+    </section>
+    {% endif %}
     {% if section == 'docs' %}
-    <section class="v3-card"><h2>v3.3 Documentation</h2><p class="v3-muted">Documentation was refreshed for the UI/UX redesign, visual QA workflow, and release-candidate validation.</p><div class="v3-actions"><a href="/docs/V3_UI_UX_REDESIGN_GUIDE_v3.3.0-real.md">UI/UX Redesign Guide</a><a href="/docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v3.3.0-real.md">V3 Operator Intelligence OS Guide</a><a href="/docs/V3_OPERATOR_ANALYTICS_GUIDE_v3.3.0-real.md">Operator Analytics Guide</a><a href="/docs/V2_TO_V3_MIGRATION_GUIDE_v3.3.0-real.md">V2 to V3 Migration Guide</a><a href="/docs/VISUAL_QA_CHECKLIST_v3.3.0-real.md">Visual QA Checklist</a><a href="/docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md">Manual QA Checklist</a><a href="/docs/RELEASE_CHECKLIST_v3.3.0-real.md">Release Checklist</a><a href="/docs/VALIDATION_v3.3.0-real.md">Validation Report</a></div></section>
+    <section class="v3-card"><h2>v4.0 Documentation</h2><p class="v3-muted">Documentation was refreshed for the Operator Task Planner, Daily Ops, Weekly Planning, cadence, freshness, datasets, simulation, analytics, and v3 safety boundaries.</p><div class="v3-actions"><a href="/docs/V3_FRESHNESS_SCHEDULER_GUIDE_v4.0.1-real.md">Freshness Scheduler Guide</a><a href="/docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md">UI/UX Redesign Guide</a><a href="/docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md">V3 Operator Intelligence OS Guide</a><a href="/docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md">Operator Analytics Guide</a><a href="/docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md">V2 to V3 Migration Guide</a><a href="/docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md">Visual QA Checklist</a><a href="/docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md">Manual QA Checklist</a><a href="/docs/RELEASE_CHECKLIST_v4.0.1-real.md">Release Checklist</a><a href="/docs/VALIDATION_v4.0.1-real.md">Validation Report</a></div></section>
     {% endif %}
 
-    <section class="v3-warning"><strong>Safety boundary:</strong> v3.3 redesigned UI, search, graph, analytics, packets, reports, demo data, and workflows are operator-guidance features only. Live order submission still requires backend risk gates, human approval, warning acknowledgement, typed confirmation phrase, Live Armed mode, read-only disabled, and kill switch disabled.</section>
+    <section class="v3-warning"><strong>Safety boundary:</strong> v4.0 cockpit, shortcuts, command palette, guided reviews, tasks, daily ops, cadence, notifications, datasets, snapshots, simulation, replay, redesigned UI, search, graph, analytics, packets, reports, demo data, and workflows are operator-guidance features only. Live order submission still requires backend risk gates, human approval, warning acknowledgement, typed confirmation phrase, Live Armed mode, read-only disabled, and kill switch disabled.</section>
   </main>
 </div>
 </body>

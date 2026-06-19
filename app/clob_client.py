@@ -25,7 +25,7 @@ class ClobClient:
 
     async def _get(self, path: str, params: dict[str, Any] | None = None) -> Any:
         url = f"{self.base_url}{path}"
-        async with httpx.AsyncClient(timeout=self.timeout, headers={"User-Agent": f"polymarket-gamma-starter/{APP_VERSION}"}) as client:
+        async with httpx.AsyncClient(timeout=self.timeout, headers={"User-Agent": f"polymarket-op-console/{APP_VERSION}"}) as client:
             response = await client.get(url, params=params)
             response.raise_for_status()
             return response.json()

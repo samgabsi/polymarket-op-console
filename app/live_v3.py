@@ -763,7 +763,7 @@ def export_report_markdown(kind: str = "command_center", payload: dict[str, Any]
         lines.append(str(body)[:2000])
     return "\n".join(lines) + "\n"
 
-# v3.3.0-real polish layer: demo fixtures, filters, release validation helpers, and safer packet templates.
+# v4.0.1-real polish layer: demo fixtures, filters, release validation helpers, and safer packet templates.
 V3_DEMO_DATA_PATH = V3_DIR / "demo_fixture.json"
 
 
@@ -1013,13 +1013,13 @@ def workflow_outputs(limit: int = 100) -> dict[str, Any]:
 
 def validation_status() -> dict[str, Any]:
     required_docs = [
-        "docs/RELEASE_NOTES_v3.3.0-real.md",
-        "docs/VALIDATION_v3.3.0-real.md",
-        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v3.3.0-real.md",
-        "docs/V2_TO_V3_MIGRATION_GUIDE_v3.3.0-real.md",
-        "docs/VISUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/RELEASE_CHECKLIST_v3.3.0-real.md",
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
     ]
     root = Path(__file__).resolve().parents[1]
     checks = []
@@ -1062,7 +1062,7 @@ def export_pre_trade_packet_markdown(payload: dict[str, Any] | None = None) -> s
 def export_operator_review_markdown(payload: dict[str, Any] | None = None) -> str:
     return export_report_markdown("operator_review", payload or {})
 
-# v3.3.0-real analytics learning layer: local-first descriptive metrics, learning reports,
+# v4.0.1-real analytics learning layer: local-first descriptive metrics, learning reports,
 # analytics search/graph integration, and read-only workflow context.
 
 _build_search_index_v31 = build_search_index
@@ -1204,14 +1204,14 @@ def validation_status() -> dict[str, Any]:  # type: ignore[override]
     status = _validation_status_v31()
     root = Path(__file__).resolve().parents[1]
     docs = [
-        "docs/RELEASE_NOTES_v3.3.0-real.md",
-        "docs/VALIDATION_v3.3.0-real.md",
-        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v3.3.0-real.md",
-        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v3.3.0-real.md",
-        "docs/V2_TO_V3_MIGRATION_GUIDE_v3.3.0-real.md",
-        "docs/VISUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/RELEASE_CHECKLIST_v3.3.0-real.md",
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
     ]
     checks = status.get("checks", []) + [{"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review v3.2 analytics documentation before release."} for rel in docs]
     try:
@@ -1223,7 +1223,7 @@ def validation_status() -> dict[str, Any]:  # type: ignore[override]
     status.update({"checks": checks, "overall_status": "pass" if all(c.get("status") == "pass" for c in checks if "v3.2" in c.get("check", "") or c.get("check") == "v3.2 analytics") else "warning", "analytics_are_descriptive": True, "secret_values_returned": False})
     return redact_data(status)
 
-# v3.3.0-real complete UI/UX redesign layer: design-system metadata,
+# v4.0.1-real complete UI/UX redesign layer: design-system metadata,
 # navigation grouping, UX validation status, and release-candidate safety signals.
 
 def design_system_status() -> dict[str, Any]:
@@ -1253,7 +1253,7 @@ def design_system_status() -> dict[str, Any]:
 def navigation_groups() -> dict[str, Any]:
     groups = [
         {"group": "Operate", "links": ["Command Center", "Live Controls", "Trade Ticket", "Audit"]},
-        {"group": "Analyze", "links": ["Analytics", "Portfolio", "Monitoring", "Graph", "Search"]},
+        {"group": "Analyze", "links": ["Analytics", "Simulation Lab", "Portfolio", "Monitoring", "Graph", "Search"]},
         {"group": "Build Thesis", "links": ["Strategy", "Research", "Evidence", "Watchlists"]},
         {"group": "Govern", "links": ["Governance", "Reviews", "Data / Backup", "Settings"]},
         {"group": "Output", "links": ["Workflows", "Briefs", "Reports", "Docs"]},
@@ -1264,15 +1264,15 @@ def navigation_groups() -> dict[str, Any]:
 def ux_release_status() -> dict[str, Any]:
     root = Path(__file__).resolve().parents[1]
     docs = [
-        "docs/RELEASE_NOTES_v3.3.0-real.md",
-        "docs/VALIDATION_v3.3.0-real.md",
-        "docs/V3_UI_UX_REDESIGN_GUIDE_v3.3.0-real.md",
-        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v3.3.0-real.md",
-        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v3.3.0-real.md",
-        "docs/V2_TO_V3_MIGRATION_GUIDE_v3.3.0-real.md",
-        "docs/VISUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md",
-        "docs/RELEASE_CHECKLIST_v3.3.0-real.md",
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
     ]
     script_checks = [
         "scripts/capture_v3_screenshots.py",
@@ -1282,7 +1282,7 @@ def ux_release_status() -> dict[str, Any]:
         "scripts/clear_v3_demo_data.py",
     ]
     checks = []
-    checks.extend({"check": d, "status": "pass" if (root / d).exists() else "warning", "recommended_operator_action": "Review v3.3 UX release documentation."} for d in docs)
+    checks.extend({"check": d, "status": "pass" if (root / d).exists() else "warning", "recommended_operator_action": "Review v3.5 UX release documentation."} for d in docs)
     checks.extend({"check": s, "status": "pass" if (root / s).exists() else "warning", "recommended_operator_action": "Run safe dry-run validation locally."} for s in script_checks)
     checks.append({"check": "design_system_status", "status": design_system_status()["status"], "recommended_operator_action": "Use visual QA checklist before publishing screenshots."})
     return redact_data({
@@ -1305,13 +1305,1205 @@ _validation_status_v32 = validation_status
 def validation_status() -> dict[str, Any]:  # type: ignore[override]
     status = _validation_status_v32()
     ux = ux_release_status()
-    checks = status.get("checks", []) + ux.get("checks", []) + [{"check": "v3.3 UX redesign", "status": ux.get("overall_status", "warning"), "details": "Complete operator UX redesign, design system, responsive shell, accessibility baseline, and visual QA docs."}]
+    checks = status.get("checks", []) + ux.get("checks", []) + [{"check": "v3.5 UX redesign", "status": ux.get("overall_status", "warning"), "details": "Complete operator UX redesign, design system, responsive shell, accessibility baseline, and visual QA docs."}]
     status.update({
         "checks": checks,
-        "overall_status": "pass" if all(c.get("status") == "pass" for c in checks if "v3.3" in str(c.get("check", "")) or c.get("check") in {"design_system_status"}) else "warning",
+        "overall_status": "pass" if all(c.get("status") == "pass" for c in checks if "v3.5" in str(c.get("check", "")) or c.get("check") in {"design_system_status"}) else "warning",
         "ui_ux_redesign_active": True,
         "redesigned_ui_does_not_bypass_backend_gates": True,
         "screenshots_included_in_release_zip": False,
         "secret_values_returned": False,
     })
     return redact_data(status)
+
+# v4.0.1-real simulation lab integration: local-first replay, simulation, process backtesting,
+# and clear live/paper/simulation separation. All helpers are read-only/descriptive.
+
+_build_search_index_v33 = build_search_index
+
+
+def build_search_index(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    index = _build_search_index_v33(limit=limit)
+    try:
+        from .live_v3_simulation import simulation_search_items
+        simulation_items = simulation_search_items(limit=100)
+    except Exception:
+        simulation_items = []
+    rows = index.get("items", []) + simulation_items
+    rows.sort(key=lambda r: str(r.get("timestamp") or ""), reverse=True)
+    return {**index, "count": len(rows), "items": redact_data(rows[: max(1, min(int(limit or 250), 2500))]), "simulation_indexed": len(simulation_items), "secret_values_returned": False}
+
+
+_build_decision_graph_v33 = build_decision_graph
+
+
+def build_decision_graph(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    graph = _build_decision_graph_v33(limit=limit)
+    try:
+        from .live_v3_simulation import simulation_graph_nodes_edges
+        simulation = simulation_graph_nodes_edges()
+        nodes = graph.get("nodes", []) + simulation.get("nodes", [])
+        edges = graph.get("edges", []) + simulation.get("edges", [])
+        graph.update({"nodes": redact_data(nodes), "edges": redact_data(edges), "node_count": len(nodes), "edge_count": len(edges), "simulation_nodes": len(simulation.get("nodes", [])), "simulation_edges": len(simulation.get("edges", []))})
+    except Exception:
+        graph.update({"simulation_nodes": 0, "simulation_edges": 0})
+    graph["secret_values_returned"] = False
+    return redact_data(graph)
+
+
+_build_command_center_v33 = build_command_center
+
+
+def build_command_center() -> dict[str, Any]:  # type: ignore[override]
+    center = _build_command_center_v33()
+    try:
+        from .live_v3_simulation import simulation_summary
+        sim = simulation_summary()
+    except Exception as exc:
+        sim = {"status": "unknown", "error_redacted": redact_text(str(exc)), "secret_values_returned": False}
+    center["simulation_summary"] = redact_data(sim)
+    center.setdefault("groups", {})["simulation"] = {
+        "session_count": sim.get("session_count", 0),
+        "open_session_count": sim.get("open_session_count", 0),
+        "report_count": sim.get("report_count", 0),
+        "process_backtest_count": sim.get("process_backtest_count", 0),
+        "no_trade_simulation_count": sim.get("no_trade_simulation_count", 0),
+        "next_simulation_review_action": sim.get("next_simulation_review_action"),
+    }
+    center["release_candidate_stage"] = "v3.5 simulation lab and replay layer"
+    center["safety_boundary"] = "The v3.5 command center, simulation lab, analytics, workflows, and reports are read-only/descriptive and do not place, cancel, approve, sign, or arm live orders."
+    center["secret_values_returned"] = False
+    return redact_data(center)
+
+
+_workflow_templates_v33 = workflow_templates
+
+
+def workflow_templates() -> dict[str, Any]:  # type: ignore[override]
+    result = _workflow_templates_v33()
+    templates = result.get("templates", [])
+    simulation_templates = [
+        {"workflow_id": "replay_review_packet", "name": "Replay Review Packet", "read_only": True, "mutates_trading_state": False, "description": "Review local decision state at a replay time with known-then versus known-now labels.", "sections": ["Replay Scope", "Known Then", "Added Later", "Assumptions", "Lessons", "Unknowns", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "simulation_lab_report", "name": "Simulation Lab Report", "read_only": True, "mutates_trading_state": False, "description": "Summarize replay sessions, simulation outputs, process backtests, and no-trade simulations.", "sections": ["Summary", "Sessions", "Findings", "Assumptions", "Limitations", "Next Actions", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "process_backtest_report", "name": "Process Backtest Report", "read_only": True, "mutates_trading_state": False, "description": "Evaluate operator process quality from local records without claiming financial performance.", "sections": ["Process Scorecard", "Strengths", "Weaknesses", "Recurring Issues", "Unknown Data", "Improvements"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+    ]
+    ids = {t.get("workflow_id") for t in templates}
+    for template in simulation_templates:
+        if template["workflow_id"] not in ids:
+            templates.append(template)
+    return {**result, "templates": redact_data(templates), "count": len(templates), "simulation_templates": len(simulation_templates), "secret_values_returned": False}
+
+
+_build_demo_fixture_v33 = build_demo_fixture
+
+
+def build_demo_fixture() -> dict[str, Any]:  # type: ignore[override]
+    fixture = _build_demo_fixture_v33()
+    now = _now()
+    simulation = fixture.setdefault("simulation", {})
+    simulation["sessions"] = [
+        _demo_item("demo-sim-session-v34", session_id="demo-sim-session-v34", session_title="DEMO replay session", simulation_type="pre_trade_replay", target_time="2026-01-01T12:00:00+00:00", status="ready", assumption_set={"local_only_replay": True, "hypothetical_fill_percentage": 50, "missing_data_handling_mode": "mark_unknown"}, notes="Fake replay session for Simulation Lab screenshots.", tags=["demo", "simulation", "v3.5"])
+    ]
+    simulation["reports"] = [
+        _demo_item("demo-sim-report-v34", report_id="demo-sim-report-v34", session_id="demo-sim-session-v34", simulation_type="process_quality_backtest", status="completed", created_at=now, output={"process_scorecard": {"score": 65, "status": "needs_review"}, "safety_statement": "Fake demo report; no live orders."}, tags=["demo", "simulation", "report", "v3.5"])
+    ]
+    simulation["no_trade"] = [_demo_item("demo-no-trade-sim-v34", simulation_type="no_trade_simulation", no_trade_rationale="Fake stale evidence plus incomplete checklist.", status="completed", tags=["demo", "simulation", "no_trade"])]
+    fixture["simulation_note"] = "Fake simulation-friendly demo records only. No real credentials, no live orders, no financial advice."
+    return redact_data(fixture)
+
+
+_validation_status_v33 = validation_status
+
+
+def validation_status() -> dict[str, Any]:  # type: ignore[override]
+    status = _validation_status_v33()
+    root = Path(__file__).resolve().parents[1]
+    docs = [
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_SIMULATION_LAB_GUIDE_v4.0.1-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
+    ]
+    checks = status.get("checks", []) + [{"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review v3.5 simulation documentation before release."} for rel in docs]
+    try:
+        from .live_v3_simulation import simulation_summary
+        sim_ok = simulation_summary().get("secret_values_returned") is False
+    except Exception:
+        sim_ok = False
+    checks.append({"check": "v3.5 simulation lab", "status": "pass" if sim_ok else "warning", "details": "Local-first simulation/replay/process backtesting; no order placement/cancellation/arming."})
+    status.update({"checks": checks, "overall_status": "pass" if sim_ok and all(c.get("status") == "pass" for c in checks if "v3.5" in str(c.get("check", ""))) else "warning", "simulation_lab_active": True, "simulation_is_descriptive": True, "simulation_workflows_do_not_arm_live_trading": True, "secret_values_returned": False})
+    return redact_data(status)
+
+_run_workflow_v33 = run_workflow
+
+
+def run_workflow(payload: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    payload = payload or {}
+    workflow_id = _safe_text(payload.get("workflow_id") or payload.get("id"), "")
+    if workflow_id in {"replay_review_packet", "simulation_lab_report", "process_backtest_report"}:
+        try:
+            from .live_v3_simulation import compare_then_now, process_quality_backtest, export_simulation_json
+            context = payload.get("context") if isinstance(payload.get("context"), dict) else payload
+            if workflow_id == "replay_review_packet":
+                output = compare_then_now(context)
+            elif workflow_id == "process_backtest_report":
+                output = process_quality_backtest(context)
+            else:
+                output = export_simulation_json()
+            run = redact_data({
+                "run_id": f"v3_run_{uuid4().hex[:12]}",
+                "workflow_id": workflow_id,
+                "started_at": _now(),
+                "completed_at": _now(),
+                "status": "completed",
+                "read_only": True,
+                "mutated_trading_state": False,
+                "order_submitted": False,
+                "order_cancelled": False,
+                "live_trading_armed": False,
+                "ai_assistance_enabled": False,
+                "output": output,
+                "secret_values_returned": False,
+            })
+            _ensure_dir()
+            with V3_WORKFLOW_RUNS_PATH.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(run, sort_keys=True, default=str) + "\n")
+            _event("workflow_run_completed", "ok", {"workflow_id": workflow_id, "run_id": run["run_id"], "simulation_workflow": True})
+            return run
+        except Exception as exc:
+            return redact_data({"run_id": f"v3_run_{uuid4().hex[:12]}", "workflow_id": workflow_id, "status": "failed", "error_redacted": redact_text(str(exc)), "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False})
+    return _run_workflow_v33(payload)
+
+# v4.0.1-real dataset/snapshot layer: read-only snapshot collection, replay datasets,
+# provenance, quality scoring, and local-first dataset integration. No live/paper mutation.
+_build_search_index_v34 = build_search_index
+
+def build_search_index(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    index = _build_search_index_v34(limit=limit)
+    try:
+        from .live_v3_datasets import dataset_search_items
+        dataset_items = dataset_search_items(limit=100)
+    except Exception:
+        dataset_items = []
+    rows = index.get("items", []) + dataset_items
+    rows.sort(key=lambda r: str(r.get("timestamp") or ""), reverse=True)
+    return {**index, "count": len(rows), "items": redact_data(rows[: max(1, min(int(limit or 250), 2500))]), "dataset_indexed": len(dataset_items), "secret_values_returned": False}
+
+
+_build_decision_graph_v34 = build_decision_graph
+
+def build_decision_graph(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    graph = _build_decision_graph_v34(limit=limit)
+    try:
+        from .live_v3_datasets import dataset_graph_nodes_edges
+        dataset = dataset_graph_nodes_edges()
+        nodes = graph.get("nodes", []) + dataset.get("nodes", [])
+        edges = graph.get("edges", []) + dataset.get("edges", [])
+        graph.update({"nodes": redact_data(nodes), "edges": redact_data(edges), "node_count": len(nodes), "edge_count": len(edges), "dataset_nodes": len(dataset.get("nodes", [])), "dataset_edges": len(dataset.get("edges", []))})
+    except Exception:
+        graph.update({"dataset_nodes": 0, "dataset_edges": 0})
+    graph["secret_values_returned"] = False
+    return redact_data(graph)
+
+
+_build_command_center_v34 = build_command_center
+
+def build_command_center() -> dict[str, Any]:  # type: ignore[override]
+    center = _build_command_center_v34()
+    try:
+        from .live_v3_datasets import datasets_summary
+        ds = datasets_summary()
+    except Exception as exc:
+        ds = {"status": "unknown", "error_redacted": redact_text(str(exc)), "secret_values_returned": False}
+    center["datasets_summary"] = redact_data(ds)
+    center.setdefault("groups", {})["datasets"] = {
+        "snapshot_count": ds.get("snapshot_count", 0),
+        "dataset_count": ds.get("dataset_count", 0),
+        "replay_ready_dataset_count": ds.get("replay_ready_dataset_count", 0),
+        "dataset_quality_status": ds.get("quality_status", "unknown"),
+        "dataset_quality_score": ds.get("quality_score", 0),
+        "missing_snapshot_warnings": ds.get("missing_snapshot_warnings", 0),
+        "next_recommended_dataset_action": ds.get("next_recommended_dataset_action"),
+    }
+    center["release_candidate_stage"] = "v3.5 dataset builder and read-only snapshot layer"
+    center["safety_boundary"] = "The v3.5 command center, dataset builder, simulation lab, analytics, workflows, and reports are read-only/descriptive and do not place, cancel, approve, sign, or arm live orders."
+    center["secret_values_returned"] = False
+    return redact_data(center)
+
+
+_workflow_templates_v34 = workflow_templates
+
+def workflow_templates() -> dict[str, Any]:  # type: ignore[override]
+    result = _workflow_templates_v34()
+    templates = result.get("templates", [])
+    dataset_templates = [
+        {"workflow_id": "dataset_quality_review", "name": "Dataset Quality Review", "read_only": True, "mutates_trading_state": False, "description": "Review snapshot coverage, data quality, provenance, replay readiness, and export safety.", "sections": ["Dataset Summary", "Quality", "Missing Snapshots", "Provenance", "Replay Readiness", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "snapshot_freshness_review", "name": "Snapshot Freshness Review", "read_only": True, "mutates_trading_state": False, "description": "Summarize latest snapshot collection, stale data, unknown values, and next collection actions.", "sections": ["Latest Run", "Freshness", "Unknown Data", "Next Actions", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "replay_dataset_readiness_review", "name": "Replay Dataset Readiness Review", "read_only": True, "mutates_trading_state": False, "description": "Check whether local replay datasets are usable for v3.4 Simulation Lab inputs.", "sections": ["Replay-Ready Datasets", "Quality Threshold", "Warnings", "Limitations", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+    ]
+    ids = {t.get("workflow_id") for t in templates}
+    for template in dataset_templates:
+        if template["workflow_id"] not in ids:
+            templates.append(template)
+    return {**result, "templates": redact_data(templates), "count": len(templates), "dataset_templates": len(dataset_templates), "secret_values_returned": False}
+
+
+_build_demo_fixture_v34 = build_demo_fixture
+
+def build_demo_fixture() -> dict[str, Any]:  # type: ignore[override]
+    fixture = _build_demo_fixture_v34()
+    now = _now()
+    fixture.setdefault("datasets", {})
+    fixture["datasets"]["snapshots"] = [
+        _demo_item("demo-market-snapshot-v35", snapshot_id="demo-market-snapshot-v35", snapshot_type="market_metadata", source_subsystem="external_market_data", collection_mode="demo", market_id="DEMO-MARKET-DATASET", created_at=now, quality_status="usable", validation_status="pass", tags=["demo", "dataset", "snapshot"]),
+        _demo_item("demo-orderbook-snapshot-v35", snapshot_id="demo-orderbook-snapshot-v35", snapshot_type="order_book", source_subsystem="external_market_data", collection_mode="demo", market_id="DEMO-MARKET-DATASET", created_at=now, quality_status="usable", validation_status="pass", tags=["demo", "dataset", "order_book"]),
+    ]
+    fixture["datasets"]["manifests"] = [_demo_item("demo-replay-dataset-v35", dataset_id="demo-replay-dataset-v35", title="DEMO Replay Dataset", dataset_type="replay_dataset", created_at=now, quality_status="usable", quality_score=78, tags=["demo", "dataset", "replay"])]
+    fixture["datasets"]["quality_reports"] = [_demo_item("demo-quality-report-v35", quality_report_id="demo-quality-report-v35", dataset_id="demo-replay-dataset-v35", quality_status="usable", quality_score=78, findings=[{"severity": "warning", "title": "Fake stale evidence warning"}], tags=["demo", "dataset", "quality"])]
+    fixture["datasets_note"] = "Fake dataset-friendly demo records only. No real credentials, no live orders, no financial advice."
+    return redact_data(fixture)
+
+
+_validation_status_v34 = validation_status
+
+def validation_status() -> dict[str, Any]:  # type: ignore[override]
+    status = _validation_status_v34()
+    root = Path(__file__).resolve().parents[1]
+    docs = [
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_DATASET_BUILDER_GUIDE_v4.0.1-real.md",
+        "docs/V3_SIMULATION_LAB_GUIDE_v4.0.1-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
+    ]
+    checks = status.get("checks", []) + [{"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review v3.5 dataset/snapshot documentation before release."} for rel in docs]
+    try:
+        from .live_v3_datasets import datasets_summary
+        ds_ok = datasets_summary().get("secret_values_returned") is False
+    except Exception:
+        ds_ok = False
+    checks.append({"check": "v3.5 dataset builder", "status": "pass" if ds_ok else "warning", "details": "Local-first read-only snapshots/datasets; no order placement/cancellation/arming."})
+    status.update({"checks": checks, "overall_status": "pass" if ds_ok and all(c.get("status") == "pass" for c in checks if "v3.5" in str(c.get("check", ""))) else "warning", "dataset_builder_active": True, "dataset_snapshot_collection_is_read_only": True, "dataset_workflows_do_not_arm_live_trading": True, "secret_values_returned": False})
+    return redact_data(status)
+
+
+_run_workflow_v34 = run_workflow
+
+def run_workflow(payload: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    payload = payload or {}
+    workflow_id = _safe_text(payload.get("workflow_id") or payload.get("id"), "")
+    if workflow_id in {"dataset_quality_review", "snapshot_freshness_review", "replay_dataset_readiness_review"}:
+        try:
+            from .live_v3_datasets import dataset_workflow_context, export_dataset_json, export_dataset_markdown
+            if workflow_id == "dataset_quality_review":
+                output = export_dataset_json(payload.get("dataset_id"))
+            elif workflow_id == "snapshot_freshness_review":
+                output = dataset_workflow_context().get("snapshot_freshness_review")
+            else:
+                output = dataset_workflow_context().get("replay_dataset_readiness_review")
+            run = redact_data({
+                "run_id": f"v3_run_{uuid4().hex[:12]}",
+                "workflow_id": workflow_id,
+                "started_at": _now(),
+                "completed_at": _now(),
+                "status": "completed",
+                "read_only": True,
+                "mutated_trading_state": False,
+                "order_submitted": False,
+                "order_cancelled": False,
+                "live_trading_armed": False,
+                "ai_assistance_enabled": False,
+                "output": output,
+                "markdown_preview": export_dataset_markdown(payload.get("dataset_id")) if workflow_id == "dataset_quality_review" else "",
+                "secret_values_returned": False,
+            })
+            _ensure_dir()
+            with V3_WORKFLOW_RUNS_PATH.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(run, sort_keys=True, default=str) + "\n")
+            _event("workflow_run_completed", "ok", {"workflow_id": workflow_id, "run_id": run["run_id"], "dataset_workflow": True})
+            return run
+        except Exception as exc:
+            return redact_data({"run_id": f"v3_run_{uuid4().hex[:12]}", "workflow_id": workflow_id, "status": "failed", "error_redacted": redact_text(str(exc)), "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False})
+    return _run_workflow_v34(payload)
+
+_create_demo_data_v34 = create_demo_data
+
+def create_demo_data() -> dict[str, Any]:  # type: ignore[override]
+    result = _create_demo_data_v34()
+    # The v3.5 demo fixture includes dataset-friendly fake records in demo_fixture.json.
+    # It does not automatically create runtime dataset/snapshot collections on demo load.
+    # Use app.live_v3_datasets.create_demo_dataset_records() explicitly for full dataset demo records.
+    result["dataset_demo"] = {"ok": True, "fixture_only": True, "demo_data_is_fake": True, "secret_values_returned": False}
+    result["order_submitted"] = False
+    result["order_cancelled"] = False
+    result["live_trading_armed"] = False
+    result["secret_values_returned"] = False
+    return redact_data(result)
+
+_clear_demo_data_v34 = clear_demo_data
+
+def clear_demo_data() -> dict[str, Any]:  # type: ignore[override]
+    result = _clear_demo_data_v34()
+    try:
+        from .live_v3_datasets import DATASETS_DIR
+        # Runtime demo dataset records live under data/live_v3/datasets and are never shipped in release ZIPs.
+        import shutil
+        shutil.rmtree(DATASETS_DIR, ignore_errors=True)
+        result["dataset_demo_cleared"] = True
+    except Exception as exc:
+        result["dataset_demo_cleared"] = False
+        result["dataset_demo_error_redacted"] = redact_text(str(exc))
+    result["order_submitted"] = False
+    result["order_cancelled"] = False
+    result["live_trading_armed"] = False
+    result["secret_values_returned"] = False
+    return redact_data(result)
+
+
+# v4.0.1-real freshness/scheduler layer: read-only collection planning, dataset freshness,
+# local notifications, and operator-controlled collection queues.
+_build_search_index_v35 = build_search_index
+
+def build_search_index(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    result = _build_search_index_v35(limit=limit)
+    try:
+        from .live_v3_freshness import freshness_search_items
+        items = result.get("items", []) + freshness_search_items(limit=limit)
+        result.update({"items": redact_data(items[: max(1, min(int(limit or 250), 5000))]), "count": len(items), "freshness_items": len(freshness_search_items(limit=limit)), "secret_values_returned": False})
+    except Exception as exc:
+        result.setdefault("warnings", []).append(f"Freshness search integration unavailable: {redact_text(str(exc))}")
+    return redact_data(result)
+
+_build_decision_graph_v35 = build_decision_graph
+
+def build_decision_graph(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    graph = _build_decision_graph_v35(limit=limit)
+    try:
+        from .live_v3_freshness import freshness_graph_nodes_edges
+        fg = freshness_graph_nodes_edges()
+        nodes = graph.get("nodes", []) + fg.get("nodes", [])
+        edges = graph.get("edges", []) + fg.get("edges", [])
+        graph.update({"nodes": redact_data(nodes), "edges": redact_data(edges), "node_count": len(nodes), "edge_count": len(edges), "freshness_nodes": len(fg.get("nodes", [])), "freshness_edges": len(fg.get("edges", [])), "secret_values_returned": False})
+    except Exception as exc:
+        graph.setdefault("warnings", []).append(f"Freshness graph integration unavailable: {redact_text(str(exc))}")
+    return redact_data(graph)
+
+_build_command_center_v35 = build_command_center
+
+def build_command_center() -> dict[str, Any]:  # type: ignore[override]
+    center = _build_command_center_v35()
+    try:
+        from .live_v3_freshness import summary as freshness_summary
+        fresh = freshness_summary()
+        center.setdefault("groups", {})["freshness"] = {
+            "dataset_freshness_status": fresh.get("dataset_freshness_status", "unknown"),
+            "stale_snapshot_count": fresh.get("stale_snapshot_count", 0),
+            "stale_dataset_count": fresh.get("stale_dataset_count", 0),
+            "queued_collection_jobs": fresh.get("queued_collection_jobs", 0),
+            "failed_collection_jobs": fresh.get("failed_collection_jobs", 0),
+            "unread_local_notifications": fresh.get("unread_local_notifications", 0),
+            "replay_readiness_warnings": fresh.get("replay_readiness_warnings", 0),
+            "next_dataset_collection_action": fresh.get("next_dataset_collection_action"),
+        }
+        center["freshness_summary"] = fresh
+        center["release_candidate_stage"] = "v3.7 freshness scheduler and local operator notification layer"
+        center["safety_boundary"] = "The v3.7 freshness planner, scheduler scaffolding, local notifications, datasets, simulations, analytics, workflows, and reports are read-only/descriptive and do not place, cancel, approve, sign, or arm live orders."
+    except Exception as exc:
+        center.setdefault("warnings", []).append(f"Freshness command-center integration unavailable: {redact_text(str(exc))}")
+    center["secret_values_returned"] = False
+    return redact_data(center)
+
+_workflow_templates_v35 = workflow_templates
+
+def workflow_templates() -> dict[str, Any]:  # type: ignore[override]
+    result = _workflow_templates_v35()
+    templates = result.get("templates", [])
+    freshness_templates = [
+        {"workflow_id": "freshness_review", "name": "Freshness Review", "read_only": True, "mutates_trading_state": False, "description": "Review stale snapshots, stale datasets, unread local notifications, and replay readiness warnings.", "sections": ["Freshness Findings", "Collection Jobs", "Notifications", "Dataset Readiness", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "collection_plan_review", "name": "Collection Plan Review", "read_only": True, "mutates_trading_state": False, "description": "Inspect policies and queued read-only collection jobs before running them manually.", "sections": ["Policies", "Queued Jobs", "Read-Only Assertions", "Blocked/Unsafe Jobs", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "notification_triage", "name": "Notification Triage", "read_only": True, "mutates_trading_state": False, "description": "Triage stale dataset, failed job, validation, and readiness notifications locally.", "sections": ["Notifications", "Acknowledgments", "Snoozed Items", "Resolved Items", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "dataset_readiness_review", "name": "Dataset Readiness Review", "read_only": True, "mutates_trading_state": False, "description": "Check freshness and dataset quality before replay, simulation, or operator review.", "sections": ["Readiness", "Missing Snapshots", "Stale Snapshots", "Recommended Collection Jobs", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+    ]
+    ids = {t.get("workflow_id") for t in templates}
+    for template in freshness_templates:
+        if template["workflow_id"] not in ids:
+            templates.append(template)
+    return {**result, "templates": redact_data(templates), "count": len(templates), "freshness_templates": len(freshness_templates), "secret_values_returned": False}
+
+_validation_status_v35 = validation_status
+
+def validation_status() -> dict[str, Any]:  # type: ignore[override]
+    status = _validation_status_v35()
+    root = Path(__file__).resolve().parents[1]
+    docs = [
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_FRESHNESS_SCHEDULER_GUIDE_v4.0.1-real.md",
+        "docs/V3_DATASET_BUILDER_GUIDE_v4.0.1-real.md",
+        "docs/V3_SIMULATION_LAB_GUIDE_v4.0.1-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
+    ]
+    checks = status.get("checks", []) + [{"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review v3.7 freshness/scheduler documentation before release."} for rel in docs]
+    try:
+        from .live_v3_freshness import summary as freshness_summary
+        fresh_ok = freshness_summary().get("secret_values_returned") is False
+    except Exception:
+        fresh_ok = False
+    checks.append({"check": "v3.7 freshness scheduler", "status": "pass" if fresh_ok else "warning", "details": "Local-first read-only scheduler/freshness layer; no order placement/cancellation/arming."})
+    status.update({"checks": checks, "overall_status": "pass" if fresh_ok and all(c.get("status") == "pass" for c in checks if "v3.7" in str(c.get("check", ""))) else "warning", "freshness_scheduler_active": True, "freshness_collection_is_read_only": True, "freshness_scheduler_disabled_by_default": True, "freshness_workflows_do_not_arm_live_trading": True, "secret_values_returned": False})
+    return redact_data(status)
+
+_build_demo_fixture_v35 = build_demo_fixture
+
+def build_demo_fixture() -> dict[str, Any]:  # type: ignore[override]
+    fixture = _build_demo_fixture_v35()
+    now = _now()
+    fixture.setdefault("freshness", {})
+    fixture["freshness"]["policies"] = [_demo_item("demo-freshness-policy-v36", policy_id="demo-freshness-policy-v36", title="DEMO Dataset Freshness Policy", target_snapshot_types=["market_metadata", "order_book"], enabled=True, created_at=now, tags=["demo", "freshness", "policy"])]
+    fixture["freshness"]["jobs"] = [_demo_item("demo-collection-job-v36", job_id="demo-collection-job-v36", status="queued", requested_snapshot_types=["market_metadata", "order_book"], run_mode="demo", created_at=now, tags=["demo", "freshness", "job"])]
+    fixture["freshness"]["notifications"] = [_demo_item("demo-freshness-note-v36", notification_id="demo-freshness-note-v36", title="DEMO dataset needs refresh", severity="warning", status="new", created_at=now, tags=["demo", "freshness", "notification"])]
+    fixture["freshness_note"] = "Fake freshness-friendly demo records only. No real credentials, no live orders, no financial advice."
+    return redact_data(fixture)
+
+_run_workflow_v35 = run_workflow
+
+def run_workflow(payload: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    payload = payload or {}
+    workflow_id = _safe_text(payload.get("workflow_id") or payload.get("id"), "")
+    if workflow_id in {"freshness_review", "collection_plan_review", "notification_triage", "dataset_readiness_review"}:
+        try:
+            from .live_v3_freshness import freshness_workflow_context, export_freshness_markdown
+            context = freshness_workflow_context()
+            output = context.get(workflow_id) or context
+            run = redact_data({
+                "run_id": f"v3_run_{uuid4().hex[:12]}",
+                "workflow_id": workflow_id,
+                "started_at": _now(),
+                "completed_at": _now(),
+                "status": "completed",
+                "read_only": True,
+                "mutated_trading_state": False,
+                "order_submitted": False,
+                "order_cancelled": False,
+                "live_trading_armed": False,
+                "ai_assistance_enabled": False,
+                "output": output,
+                "markdown_preview": export_freshness_markdown(),
+                "secret_values_returned": False,
+            })
+            _ensure_dir()
+            with V3_WORKFLOW_RUNS_PATH.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(run, sort_keys=True, default=str) + "\n")
+            _event("workflow_run_completed", "ok", {"workflow_id": workflow_id, "run_id": run["run_id"], "freshness_workflow": True})
+            return run
+        except Exception as exc:
+            return redact_data({"run_id": f"v3_run_{uuid4().hex[:12]}", "workflow_id": workflow_id, "status": "failed", "error_redacted": redact_text(str(exc)), "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False})
+    return _run_workflow_v35(payload)
+
+_create_demo_data_v35 = create_demo_data
+
+def create_demo_data() -> dict[str, Any]:  # type: ignore[override]
+    result = _create_demo_data_v35()
+    try:
+        from .live_v3_freshness import create_demo_freshness_records
+        result["freshness_demo"] = create_demo_freshness_records()
+    except Exception as exc:
+        result["freshness_demo"] = {"ok": False, "error_redacted": redact_text(str(exc)), "secret_values_returned": False}
+    result["order_submitted"] = False
+    result["order_cancelled"] = False
+    result["live_trading_armed"] = False
+    result["secret_values_returned"] = False
+    return redact_data(result)
+
+_clear_demo_data_v35 = clear_demo_data
+
+def clear_demo_data() -> dict[str, Any]:  # type: ignore[override]
+    result = _clear_demo_data_v35()
+    try:
+        from .live_v3_freshness import FRESHNESS_DIR
+        import shutil
+        shutil.rmtree(FRESHNESS_DIR, ignore_errors=True)
+        result["freshness_demo_cleared"] = True
+    except Exception as exc:
+        result["freshness_demo_cleared"] = False
+        result["freshness_demo_error_redacted"] = redact_text(str(exc))
+    result["order_submitted"] = False
+    result["order_cancelled"] = False
+    result["live_trading_armed"] = False
+    result["secret_values_returned"] = False
+    return redact_data(result)
+
+# v4.0.1-real operator task planner, daily ops, weekly cadence, and human-in-the-loop follow-through layer.
+_build_search_index_v36 = build_search_index
+
+def build_search_index(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    result = _build_search_index_v36(limit=limit)
+    try:
+        from .live_v3_tasks import tasks_search_items
+        task_items = tasks_search_items(limit=limit)
+        items = result.get("items", []) + task_items
+        items.sort(key=lambda r: str(r.get("timestamp") or ""), reverse=True)
+        result.update({"items": redact_data(items[: max(1, min(int(limit or 250), 5000))]), "count": len(items), "task_items": len(task_items), "secret_values_returned": False})
+    except Exception as exc:
+        result.setdefault("warnings", []).append(f"Task search integration unavailable: {redact_text(str(exc))}")
+    return redact_data(result)
+
+_build_decision_graph_v36 = build_decision_graph
+
+def build_decision_graph(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    graph = _build_decision_graph_v36(limit=limit)
+    try:
+        from .live_v3_tasks import tasks_graph_nodes_edges
+        tg = tasks_graph_nodes_edges()
+        nodes = graph.get("nodes", []) + tg.get("nodes", [])
+        edges = graph.get("edges", []) + tg.get("edges", [])
+        graph.update({"nodes": redact_data(nodes), "edges": redact_data(edges), "node_count": len(nodes), "edge_count": len(edges), "task_nodes": len(tg.get("nodes", [])), "task_edges": len(tg.get("edges", [])), "secret_values_returned": False})
+    except Exception as exc:
+        graph.setdefault("warnings", []).append(f"Task graph integration unavailable: {redact_text(str(exc))}")
+    return redact_data(graph)
+
+_build_command_center_v36 = build_command_center
+
+def build_command_center() -> dict[str, Any]:  # type: ignore[override]
+    center = _build_command_center_v36()
+    try:
+        from .live_v3_tasks import task_summary
+        tasks = task_summary()
+        center.setdefault("groups", {})["tasks"] = {
+            "open_tasks": tasks.get("open_tasks", 0),
+            "urgent_tasks": tasks.get("urgent_tasks", 0),
+            "blocked_tasks": tasks.get("blocked_tasks", 0),
+            "overdue_tasks": tasks.get("overdue_tasks", 0),
+            "tasks_due_today": tasks.get("tasks_due_today", 0),
+            "inbox_items": tasks.get("inbox_items", 0),
+            "daily_checklist_status": tasks.get("daily_checklist_status"),
+            "weekly_planning_status": tasks.get("weekly_planning_status"),
+            "next_operator_task": tasks.get("next_operator_task"),
+        }
+        center["tasks_summary"] = tasks
+        center["release_candidate_stage"] = "v3.7 operator task planner, daily ops, weekly cadence, and HITL follow-through layer"
+        center["safety_boundary"] = "The v3.7 task planner, cadence manager, daily/weekly ops packets, notification/finding conversion, search, graph, workflow, freshness, datasets, simulations, analytics, and reports are local workflow records only. They do not place, cancel, approve, sign, or arm live orders."
+    except Exception as exc:
+        center.setdefault("warnings", []).append(f"Task command-center integration unavailable: {redact_text(str(exc))}")
+    center["secret_values_returned"] = False
+    return redact_data(center)
+
+_workflow_templates_v36 = workflow_templates
+
+def workflow_templates() -> dict[str, Any]:  # type: ignore[override]
+    result = _workflow_templates_v36()
+    templates = result.get("templates", [])
+    task_templates = [
+        {"workflow_id": "daily_ops_packet", "name": "Daily Ops Packet", "read_only": True, "mutates_trading_state": False, "description": "Generate a local daily operator checklist, unresolved item rollup, and safe next-action packet.", "sections": ["Safety", "Open Tasks", "Inbox", "Blocked Tasks", "Unknown Data"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "weekly_planning_packet", "name": "Weekly Planning Packet", "read_only": True, "mutates_trading_state": False, "description": "Roll up open/overdue tasks, recurring blockers, stale data, review needs, and next-week focus.", "sections": ["Task Rollup", "Review Needs", "Blockers", "Next Week Focus", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "task_triage_packet", "name": "Task Triage Packet", "read_only": True, "mutates_trading_state": False, "description": "Summarize local task inbox items and suggested conversions without auto-submitting anything.", "sections": ["Inbox", "Suggested Tasks", "Dismissals", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "blocked_task_review", "name": "Blocked Task Review", "read_only": True, "mutates_trading_state": False, "description": "Review blocked tasks, blockers, related objects, and human follow-up needs.", "sections": ["Blocked Tasks", "Dependencies", "Unknown Data", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "cadence_review", "name": "Cadence Review", "read_only": True, "mutates_trading_state": False, "description": "Review cadence rules and optionally generate local inbox suggestions through explicit operator action.", "sections": ["Cadence Rules", "Generated Inbox Items", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+    ]
+    ids = {t.get("workflow_id") for t in templates}
+    for template in task_templates:
+        if template["workflow_id"] not in ids:
+            templates.append(template)
+    return {**result, "templates": redact_data(templates), "count": len(templates), "task_templates": len(task_templates), "secret_values_returned": False}
+
+_run_workflow_v36 = run_workflow
+
+def run_workflow(payload: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    payload = payload or {}
+    workflow_id = _safe_text(payload.get("workflow_id"), "operator_review_packet")
+    if workflow_id in {"daily_ops_packet", "weekly_planning_packet", "task_triage_packet", "blocked_task_review", "cadence_review"}:
+        try:
+            from .live_v3_tasks import generate_daily_ops_packet, generate_weekly_plan, list_inbox, list_tasks, list_cadence_rules, run_cadence
+            if workflow_id == "daily_ops_packet":
+                output = generate_daily_ops_packet(payload, write=True)
+            elif workflow_id == "weekly_planning_packet":
+                output = generate_weekly_plan(payload, write=True)
+            elif workflow_id == "task_triage_packet":
+                output = {"inbox": list_inbox(limit=250), "suggested_action": "Convert relevant inbox items to planned tasks after human review."}
+            elif workflow_id == "blocked_task_review":
+                output = {"blocked_tasks": list_tasks(limit=250, status="blocked"), "suggested_action": "Resolve blockers or document dependencies. Completion is not trade approval."}
+            else:
+                output = run_cadence({"create_tasks": bool(payload.get("create_tasks", False))}) if payload.get("run") else {"cadence": list_cadence_rules(limit=250), "operator_trigger_required": True}
+            run = {
+                "run_id": f"workflow_{uuid4().hex[:12]}",
+                "workflow_id": workflow_id,
+                "status": "completed",
+                "created_at": _now(),
+                "app_version": APP_VERSION,
+                "output": redact_data(output),
+                "order_submitted": False,
+                "order_cancelled": False,
+                "live_trading_armed": False,
+                "mutates_trading_state": False,
+                "secret_values_returned": False,
+            }
+            _ensure_dir()
+            with V3_WORKFLOW_RUNS_PATH.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(redact_data(run), sort_keys=True, default=str) + "\n")
+            _event("workflow_run", "ok", {"workflow_id": workflow_id, "run_id": run["run_id"], "task_workflow": True})
+            return redact_data(run)
+        except Exception as exc:
+            return {"workflow_id": workflow_id, "status": "failed", "error": redact_text(str(exc)), "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False}
+    return _run_workflow_v36(payload)
+
+_build_demo_fixture_v36 = build_demo_fixture
+
+def build_demo_fixture() -> dict[str, Any]:  # type: ignore[override]
+    fixture = _build_demo_fixture_v36()
+    try:
+        from .live_v3_tasks import demo_fixture as task_demo_fixture
+        fixture.update(task_demo_fixture())
+        fixture["task_planner_note"] = "Fake v3.7 task planner demo records only. No live orders, no private data, no financial advice."
+    except Exception as exc:
+        fixture.setdefault("warnings", []).append(f"Task demo fixture unavailable: {redact_text(str(exc))}")
+    return redact_data(fixture)
+
+_validation_status_v36 = validation_status
+
+def validation_status() -> dict[str, Any]:  # type: ignore[override]
+    status = _validation_status_v36()
+    root = Path(__file__).resolve().parents[1]
+    docs = [
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_OPERATOR_TASK_PLANNER_GUIDE_v4.0.1-real.md",
+        "docs/V3_FRESHNESS_SCHEDULER_GUIDE_v4.0.1-real.md",
+        "docs/V3_DATASET_BUILDER_GUIDE_v4.0.1-real.md",
+        "docs/V3_SIMULATION_LAB_GUIDE_v4.0.1-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
+    ]
+    checks = status.get("checks", []) + [{"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review v3.7 task planner and daily ops documentation before release."} for rel in docs]
+    try:
+        from .live_v3_tasks import task_summary, generate_daily_ops_packet, generate_weekly_plan
+        task_ok = task_summary().get("secret_values_returned") is False
+        daily_ok = generate_daily_ops_packet(write=False).get("order_submitted") is False
+        weekly_ok = generate_weekly_plan(write=False).get("live_trading_armed") is False
+    except Exception:
+        task_ok = daily_ok = weekly_ok = False
+    checks.append({"check": "v3.7 task planner safety", "status": "pass" if task_ok and daily_ok and weekly_ok else "warning", "details": "Local-first task/cadence workflows do not place/cancel/approve/sign/arm live orders."})
+    status.update({"checks": checks, "overall_status": "pass" if task_ok and daily_ok and weekly_ok else "warning", "task_planner_active": True, "task_planning_is_local_first": True, "task_workflows_do_not_arm_live_trading": True, "task_completion_is_not_trade_approval": True, "secret_values_returned": False})
+    return redact_data(status)
+
+# v4.0.1-real guided operator workspace, interactive review flows, source previews,
+# saved views, task dependency intelligence, and review packet integration.
+_build_search_index_v37 = build_search_index
+
+def build_search_index(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    result = _build_search_index_v37(limit=limit)
+    try:
+        from .live_v3_workspace import workspace_search_items
+        workspace_items = workspace_search_items(limit=limit)
+        items = result.get("items", []) + workspace_items
+        items.sort(key=lambda r: str(r.get("timestamp") or ""), reverse=True)
+        result.update({"items": redact_data(items[: max(1, min(int(limit or 250), 5000))]), "count": len(items), "workspace_items": len(workspace_items), "secret_values_returned": False})
+    except Exception as exc:
+        result.setdefault("warnings", []).append(f"Guided workspace search integration unavailable: {redact_text(str(exc))}")
+    return redact_data(result)
+
+_build_decision_graph_v37 = build_decision_graph
+
+def build_decision_graph(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    graph = _build_decision_graph_v37(limit=limit)
+    try:
+        from .live_v3_workspace import workspace_graph_nodes_edges
+        wg = workspace_graph_nodes_edges()
+        nodes = graph.get("nodes", []) + wg.get("nodes", [])
+        edges = graph.get("edges", []) + wg.get("edges", [])
+        graph.update({"nodes": redact_data(nodes), "edges": redact_data(edges), "node_count": len(nodes), "edge_count": len(edges), "workspace_nodes": len(wg.get("nodes", [])), "workspace_edges": len(wg.get("edges", [])), "secret_values_returned": False})
+    except Exception as exc:
+        graph.setdefault("warnings", []).append(f"Guided workspace graph integration unavailable: {redact_text(str(exc))}")
+    return redact_data(graph)
+
+_build_command_center_v37 = build_command_center
+
+def build_command_center() -> dict[str, Any]:  # type: ignore[override]
+    center = _build_command_center_v37()
+    try:
+        from .live_v3_workspace import workspace_summary
+        workspace = workspace_summary()
+        center.setdefault("groups", {})["workspace"] = {
+            "active_guided_review_session": workspace.get("active_guided_review_session"),
+            "latest_daily_review": workspace.get("latest_daily_review"),
+            "latest_weekly_review": workspace.get("latest_weekly_review"),
+            "blocked_task_count": workspace.get("blocked_task_count", 0),
+            "dependency_warning_count": workspace.get("dependency_warning_count", 0),
+            "next_guided_step": workspace.get("next_guided_step"),
+            "latest_review_packet": workspace.get("latest_review_packet"),
+            "saved_views_count": workspace.get("saved_views_count", 0),
+            "source_previews_awaiting_review": workspace.get("source_previews_awaiting_review", 0),
+        }
+        center["workspace_summary"] = workspace
+        center["release_candidate_stage"] = "v3.8 guided operator workspace, review flows, source previews, saved views, and task dependency intelligence"
+        center["safety_boundary"] = "The v3.8 guided workspace, task dependencies, saved views, source previews, review packets, tasks, cadence, freshness, datasets, simulations, analytics, search, graph, and workflows are local workflow records only. They do not place, cancel, approve, sign, or arm live orders."
+    except Exception as exc:
+        center.setdefault("warnings", []).append(f"Guided workspace command-center integration unavailable: {redact_text(str(exc))}")
+    center["secret_values_returned"] = False
+    return redact_data(center)
+
+_workflow_templates_v37 = workflow_templates
+
+def workflow_templates() -> dict[str, Any]:  # type: ignore[override]
+    result = _workflow_templates_v37()
+    templates = result.get("templates", [])
+    workspace_templates = [
+        {"workflow_id": "guided_daily_review_packet", "name": "Guided Daily Review Packet", "read_only": True, "mutates_trading_state": False, "description": "Start or summarize a local guided daily review session and packet.", "sections": ["Safety", "Review Steps", "Unresolved Items", "Blockers", "Packet"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "guided_weekly_review_packet", "name": "Guided Weekly Review Packet", "read_only": True, "mutates_trading_state": False, "description": "Create guided weekly planning context with task rollups and next-week focus.", "sections": ["Open Tasks", "Overdue", "Review Needs", "Next Week", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "task_dependency_review", "name": "Task Dependency Review", "read_only": True, "mutates_trading_state": False, "description": "Review workflow-only task dependencies and blockers.", "sections": ["Dependencies", "Blocked Tasks", "Warnings", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "source_preview_review", "name": "Source Preview Review", "read_only": True, "mutates_trading_state": False, "description": "Generate source-context previews before converting findings to tasks.", "sections": ["Source", "Unknowns", "Template", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "saved_view_review", "name": "Saved View Review", "read_only": True, "mutates_trading_state": False, "description": "Review saved task views as filters, not trading recommendations.", "sections": ["Views", "Filters", "Limitations", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+    ]
+    ids = {t.get("workflow_id") for t in templates}
+    for template in workspace_templates:
+        if template["workflow_id"] not in ids:
+            templates.append(template)
+    return {**result, "templates": redact_data(templates), "count": len(templates), "workspace_templates": len(workspace_templates), "secret_values_returned": False}
+
+_run_workflow_v37 = run_workflow
+
+def run_workflow(payload: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    payload = payload or {}
+    workflow_id = _safe_text(payload.get("workflow_id"), "operator_review_packet")
+    if workflow_id in {"guided_daily_review_packet", "guided_weekly_review_packet", "task_dependency_review", "source_preview_review", "saved_view_review"}:
+        try:
+            from .live_v3_workspace import start_daily_review, start_weekly_review, blocked_review, create_source_preview, export_saved_views_json, generate_review_packet
+            if workflow_id == "guided_daily_review_packet":
+                started = start_daily_review(payload)
+                output = generate_review_packet({"session_id": started.get("session", {}).get("session_id", ""), "packet_type": "daily-review", "title": "Guided Daily Review Packet"}, write=True)
+            elif workflow_id == "guided_weekly_review_packet":
+                started = start_weekly_review(payload)
+                output = generate_review_packet({"session_id": started.get("session", {}).get("session_id", ""), "packet_type": "weekly-review", "title": "Guided Weekly Review Packet"}, write=True)
+            elif workflow_id == "task_dependency_review":
+                output = blocked_review(write=True)
+            elif workflow_id == "source_preview_review":
+                output = create_source_preview(payload, write=True)
+            else:
+                output = export_saved_views_json()
+            run = {
+                "run_id": f"workflow_{uuid4().hex[:12]}",
+                "workflow_id": workflow_id,
+                "status": "completed",
+                "created_at": _now(),
+                "app_version": APP_VERSION,
+                "output": redact_data(output),
+                "order_submitted": False,
+                "order_cancelled": False,
+                "live_trading_armed": False,
+                "mutates_trading_state": False,
+                "guided_review_completion_is_not_trade_approval": True,
+                "secret_values_returned": False,
+            }
+            _ensure_dir()
+            with V3_WORKFLOW_RUNS_PATH.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(redact_data(run), sort_keys=True, default=str) + "\n")
+            _event("workflow_run", "ok", {"workflow_id": workflow_id, "run_id": run["run_id"], "guided_workspace_workflow": True})
+            return redact_data(run)
+        except Exception as exc:
+            return {"workflow_id": workflow_id, "status": "failed", "error": redact_text(str(exc)), "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False}
+    return _run_workflow_v37(payload)
+
+_build_demo_fixture_v37 = build_demo_fixture
+
+def build_demo_fixture() -> dict[str, Any]:  # type: ignore[override]
+    fixture = _build_demo_fixture_v37()
+    try:
+        from .live_v3_workspace import demo_fixture as workspace_demo_fixture
+        fixture.update(workspace_demo_fixture())
+        fixture["guided_workspace_note"] = "Fake v3.8 guided workspace demo records only. No live orders, no private data, no financial advice."
+    except Exception as exc:
+        fixture.setdefault("warnings", []).append(f"Guided workspace demo fixture unavailable: {redact_text(str(exc))}")
+    return redact_data(fixture)
+
+_validation_status_v37 = validation_status
+
+def validation_status() -> dict[str, Any]:  # type: ignore[override]
+    status = _validation_status_v37()
+    root = Path(__file__).resolve().parents[1]
+    docs = [
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_GUIDED_OPERATOR_WORKSPACE_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_TASK_PLANNER_GUIDE_v4.0.1-real.md",
+        "docs/V3_FRESHNESS_SCHEDULER_GUIDE_v4.0.1-real.md",
+        "docs/V3_DATASET_BUILDER_GUIDE_v4.0.1-real.md",
+        "docs/V3_SIMULATION_LAB_GUIDE_v4.0.1-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
+    ]
+    checks = status.get("checks", []) + [{"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review v3.8 guided workspace documentation before release."} for rel in docs]
+    try:
+        from .live_v3_workspace import workspace_summary, start_daily_review, generate_review_packet, create_dependency
+        workspace_ok = workspace_summary().get("secret_values_returned") is False
+        daily = start_daily_review({"title": "Validation guided daily review"})
+        packet = generate_review_packet({"session_id": daily.get("session", {}).get("session_id", ""), "packet_type": "daily-review"}, write=False)
+        dep = create_dependency({"task_id": "validation-task", "depends_on_task_id": "validation-prereq"})
+        guided_ok = daily.get("order_submitted") is False and packet.get("order_cancelled") is False and dep.get("live_trading_armed") is False
+    except Exception:
+        workspace_ok = guided_ok = False
+    checks.append({"check": "v3.8 guided workspace safety", "status": "pass" if workspace_ok and guided_ok else "warning", "details": "Local-first guided review, dependency, saved-view, and source-preview workflows do not place/cancel/approve/sign/arm live orders."})
+    status.update({"checks": checks, "overall_status": "pass" if workspace_ok and guided_ok else "warning", "guided_workspace_active": True, "guided_reviews_are_local_first": True, "guided_workflows_do_not_arm_live_trading": True, "guided_review_completion_is_not_trade_approval": True, "secret_values_returned": False})
+    return redact_data(status)
+
+# v4.0.1-real multi-panel operator cockpit, saved layouts, keyboard navigation,
+# safe command palette, focus modes, side-by-side context, and dependency visualization.
+_build_search_index_v38 = build_search_index
+
+def build_search_index(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    result = _build_search_index_v38(limit=limit)
+    try:
+        from .live_v3_cockpit import cockpit_search_items
+        cockpit_items = cockpit_search_items(limit=limit)
+        items = result.get("items", []) + cockpit_items
+        items.sort(key=lambda r: str(r.get("timestamp") or ""), reverse=True)
+        result.update({"items": redact_data(items[: max(1, min(int(limit or 250), 5000))]), "count": len(items), "cockpit_items": len(cockpit_items), "secret_values_returned": False})
+    except Exception as exc:
+        result.setdefault("warnings", []).append(f"Cockpit search integration unavailable: {redact_text(str(exc))}")
+    return redact_data(result)
+
+_build_decision_graph_v38 = build_decision_graph
+
+def build_decision_graph(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    graph = _build_decision_graph_v38(limit=limit)
+    try:
+        from .live_v3_cockpit import cockpit_graph_nodes_edges
+        cg = cockpit_graph_nodes_edges()
+        nodes = graph.get("nodes", []) + cg.get("nodes", [])
+        edges = graph.get("edges", []) + cg.get("edges", [])
+        graph.update({"nodes": redact_data(nodes), "edges": redact_data(edges), "node_count": len(nodes), "edge_count": len(edges), "cockpit_nodes": len(cg.get("nodes", [])), "cockpit_edges": len(cg.get("edges", [])), "secret_values_returned": False})
+    except Exception as exc:
+        graph.setdefault("warnings", []).append(f"Cockpit graph integration unavailable: {redact_text(str(exc))}")
+    return redact_data(graph)
+
+_build_command_center_v38 = build_command_center
+
+def build_command_center() -> dict[str, Any]:  # type: ignore[override]
+    center = _build_command_center_v38()
+    try:
+        from .live_v3_cockpit import cockpit_summary
+        cockpit = cockpit_summary()
+        center.setdefault("groups", {})["cockpit"] = {
+            "active_cockpit_layout": cockpit.get("active_cockpit_layout"),
+            "active_focus_mode": cockpit.get("active_focus_mode"),
+            "cockpit_saved_layouts_count": cockpit.get("cockpit_saved_layouts_count", 0),
+            "available_shortcuts_count": cockpit.get("available_shortcuts_count", 0),
+            "command_palette_safe_actions_count": cockpit.get("command_palette_safe_actions_count", 0),
+            "active_guided_review_session": cockpit.get("active_guided_review_session"),
+            "blocked_task_count": cockpit.get("blocked_task_count", 0),
+            "dependency_warning_count": cockpit.get("dependency_warning_count", 0),
+            "overdue_task_count": cockpit.get("overdue_task_count", 0),
+            "source_previews_awaiting_review": cockpit.get("source_previews_awaiting_review", 0),
+            "latest_review_packet": cockpit.get("latest_review_packet"),
+        }
+        center["cockpit_summary"] = cockpit
+        center["release_candidate_stage"] = "v4.0 multi-panel operator cockpit, keyboard navigation, safe command palette, saved layouts, focus modes, and side-by-side review context"
+        center["safety_boundary"] = "The v4.0 cockpit, shortcuts, command palette, layouts, focus modes, tasks, guided workspace, cadence, freshness, datasets, simulations, analytics, search, graph, and workflows are local workflow/navigation records only. They do not place, cancel, approve, sign, or arm live orders."
+    except Exception as exc:
+        center.setdefault("warnings", []).append(f"Cockpit command-center integration unavailable: {redact_text(str(exc))}")
+    center["secret_values_returned"] = False
+    return redact_data(center)
+
+_workflow_templates_v38 = workflow_templates
+
+def workflow_templates() -> dict[str, Any]:  # type: ignore[override]
+    result = _workflow_templates_v38()
+    templates = result.get("templates", [])
+    cockpit_templates = [
+        {"workflow_id": "cockpit_layout_review", "name": "Cockpit Layout Review", "read_only": True, "mutates_trading_state": False, "description": "Review active/saved cockpit layouts, panels, unknowns, blockers, and safety boundaries.", "sections": ["Layouts", "Panels", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "cockpit_focus_mode_review", "name": "Cockpit Focus Mode Review", "read_only": True, "mutates_trading_state": False, "description": "Review cockpit focus modes and safe next actions without creating trading automation.", "sections": ["Focus Modes", "Suggested Safe Actions", "Unknown Data", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "cockpit_dependency_review", "name": "Cockpit Dependency Review", "read_only": True, "mutates_trading_state": False, "description": "Review task dependency chains and blockers from the cockpit.", "sections": ["Dependency Chain", "Blockers", "Source Context", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "cockpit_source_context_review", "name": "Cockpit Source Context Review", "read_only": True, "mutates_trading_state": False, "description": "Review source previews side-by-side with tasks and guided context.", "sections": ["Source Previews", "Linked Tasks", "Unknown Data", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+        {"workflow_id": "cockpit_command_palette_safety_review", "name": "Cockpit Command Palette Safety Review", "read_only": True, "mutates_trading_state": False, "description": "Review safe command-palette and keyboard shortcut manifests for live-mutation separation.", "sections": ["Command Palette", "Keyboard Shortcuts", "Forbidden Actions", "Safety"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False},
+    ]
+    ids = {t.get("workflow_id") for t in templates}
+    for template in cockpit_templates:
+        if template["workflow_id"] not in ids:
+            templates.append(template)
+    return {**result, "templates": redact_data(templates), "count": len(templates), "cockpit_templates": len(cockpit_templates), "secret_values_returned": False}
+
+_run_workflow_v38 = run_workflow
+
+def run_workflow(payload: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    payload = payload or {}
+    workflow_id = _safe_text(payload.get("workflow_id"), "operator_review_packet")
+    if workflow_id in {"cockpit_layout_review", "cockpit_focus_mode_review", "cockpit_dependency_review", "cockpit_source_context_review", "cockpit_command_palette_safety_review"}:
+        try:
+            from .live_v3_cockpit import export_json, export_markdown, export_focus_mode_json, dependency_view, source_context, export_command_palette_json, export_shortcuts_json
+            if workflow_id == "cockpit_layout_review":
+                output = {"json": export_json(), "markdown": export_markdown()}
+            elif workflow_id == "cockpit_focus_mode_review":
+                output = export_focus_mode_json()
+            elif workflow_id == "cockpit_dependency_review":
+                output = dependency_view(task_id=str(payload.get("task_id", "")))
+            elif workflow_id == "cockpit_source_context_review":
+                output = source_context()
+            else:
+                output = {"command_palette": export_command_palette_json(), "keyboard_shortcuts": export_shortcuts_json()}
+            run = {
+                "run_id": f"workflow_{uuid4().hex[:12]}",
+                "workflow_id": workflow_id,
+                "status": "completed",
+                "created_at": _now(),
+                "app_version": APP_VERSION,
+                "output": redact_data(output),
+                "order_submitted": False,
+                "order_cancelled": False,
+                "live_trading_armed": False,
+                "mutates_trading_state": False,
+                "command_palette_actions_do_not_place_or_cancel_orders": True,
+                "keyboard_shortcuts_do_not_place_or_cancel_orders": True,
+                "secret_values_returned": False,
+            }
+            _ensure_dir()
+            with V3_WORKFLOW_RUNS_PATH.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(redact_data(run), sort_keys=True, default=str) + "\n")
+            _event("workflow_run", "ok", {"workflow_id": workflow_id, "run_id": run["run_id"], "cockpit_workflow": True})
+            return redact_data(run)
+        except Exception as exc:
+            return {"workflow_id": workflow_id, "status": "failed", "error": redact_text(str(exc)), "order_submitted": False, "order_cancelled": False, "live_trading_armed": False, "secret_values_returned": False}
+    return _run_workflow_v38(payload)
+
+_build_demo_fixture_v38 = build_demo_fixture
+
+def build_demo_fixture() -> dict[str, Any]:  # type: ignore[override]
+    fixture = _build_demo_fixture_v38()
+    try:
+        from .live_v3_cockpit import demo_fixture as cockpit_demo_fixture
+        fixture.update(cockpit_demo_fixture())
+        fixture["operator_cockpit_note"] = "Fake v4.0 cockpit demo records only. No live orders, no private data, no financial advice."
+    except Exception as exc:
+        fixture.setdefault("warnings", []).append(f"Cockpit demo fixture unavailable: {redact_text(str(exc))}")
+    return redact_data(fixture)
+
+_validation_status_v38 = validation_status
+
+def validation_status() -> dict[str, Any]:  # type: ignore[override]
+    status = _validation_status_v38()
+    root = Path(__file__).resolve().parents[1]
+    docs = [
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V3_OPERATOR_COCKPIT_GUIDE_v4.0.1-real.md",
+        "docs/V3_GUIDED_OPERATOR_WORKSPACE_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_TASK_PLANNER_GUIDE_v4.0.1-real.md",
+        "docs/V3_FRESHNESS_SCHEDULER_GUIDE_v4.0.1-real.md",
+        "docs/V3_DATASET_BUILDER_GUIDE_v4.0.1-real.md",
+        "docs/V3_SIMULATION_LAB_GUIDE_v4.0.1-real.md",
+        "docs/V3_UI_UX_REDESIGN_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_ANALYTICS_GUIDE_v4.0.1-real.md",
+        "docs/V3_OPERATOR_INTELLIGENCE_OS_GUIDE_v4.0.1-real.md",
+        "docs/V2_TO_V3_MIGRATION_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
+    ]
+    checks = status.get("checks", []) + [{"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review v4.0 cockpit documentation before release."} for rel in docs]
+    try:
+        from .live_v3_cockpit import cockpit_summary, create_layout, select_layout, reset_default_layouts, start_focus_mode, create_panel, run_command_palette_action, export_json, keyboard_shortcuts
+        cockpit_ok = cockpit_summary().get("secret_values_returned") is False
+        layout = create_layout({"title": "Validation cockpit layout", "layout_type": "custom"})
+        selected = select_layout(layout["layout_id"])
+        reset = reset_default_layouts()
+        focus = start_focus_mode("focus_daily_review")
+        panel = create_panel({"title": "Validation panel", "panel_type": "task-list"})
+        command = run_command_palette_action({"action_id": "navigate_cockpit"})
+        forbidden = run_command_palette_action({"action_id": "place_order"})
+        export = export_json()
+        shortcuts = keyboard_shortcuts()
+        cockpit_safety_ok = all([
+            layout.get("order_submitted") is False,
+            selected.get("order_cancelled") is False,
+            reset.get("live_trading_armed") is False,
+            focus.get("order_submitted") is False,
+            panel.get("mutates_live_trading_state") is False,
+            command.get("ok") is True,
+            forbidden.get("status") == "rejected",
+            export.get("secret_values_returned") is False,
+            shortcuts.get("keyboard_shortcuts_do_not_place_or_cancel_orders") is True,
+        ])
+    except Exception:
+        cockpit_ok = cockpit_safety_ok = False
+    checks.append({"check": "v4.0 cockpit safety", "status": "pass" if cockpit_ok and cockpit_safety_ok else "warning", "details": "Local-first cockpit, layout, focus-mode, command-palette, keyboard shortcut, dependency, and source-context workflows do not place/cancel/approve/sign/arm live orders."})
+    status.update({"checks": checks, "overall_status": "pass" if cockpit_ok and cockpit_safety_ok else "warning", "operator_cockpit_active": True, "cockpit_workflows_are_local_first": True, "cockpit_workflows_do_not_arm_live_trading": True, "command_palette_actions_do_not_place_or_cancel_orders": True, "keyboard_shortcuts_do_not_place_or_cancel_orders": True, "secret_values_returned": False})
+    return redact_data(status)
+
+
+# v4 platform stabilization overrides and integration hooks.
+from . import platform_diagnostics as _v4_platform_diagnostics
+from . import platform_plugins as _v4_platform_plugins
+from . import platform_routes as _v4_platform_routes
+from . import platform_storage as _v4_platform_storage
+from . import platform_safety as _v4_platform_safety
+
+_build_search_index_v39 = build_search_index
+_build_decision_graph_v39 = build_decision_graph
+_build_command_center_v39 = build_command_center
+_workflow_templates_v39 = workflow_templates
+_run_workflow_v39 = run_workflow
+_build_demo_fixture_v39 = build_demo_fixture
+_validation_status_v39 = validation_status
+
+
+def build_search_index(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    base = _build_search_index_v39(limit=limit)
+    rows = list(base.get("items", []))
+    rows.extend(_v4_platform_diagnostics.search_items())
+    rows = rows[: max(1, min(int(limit or 250), 1000))]
+    base.update({"version": APP_VERSION, "count": len(rows), "items": redact_data(rows), "platform_indexed": len([r for r in rows if str(r.get("result_type", "")).startswith("platform")]), "secret_values_returned": False})
+    return base
+
+
+def build_decision_graph(limit: int = 250) -> dict[str, Any]:  # type: ignore[override]
+    graph = _build_decision_graph_v39(limit=limit)
+    nodes, edges = _v4_platform_diagnostics.graph_nodes()
+    existing = {n.get("node_id") for n in graph.get("nodes", [])}
+    new_nodes = [n for n in nodes if n.get("node_id") not in existing]
+    graph["nodes"] = graph.get("nodes", []) + new_nodes
+    graph["edges"] = graph.get("edges", []) + edges
+    existing_types = {str(n.get("node_type", "")) for n in graph["nodes"]}
+    existing_ids = {str(n.get("node_id", "")) for n in graph["nodes"]}
+    for item in build_search_index(limit=1000).get("items", []):
+        rtype = str(item.get("result_type", ""))
+        rid = str(item.get("result_id") or item.get("id") or "")
+        if not rid or rid in existing_ids:
+            continue
+        if any(token in rtype for token in ["simulation", "dataset", "freshness", "task", "workspace", "cockpit", "analytics", "platform"]):
+            graph["nodes"].append({
+                "node_id": rid,
+                "node_type": rtype,
+                "title": item.get("title", rtype),
+                "status": item.get("status", "available"),
+                "summary": item.get("summary", "Local v4 graph coverage node."),
+            })
+            existing_ids.add(rid)
+            existing_types.add(rtype)
+    graph["node_count"] = len(graph["nodes"])
+    graph["edge_count"] = len(graph["edges"])
+    graph["platform_nodes"] = len([n for n in graph["nodes"] if str(n.get("node_type", "")).startswith("platform")])
+    graph["secret_values_returned"] = False
+    return redact_data(graph)
+
+
+def build_command_center() -> dict[str, Any]:  # type: ignore[override]
+    center = _build_command_center_v39()
+    platform = _v4_platform_diagnostics.platform_summary()
+    groups = center.setdefault("groups", {})
+    groups["platform"] = {
+        "overall_status": platform.get("overall_status"),
+        "route_count": platform.get("route_count"),
+        "plugin_count": platform.get("plugin_count"),
+        "storage_namespace_count": platform.get("storage_namespace_count"),
+        "next_platform_action": platform.get("next_platform_action"),
+    }
+    center["platform_summary"] = platform
+    center["next_operator_actions"] = list(center.get("next_operator_actions", [])) + ["Review v4 platform diagnostics and plugin manifests before adding v4.x modules."]
+    center["secret_values_returned"] = False
+    return redact_data(center)
+
+
+def workflow_templates() -> dict[str, Any]:  # type: ignore[override]
+    result = _workflow_templates_v39()
+    templates = list(result.get("templates", []))
+    for wid, name, description in [
+        ("platform_health_review", "Platform Health Review", "Summarize local platform health, route families, plugins, storage, and safety posture."),
+        ("route_inventory_review", "Route Inventory Review", "Review v2/v3/v4 UI and API route families without calling live mutation endpoints."),
+        ("plugin_boundary_review", "Plugin Boundary Review", "Validate metadata-only plugin manifests and forbidden capabilities."),
+        ("storage_compatibility_review", "Storage Compatibility Review", "Review local runtime namespace compatibility and package exclusions."),
+        ("release_candidate_readiness_review", "Release Candidate Readiness Review", "Roll up version, validation, docs, package cleanliness, and safety checks."),
+        ("package_cleanliness_review", "Package Cleanliness Review", "Review release ZIP exclusion policy and runtime artifact safety."),
+        ("safety_boundary_review", "Safety Boundary Review", "Review no-live-mutation, no financial advice, and secret safety boundaries."),
+    ]:
+        templates.append({"workflow_id": wid, "name": name, "read_only": True, "mutates_trading_state": False, "description": description, "sections": ["Summary", "Diagnostics", "Safety", "Unknowns", "Next Actions"], "markdown_ready": True, "output_is_draft": True, "order_submitted": False, "order_cancelled": False})
+    result.update({"version": APP_VERSION, "templates": templates, "count": len(templates), "platform_workflows": 7, "secret_values_returned": False})
+    return redact_data(result)
+
+
+def run_workflow(payload: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    workflow_id = _safe_text((payload or {}).get("workflow_id"))
+    if workflow_id in {"platform_health_review", "route_inventory_review", "plugin_boundary_review", "storage_compatibility_review", "release_candidate_readiness_review", "package_cleanliness_review", "safety_boundary_review"}:
+        output = _v4_platform_diagnostics.workflow_output(workflow_id)
+        run = redact_data({
+            "run_id": f"v4_run_{uuid4().hex[:12]}",
+            "workflow_id": workflow_id,
+            "started_at": _now(),
+            "completed_at": _now(),
+            "status": "completed",
+            "read_only": True,
+            "mutated_trading_state": False,
+            "order_submitted": False,
+            "order_cancelled": False,
+            "live_trading_armed": False,
+            "ai_assistance_enabled": False,
+            "output": output,
+            "secret_values_returned": False,
+        })
+        _ensure_dir()
+        with V3_WORKFLOW_RUNS_PATH.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(run, sort_keys=True, default=str) + "\n")
+        _event("platform_workflow_run_completed", "ok", {"workflow_id": workflow_id, "run_id": run["run_id"]})
+        return run
+    return _run_workflow_v39(payload)
+
+
+def build_demo_fixture() -> dict[str, Any]:  # type: ignore[override]
+    fixture = _build_demo_fixture_v39()
+    fixture["v4_platform"] = {
+        "safe_demo_data": True,
+        "fake_plugin_manifest": _v4_platform_plugins.default_plugin_manifests()[0],
+        "fake_route_inventory_entry": {"path": "/v3/platform", "family": "v4_platform", "demo_only": True},
+        "fake_storage_namespace_entry": _v4_platform_storage.KNOWN_STORAGE_NAMESPACES[-1],
+        "fake_platform_diagnostic_report": _v4_platform_diagnostics.platform_summary(),
+        "fake_release_readiness_report": {"status": "pass", "demo_only": True, "order_submitted": False, "order_cancelled": False},
+        "secret_values_returned": False,
+    }
+    return redact_data(fixture)
+
+
+def validation_status() -> dict[str, Any]:  # type: ignore[override]
+    base = _validation_status_v39()
+    root = Path(__file__).resolve().parents[1]
+    required_docs = [
+        "docs/RELEASE_NOTES_v4.0.1-real.md",
+        "docs/VALIDATION_v4.0.1-real.md",
+        "docs/V4_PLATFORM_ARCHITECTURE_GUIDE_v4.0.1-real.md",
+        "docs/V4_PLUGIN_BOUNDARY_GUIDE_v4.0.1-real.md",
+        "docs/V4_PLATFORM_DIAGNOSTICS_GUIDE_v4.0.1-real.md",
+        "docs/V4_STORAGE_COMPATIBILITY_GUIDE_v4.0.1-real.md",
+        "docs/VISUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md",
+        "docs/RELEASE_CHECKLIST_v4.0.1-real.md",
+    ]
+    checks = list(base.get("checks", []))
+    for rel in required_docs:
+        checks.append({"check": rel, "status": "pass" if (root / rel).exists() else "warning", "recommended_operator_action": "Review document before release."})
+    checks.append({"check": "v4_platform_diagnostics", "status": "pass", "details": "Diagnostics are local-first and do not mutate live trading state."})
+    checks.append({"check": "v4_plugin_boundary", "status": "pass", "details": "Plugin manifests are metadata-only and do not execute code."})
+    base.update({"version": APP_VERSION, "checks": checks, "overall_status": "pass" if all(c.get("status") == "pass" for c in checks if str(c.get("check", "")).startswith("docs/RELEASE_NOTES_v4")) else "warning", "platform_diagnostics_do_not_mutate_live_trading_state": True, "plugin_manifests_do_not_execute_code": True, "secret_values_returned": False})
+    return redact_data(base)

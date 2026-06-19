@@ -1,7 +1,7 @@
 # Release Checklist — v2.4.0-real
 
 - [ ] VERSION file says `2.4.0-real`.
-- [ ] README title says `Polymarket Gamma Starter v2.4.0-real`.
+- [ ] README title says `Polymarket OP Console v2.4.0-real`.
 - [ ] Tests pass.
 - [ ] Version script passes.
 - [ ] Startup smoke test passes.
@@ -24,11 +24,11 @@ git push origin v2.4.0-real
 Suggested GitHub release title:
 
 ```text
-Polymarket Gamma Starter v2.4.0-real
+Polymarket OP Console v2.4.0-real
 ```
 
 Asset:
 
 ```text
-polymarket-gamma-starter-v2.4.0-real.zip
+polymarket-op-console-v2.4.0-real.zip
 ```

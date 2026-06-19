@@ -1,6 +1,6 @@
 # Live Trading v2 — v2.3.0-real
 
-`v2.3.0-real` carries forward the full live-trading control plane for the Polymarket Gamma Starter package. The implementation is intentionally operator-controlled and fail-closed: it can build and preview live tickets, run strict risk checks, require explicit human approval, require a typed confirmation phrase, route real submit/cancel attempts through the isolated CLOB adapter, record a local audit ledger, inspect read-only account state where supported, and reconcile local records against remote open-order state.
+`v2.3.0-real` carries forward the full live-trading control plane for the Polymarket OP Console package. The implementation is intentionally operator-controlled and fail-closed: it can build and preview live tickets, run strict risk checks, require explicit human approval, require a typed confirmation phrase, route real submit/cancel attempts through the isolated CLOB adapter, record a local audit ledger, inspect read-only account state where supported, and reconcile local records against remote open-order state.
 
 ## Main routes
 

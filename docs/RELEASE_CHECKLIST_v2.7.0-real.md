@@ -13,6 +13,6 @@
 - [ ] Confirm scenarios do not submit or cancel orders.
 - [ ] Confirm existing kill switch/read-only/live submit gates still block as expected.
 - [ ] Create Git tag: `git tag v2.7.0-real`.
-- [ ] Create GitHub release title: `Polymarket Gamma Starter v2.7.0-real`.
-- [ ] Upload `polymarket-gamma-starter-v2.7.0-real.zip`.
+- [ ] Create GitHub release title: `Polymarket OP Console v2.7.0-real`.
+- [ ] Upload `polymarket-op-console-v2.7.0-real.zip`.
 - [ ] Keep prior v2.6.0-real ZIP available for rollback.

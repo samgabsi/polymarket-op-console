@@ -12,14 +12,14 @@ def authed_client(monkeypatch, tmp_path):
     users_path = tmp_path / "users.json"
     monkeypatch.setattr(auth, "USERS_PATH", users_path)
     auth.create_user("admin", "test-password-123", "admin")
-    client = TestClient(app)
-    response = client.post(
-        "/login",
-        data={"username": "admin", "password": "test-password-123", "next": "/v2-live"},
-        follow_redirects=False,
-    )
-    assert response.status_code in {303, 307}
-    return client
+    with TestClient(app) as client:
+        response = client.post(
+            "/login",
+            data={"username": "admin", "password": "test-password-123", "next": "/v2-live"},
+            follow_redirects=False,
+        )
+        assert response.status_code in {303, 307}
+        yield client
 
 
 def test_live_v2_ui_routes_render_without_network(monkeypatch, tmp_path, authed_client):
@@ -45,7 +45,7 @@ def test_live_v2_ui_routes_render_without_network(monkeypatch, tmp_path, authed_
         response = authed_client.get(route)
         assert response.status_code == 200, route
         assert "Live v2 Console" in response.text
-        assert "v3.3.0-real" in response.text
+        assert "v4.0.1-real" in response.text
 
 
 def test_live_v2_settings_schema_and_validation_do_not_return_secrets(authed_client):

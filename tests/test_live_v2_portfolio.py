@@ -35,14 +35,14 @@ def authed_client(monkeypatch, tmp_path):
     users_path = tmp_path / "users.json"
     monkeypatch.setattr(auth, "USERS_PATH", users_path)
     auth.create_user("admin", "test-password-123", "admin")
-    client = TestClient(app)
-    response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v2-live/portfolio"}, follow_redirects=False)
-    assert response.status_code in {303, 307}
-    return client
+    with TestClient(app) as client:
+        response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v2-live/portfolio"}, follow_redirects=False)
+        assert response.status_code in {303, 307}
+        yield client
 
 
 def test_version_is_v2_7():
-    assert APP_VERSION == "3.3.0-real"
+    assert APP_VERSION == "4.0.1-real"
 
 
 def test_portfolio_snapshot_bankroll_warnings_exports_and_safety():
@@ -84,7 +84,7 @@ def test_portfolio_routes_and_api_endpoints(authed_client):
     page = authed_client.get("/v2-live/portfolio")
     assert page.status_code == 200
     assert "Portfolio / Exposure Intelligence" in page.text
-    assert "v3.3.0-real" in page.text
+    assert "v4.0.1-real" in page.text
     assert authed_client.get("/api/v2/live/portfolio").status_code == 200
     assert authed_client.get("/api/v2/live/portfolio/snapshot").status_code == 200
     assert authed_client.post("/api/v2/live/portfolio/snapshot").status_code == 200

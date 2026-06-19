@@ -598,3 +598,84 @@ def export_csv(kind: str) -> str:
     }
     _event("export_generated", "ok", {"format": "csv", "kind": kind})
     return _csv_from_rows(mapping.get(kind, []), fields)
+
+# v4.0.1-real simulation context integration for analytics summaries.
+_analytics_context_v33 = analytics_context
+
+
+def analytics_context(limit: int = 5) -> dict[str, Any]:  # type: ignore[override]
+    context = _analytics_context_v33(limit=limit)
+    try:
+        from .live_v3_simulation import simulation_analytics_context
+        context["simulation"] = simulation_analytics_context()
+    except Exception as exc:
+        context["simulation"] = {"status": "unknown", "error_redacted": redact_text(str(exc)), "secret_values_returned": False}
+    context["secret_values_returned"] = False
+    return redact_data(context)
+
+
+_build_analytics_summary_v33 = build_analytics_summary
+
+
+def build_analytics_summary(data: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    summary = _build_analytics_summary_v33(data)
+    try:
+        from .live_v3_simulation import simulation_analytics_context
+        sim = simulation_analytics_context()
+    except Exception:
+        sim = {"simulation_sessions": 0, "process_backtests_completed": 0, "no_trade_simulations": 0, "secret_values_returned": False}
+    summary["simulation_sessions"] = sim.get("simulation_sessions", 0)
+    summary["process_backtests_completed"] = sim.get("process_backtests_completed", 0)
+    summary["no_trade_simulations"] = sim.get("no_trade_simulations", 0)
+    summary["simulation_context_available"] = True
+    summary["secret_values_returned"] = False
+    return redact_data(summary)
+
+# v4.0.1-real dataset context integration for analytics summaries.
+_analytics_context_v34 = analytics_context
+
+def analytics_context(limit: int = 5) -> dict[str, Any]:  # type: ignore[override]
+    context = _analytics_context_v34(limit=limit)
+    try:
+        from .live_v3_datasets import dataset_analytics_context
+        context["datasets"] = dataset_analytics_context()
+    except Exception as exc:
+        context["datasets"] = {"status": "unknown", "error_redacted": redact_text(str(exc)), "secret_values_returned": False}
+    context["secret_values_returned"] = False
+    return redact_data(context)
+
+_build_analytics_summary_v34 = build_analytics_summary
+
+def build_analytics_summary(data: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    summary = _build_analytics_summary_v34(data)
+    try:
+        from .live_v3_datasets import dataset_analytics_context
+        ds = dataset_analytics_context()
+    except Exception:
+        ds = {"snapshot_count": 0, "dataset_count": 0, "replay_ready_dataset_count": 0, "secret_values_returned": False}
+    summary["dataset_snapshot_count"] = ds.get("snapshot_count", 0)
+    summary["dataset_count"] = ds.get("dataset_count", 0)
+    summary["replay_ready_dataset_count"] = ds.get("replay_ready_dataset_count", 0)
+    summary["dataset_quality_status"] = ds.get("dataset_quality_status", "unknown")
+    summary["dataset_context_available"] = True
+    summary["secret_values_returned"] = False
+    return redact_data(summary)
+
+
+# v4.0.1-real freshness context integration for analytics summaries.
+_build_analytics_summary_v35 = build_analytics_summary
+
+def build_analytics_summary(data: dict[str, Any] | None = None) -> dict[str, Any]:  # type: ignore[override]
+    try:
+        summary = _build_analytics_summary_v35(data)  # type: ignore[arg-type]
+    except TypeError:
+        summary = _build_analytics_summary_v35()
+    try:
+        from .live_v3_freshness import freshness_analytics_context
+        summary["freshness_context"] = freshness_analytics_context()
+        summary["stale_dataset_trend"] = summary["freshness_context"].get("stale_dataset_trend", 0)
+        summary["notification_resolution_rate"] = summary["freshness_context"].get("notification_resolution_rate", 0)
+    except Exception as exc:
+        summary.setdefault("warnings", []).append(f"Freshness analytics context unavailable: {redact_text(str(exc))}")
+    summary["secret_values_returned"] = False
+    return redact_data(summary)

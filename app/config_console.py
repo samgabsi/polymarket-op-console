@@ -859,7 +859,7 @@ def _write_env(normalized_changes: dict[str, str]) -> Path | None:
         backup_path = CONFIG_BACKUP_DIR / f"env_backup_{timestamp}.env"
         shutil.copy2(ENV_PATH, backup_path)
     else:
-        ENV_PATH.write_text("# Polymarket Gamma Starter local configuration\n", encoding="utf-8")
+        ENV_PATH.write_text("# Polymarket OP Console local configuration\n", encoding="utf-8")
         rows, existing = _parse_env_lines(ENV_PATH)
 
     remaining = dict(normalized_changes)
@@ -958,7 +958,7 @@ def setup_runtime_status() -> dict[str, Any]:
     }
     deps_missing = [row for row in dependency_rows if not row.get("available")]
     status["sections"] = [
-        {"name": "App", "tone": "ok", "rows": [{"label": "App version", "detected": APP_VERSION, "expected": "3.3.0-real"}, {"label": "Package mode", "detected": status["package_mode"], "expected": "source_tree"}]},
+        {"name": "App", "tone": "ok", "rows": [{"label": "App version", "detected": APP_VERSION, "expected": "4.0.1-real"}, {"label": "Package mode", "detected": status["package_mode"], "expected": "source_tree"}]},
         {"name": "Python", "tone": "ok", "rows": [{"label": "Python version", "detected": status["python_version"], "expected": "3.10+"}, {"label": "Executable", "detected": status["python_executable"], "expected": "Project venv executable recommended"}]},
         {"name": "Virtual Environment", "tone": "ok" if venv_detected else "warning", "rows": [{"label": "Venv detected", "detected": "yes" if venv_detected else "no", "expected": "yes for local operator installs"}, {"label": "sys.prefix", "detected": sys.prefix, "expected": "Inside .venv when activated"}]},
         {"name": "Launch", "tone": "info", "rows": [{"label": "Expected launch", "detected": status["expected_launch_command"], "expected": "Copy and run manually; UI does not execute commands"}]},
@@ -1169,7 +1169,7 @@ def export_sanitized_configuration() -> dict[str, Any]:
 
 
 def sanitized_env_template() -> str:
-    lines = ["# Sanitized Polymarket Gamma Starter .env template", f"# Generated at {now_iso()}", "# Secrets are intentionally blank/masked. Review before use.", ""]
+    lines = ["# Sanitized Polymarket OP Console .env template", f"# Generated at {now_iso()}", "# Secrets are intentionally blank/masked. Review before use.", ""]
     for option in build_config_schema():
         value = "" if option.secret else option.default_value
         lines.append(f"# {option.label}: {option.description}")

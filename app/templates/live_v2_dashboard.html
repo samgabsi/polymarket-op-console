@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Live v2 Console · Polymarket Gamma Starter{% endblock %}
+{% block title %}Live v2 Console · Polymarket OP Console{% endblock %}
 {% block breadcrumbs %}<a href="/">Overview</a><span>/</span><a href="/v2-live">Live v2</a><span>/</span><span>{{ section|replace('_', ' ')|title }}</span>{% endblock %}
 {% block content %}
 {% set readiness = status.readiness %}
@@ -27,7 +27,7 @@
 
 <section class="page-header live-v2-hero" data-live-v2-section="{{ section }}">
   <div>
-    <p class="eyebrow">v3.3.0-real · data integrity / backup / recovery layer</p>
+    <p class="eyebrow">v4.0.1-real · data integrity / backup / recovery layer</p>
     <div class="page-title-row"><h1>Live v2 Console</h1><span class="status-badge tone-{{ ui.mode_tone|default('neutral') }}">{{ ui.mode_label|default(cfg.trading_mode) }}</span></div>
     <p class="page-subtitle">A durable local-first research-to-thesis-to-ticket workstation for data health, backups, restore previews, migrations, governance, portfolio exposure, monitoring alerts, source freshness, ticket rehearsal, audit exports, verification, and emergency controls. Backend gates remain the source of truth for every live action.</p>
   </div>
@@ -457,9 +457,9 @@
   <h2>Release exports</h2>
   <div class="settings-link-grid docs-grid">
     <a class="settings-link-card" href="/docs/LIVE_READ_ONLY_VERIFICATION_v2.3.0-real.md"><strong>Verification guide</strong><span>How to run safe live/read-only checks and exports.</span></a>
-    <a class="settings-link-card" href="/docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md"><strong>Manual QA checklist</strong><span>Browser and screenshot acceptance checks.</span></a>
-    <a class="settings-link-card" href="/docs/RELEASE_CHECKLIST_v3.3.0-real.md"><strong>Release checklist</strong><span>GitHub release, tag, asset, and rollback workflow.</span></a>
-    <a class="settings-link-card" href="/docs/VALIDATION_v3.3.0-real.md"><strong>Validation report</strong><span>Commands, safety checks, and known limitations.</span></a>
+    <a class="settings-link-card" href="/docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md"><strong>Manual QA checklist</strong><span>Browser and screenshot acceptance checks.</span></a>
+    <a class="settings-link-card" href="/docs/RELEASE_CHECKLIST_v4.0.1-real.md"><strong>Release checklist</strong><span>GitHub release, tag, asset, and rollback workflow.</span></a>
+    <a class="settings-link-card" href="/docs/VALIDATION_v4.0.1-real.md"><strong>Validation report</strong><span>Commands, safety checks, and known limitations.</span></a>
   </div>
 </section>
 {% endif %}
@@ -472,19 +472,19 @@
     <a class="settings-link-card" href="/docs/STRATEGY_PLAYBOOK_GUIDE_v2.4.0-real.md"><strong>Strategy / Playbook</strong><span>Theses, evidence, watchlists, scorecards, ticket linkage, and reviews.</span></a>
     <a class="settings-link-card" href="/docs/MONITORING_ALERTS_GUIDE_v2.6.0-real.md"><strong>Monitoring / Alerts</strong><span>Alert rules, reminders, notification center, and exports.</span></a>
     <a class="settings-link-card" href="/docs/PORTFOLIO_EXPOSURE_GUIDE_v2.7.0-real.md"><strong>Portfolio / Exposure</strong><span>Exposure intelligence, scenario planning, and planned impact previews.</span></a>
-    <a class="settings-link-card" href="/docs/DATA_INTEGRITY_BACKUP_RECOVERY_GUIDE_v3.3.0-real.md"><strong>Data Integrity / Backup / Recovery</strong><span>Health checks, backups, restore previews, import/export, migrations, and recovery reports.</span></a>
+    <a class="settings-link-card" href="/docs/DATA_INTEGRITY_BACKUP_RECOVERY_GUIDE_v4.0.1-real.md"><strong>Data Integrity / Backup / Recovery</strong><span>Health checks, backups, restore previews, import/export, migrations, and recovery reports.</span></a>
     <a class="settings-link-card" href="/docs/GOVERNANCE_DECISION_JOURNAL_GUIDE_v2.8.0-real.md"><strong>Governance / Decision Journal</strong><span>Decision journal, checklists, reviews, near-misses, and mistake patterns.</span></a>
     <a class="settings-link-card" href="/docs/RESEARCH_INTAKE_GUIDE_v2.5.0-real.md"><strong>Research Intake</strong><span>Sources, queue, notes, evidence candidates, freshness, and thesis comparison.</span></a>
     <a class="settings-link-card" href="/docs/LIVE_TRADING_V2.md"><strong>Live Trading</strong><span>Control-plane architecture and gates.</span></a>
     <a class="settings-link-card" href="/docs/UI_UX_V2_2.md"><strong>Browser Polish</strong><span>Saved preferences, interactive filters, and refresh behavior.</span></a>
-    <a class="settings-link-card" href="/docs/MANUAL_QA_CHECKLIST_v3.3.0-real.md"><strong>Manual QA Checklist</strong><span>Browser validation path and screenshot guidance.</span></a>
+    <a class="settings-link-card" href="/docs/MANUAL_QA_CHECKLIST_v4.0.1-real.md"><strong>Manual QA Checklist</strong><span>Browser validation path and screenshot guidance.</span></a>
     <a class="settings-link-card" href="/docs/LIVE_READ_ONLY_VERIFICATION_v2.3.0-real.md"><strong>Live Read-Only Verification</strong><span>Safe verification harness and export reports.</span></a>
     <a class="settings-link-card" href="/docs/RISK_CONTROLS_GUIDE.md"><strong>Risk Controls</strong><span>Limit, approval, warning, and blocker behavior.</span></a>
     <a class="settings-link-card" href="/docs/ORDER_LIFECYCLE_GUIDE.md"><strong>Order Lifecycle</strong><span>Preview, approval, submit, status, cancel, reconcile.</span></a>
     <a class="settings-link-card" href="/docs/EMERGENCY_KILL_SWITCH_GUIDE.md"><strong>Emergency Controls</strong><span>Kill switch, read-only, disable-orders, cancel preview.</span></a>
     <a class="settings-link-card" href="/docs/ENVIRONMENT_VARIABLES_REFERENCE.md"><strong>Environment Variables</strong><span>Grouped settings and secret handling.</span></a>
     <a class="settings-link-card" href="/docs/TROUBLESHOOTING_GUIDE.md"><strong>Troubleshooting</strong><span>Common failures and recovery paths.</span></a>
-    <a class="settings-link-card" href="/docs/RELEASE_NOTES_v3.3.0-real.md"><strong>Release Notes</strong><span>What changed in v3.3.0-real.</span></a>
+    <a class="settings-link-card" href="/docs/RELEASE_NOTES_v4.0.1-real.md"><strong>Release Notes</strong><span>What changed in v4.0.1-real.</span></a>
   </div>
 </section>
 {% endif %}

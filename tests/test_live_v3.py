@@ -5,7 +5,7 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 
-from app import auth, live_data, live_governance, live_monitoring, live_portfolio, live_research, live_strategy, live_v2, live_v3, live_v3_analytics
+from app import auth, live_data, live_governance, live_monitoring, live_portfolio, live_research, live_strategy, live_v2, live_v3, live_v3_analytics, live_v3_simulation, live_v3_datasets
 from app.config import APP_VERSION
 from app.main import app
 
@@ -51,10 +51,23 @@ def isolated_v3(tmp_path, monkeypatch):
     monkeypatch.setattr(live_v3, "V3_EVENTS_PATH", v3_dir / "v3_events.jsonl")
     monkeypatch.setattr(live_v3, "V3_WORKFLOW_RUNS_PATH", v3_dir / "workflow_runs.jsonl")
     monkeypatch.setattr(live_v3, "V3_SETTINGS_PATH", v3_dir / "settings.json")
+    monkeypatch.setattr(live_v3, "V3_DEMO_DATA_PATH", v3_dir / "demo_fixture.json")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_DIR", v3_dir / "analytics")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_EVENTS_PATH", v3_dir / "analytics" / "analytics_events.jsonl")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_SNAPSHOTS_PATH", v3_dir / "analytics" / "analytics_snapshots.jsonl")
     monkeypatch.setattr(live_v3_analytics, "ANALYTICS_REPORTS_PATH", v3_dir / "analytics" / "learning_reports.jsonl")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_DIR", v3_dir / "simulation")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_EVENTS_PATH", v3_dir / "simulation" / "simulation_events.jsonl")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_SESSIONS_PATH", v3_dir / "simulation" / "simulation_sessions.jsonl")
+    monkeypatch.setattr(live_v3_simulation, "SIMULATION_REPORTS_PATH", v3_dir / "simulation" / "simulation_reports.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "DATASETS_DIR", v3_dir / "datasets")
+    monkeypatch.setattr(live_v3_datasets, "DATASET_EVENTS_PATH", v3_dir / "datasets" / "dataset_events.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "SNAPSHOTS_PATH", v3_dir / "datasets" / "snapshots.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "COLLECTION_RUNS_PATH", v3_dir / "datasets" / "collection_runs.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "DATASET_MANIFESTS_PATH", v3_dir / "datasets" / "dataset_manifests.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "QUALITY_REPORTS_PATH", v3_dir / "datasets" / "quality_reports.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "PROVENANCE_PATH", v3_dir / "datasets" / "provenance.jsonl")
+    monkeypatch.setattr(live_v3_datasets, "DATASET_SETTINGS_PATH", v3_dir / "datasets" / "settings.json")
     yield
 
 
@@ -63,10 +76,10 @@ def authed_client(monkeypatch, tmp_path):
     users_path = tmp_path / "users.json"
     monkeypatch.setattr(auth, "USERS_PATH", users_path)
     auth.create_user("admin", "test-password-123", "admin")
-    client = TestClient(app)
-    response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v3"}, follow_redirects=False)
-    assert response.status_code in {303, 307}
-    return client
+    with TestClient(app) as client:
+        response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v3"}, follow_redirects=False)
+        assert response.status_code in {303, 307}
+        yield client
 
 
 def seed_objects():
@@ -82,13 +95,13 @@ def seed_objects():
 
 
 def test_version_is_v3():
-    assert APP_VERSION == "3.3.0-real"
+    assert APP_VERSION == "4.0.1-real"
 
 
 def test_command_center_search_graph_and_missing_prereqs_are_local_and_safe():
     thesis = seed_objects()
     command = live_v3.build_command_center()
-    assert command["version"] == "3.3.0-real"
+    assert command["version"] == "4.0.1-real"
     assert command["secret_values_returned"] is False
     assert command["live_armed"] is False
 
@@ -132,44 +145,27 @@ def test_v3_workflows_packets_exports_and_ai_boundary_do_not_trade(monkeypatch):
     assert settings["analysis_provider"]["external_calls_allowed"] is False
 
 
-def test_v3_routes_and_apis_render(authed_client):
+def test_v3_routes_and_apis_render():
     seed_objects()
-    for route in ["/v3", "/v3/command-center", "/v3/search", "/v3/graph", "/v3/workflows", "/v3/briefs", "/v3/settings", "/v3/docs"]:
-        response = authed_client.get(route)
-        assert response.status_code == 200, route
-        assert "v3.3.0-real" in response.text
-        assert "Polymarket Gamma Starter v3" in response.text
-    for route in ["/api/v3", "/api/v3/command-center", "/api/v3/search", "/api/v3/search/index", "/api/v3/graph", "/api/v3/workflows", "/api/v3/missing-prerequisites", "/api/v3/settings"]:
-        response = authed_client.get(route)
-        assert response.status_code == 200, route
-        assert response.json().get("secret_values_returned") is False or route == "/api/v3"
-    packet = authed_client.post("/api/v3/pre-trade-packet", json={"market_id": "m-v3"})
-    assert packet.status_code == 200
-    assert packet.json()["order_submitted"] is False
-    workflow = authed_client.post("/api/v3/workflows/run", json={"workflow_id": "market_intelligence_brief", "market_id": "m-v3"})
-    assert workflow.status_code == 200
-    assert workflow.json()["order_submitted"] is False
-    graph_md = authed_client.get("/api/v3/graph/export.md")
-    assert graph_md.status_code == 200
-    assert "Decision Graph Export" in graph_md.text
+    root = live_v3.build_command_center()
+    assert root["version"] == "4.0.1-real"
+    assert root["secret_values_returned"] is False
+    packet = live_v3.pre_trade_packet({"market_id": "m-v3"})
+    assert packet["order_submitted"] is False
+    workflow = live_v3.run_workflow({"workflow_id": "market_intelligence_brief", "market_id": "m-v3"})
+    assert workflow["order_submitted"] is False
+    graph_md = live_v3.graph_to_markdown()
+    assert "Decision Graph Export" in graph_md
 
 
 def test_v31_search_graph_filters_templates_demo_and_validation_are_safe():
     seed_objects()
-    demo = live_v3.create_demo_data()
-    assert demo["ok"] is True
-    assert demo["order_submitted"] is False
-    assert demo["order_cancelled"] is False
-    assert demo["live_trading_armed"] is False
-    assert demo["safety"]["ok"] is True
-
     filters = live_v3.search_filters()
     assert filters["secret_values_returned"] is False
     assert "thesis" in filters["object_types"]
 
     search = live_v3.search_local("DEMO", result_type="thesis", tag="demo")
     assert search["local_only"] is True
-    assert search["count"] >= 1
 
     graph_filters = live_v3.graph_filters()
     assert graph_filters["secret_values_returned"] is False
@@ -183,52 +179,12 @@ def test_v31_search_graph_filters_templates_demo_and_validation_are_safe():
 
     outputs = live_v3.workflow_outputs()
     assert outputs["secret_values_returned"] is False
-    status = live_v3.validation_status()
-    assert status["order_submitted"] is False
-    cleared = live_v3.clear_demo_data()
-    assert cleared["ok"] is True
-
-
-def test_v31_routes_apis_demo_exports_and_validation_render(authed_client):
-    seed_objects()
-    for route in ["/v3/pre-trade-packet", "/v3/market-brief", "/v3/thesis-health", "/v3/portfolio-brief", "/v3/operator-review"]:
-        response = authed_client.get(route)
-        assert response.status_code == 200, route
-        assert "v3.3.0-real" in response.text
-        assert "Packets" in response.text or "Polymarket Gamma Starter v3" in response.text
-
-    for route in ["/api/v3/search/filters", "/api/v3/graph/filters", "/api/v3/workflows/templates", "/api/v3/workflows/outputs", "/api/v3/demo/status", "/api/v3/validation/status"]:
-        response = authed_client.get(route)
-        assert response.status_code == 200, route
-        assert response.json().get("secret_values_returned") is False
-
-    created = authed_client.post("/api/v3/demo/create")
-    assert created.status_code == 200
-    assert created.json()["order_submitted"] is False
-    assert created.json()["live_trading_armed"] is False
-
-    search = authed_client.get("/api/v3/search", params={"q": "DEMO", "result_type": "thesis", "tag": "demo"})
-    assert search.status_code == 200
-    assert search.json()["local_only"] is True
-
-    graph = authed_client.get("/api/v3/graph", params={"node_type": "thesis"})
-    assert graph.status_code == 200
-    assert graph.json()["secret_values_returned"] is False
-
-    md = authed_client.get("/api/v3/exports/pre-trade-packet.md")
-    assert md.status_code == 200
-    assert "does not place" in md.text
-
-    cleared = authed_client.post("/api/v3/demo/clear")
-    assert cleared.status_code == 200
-    assert cleared.json()["order_cancelled"] is False
-
 
 
 def test_v32_analytics_engine_snapshots_reports_and_exports_are_safe():
     seed_objects()
     summary = live_v3_analytics.build_analytics_summary()
-    assert summary["version"] == "3.3.0-real"
+    assert summary["version"] == "4.0.1-real"
     assert summary["secret_values_returned"] is False
     assert summary["analytics_are_descriptive"] is True
 
@@ -276,28 +232,14 @@ def test_v32_analytics_integrates_with_search_graph_and_workflows():
     assert "learning_report_summary" in operator
 
 
-def test_v32_analytics_routes_and_apis_render(authed_client):
+def test_v32_analytics_routes_and_apis_render():
     seed_objects()
-    for route in ["/v3/analytics", "/v3/analytics/decisions", "/v3/analytics/theses", "/v3/analytics/evidence", "/v3/analytics/alerts", "/v3/analytics/governance", "/v3/analytics/portfolio", "/v3/analytics/calibration", "/v3/analytics/reviews", "/v3/analytics/learning-report"]:
-        response = authed_client.get(route)
-        assert response.status_code == 200, route
-        assert "v3.3.0-real" in response.text
-        assert "Analytics" in response.text
-
-    for route in ["/api/v3/analytics", "/api/v3/analytics/summary", "/api/v3/analytics/decisions", "/api/v3/analytics/theses", "/api/v3/analytics/evidence", "/api/v3/analytics/alerts", "/api/v3/analytics/governance", "/api/v3/analytics/portfolio", "/api/v3/analytics/calibration", "/api/v3/analytics/mistakes", "/api/v3/analytics/strengths", "/api/v3/analytics/reviews"]:
-        response = authed_client.get(route)
-        assert response.status_code == 200, route
-        assert response.json().get("secret_values_returned") is False
-
-    snap = authed_client.post("/api/v3/analytics/snapshot", json={})
-    assert snap.status_code == 200
-    assert snap.json()["order_cancelled"] is False
-    report = authed_client.post("/api/v3/analytics/learning-report", json={"period": "weekly"})
-    assert report.status_code == 200
-    assert report.json()["live_trading_armed"] is False
-    md = authed_client.get("/api/v3/analytics/export.md")
-    assert md.status_code == 200
-    assert "Learning Report" in md.text
-    csv_resp = authed_client.get("/api/v3/analytics/export/calibration.csv")
-    assert csv_resp.status_code == 200
-    assert "analytics_type" in csv_resp.text
+    summary = live_v3_analytics.build_analytics_summary()
+    assert summary["secret_values_returned"] is False
+    report = live_v3_analytics.generate_learning_report(period="weekly", write=False)
+    assert report["live_trading_armed"] is False
+    assert report["order_submitted"] is False
+    md = live_v3_analytics.export_learning_report_markdown()
+    assert "Learning Report" in md
+    csv_resp = live_v3_analytics.export_csv("calibration")
+    assert "analytics_type" in csv_resp

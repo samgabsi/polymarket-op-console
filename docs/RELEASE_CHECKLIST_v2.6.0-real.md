@@ -12,6 +12,6 @@
 - [ ] Confirm no real order placement occurred.
 - [ ] Confirm no real cancellation occurred.
 - [ ] Create Git tag: `git tag v2.6.0-real`.
-- [ ] Create GitHub release title: `Polymarket Gamma Starter v2.6.0-real`.
+- [ ] Create GitHub release title: `Polymarket OP Console v2.6.0-real`.
 - [ ] Upload ZIP artifact.
 - [ ] Keep rollback note to v2.5.0-real.

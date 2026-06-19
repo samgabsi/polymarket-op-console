@@ -25,14 +25,14 @@ def authed_client(monkeypatch, tmp_path):
     users_path = tmp_path / "users.json"
     monkeypatch.setattr(auth, "USERS_PATH", users_path)
     auth.create_user("admin", "test-password-123", "admin")
-    client = TestClient(app)
-    response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v2-live/strategy"}, follow_redirects=False)
-    assert response.status_code in {303, 307}
-    return client
+    with TestClient(app) as client:
+        response = client.post("/login", data={"username": "admin", "password": "test-password-123", "next": "/v2-live/strategy"}, follow_redirects=False)
+        assert response.status_code in {303, 307}
+        yield client
 
 
 def test_version_is_v2_4():
-    assert APP_VERSION == "3.3.0-real"
+    assert APP_VERSION == "4.0.1-real"
 
 
 def test_strategy_create_edit_archive_and_exports():
